@@ -25,6 +25,8 @@ public class Panel extends JPanel implements Runnable {
 	int playerY = 100;
 	int playerSpeed = 4;
 	
+	final int FPS = 60;
+	
 	public Panel() {
 		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
 		this.setBackground(Color.black);
@@ -41,13 +43,29 @@ public class Panel extends JPanel implements Runnable {
 	@Override
 	public void run() {
 		
+		double drawInterval = 1000000000/FPS;
+		double nextDrawTime = System.nanoTime() + drawInterval;
+		
 		while(gameThread != null) {
-			System.out.println("The loop is running");
-			System.out.println(playerX + " : " + playerY );
 			
 			update();
 			
 			repaint();
+			
+			try {
+				double remainingTime = nextDrawTime - System.nanoTime();
+				
+				if (remainingTime < 0) {
+					remainingTime = 0;
+				}
+				
+				Thread.sleep((long) remainingTime / 1000000);
+				
+				nextDrawTime += drawInterval;
+				
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
