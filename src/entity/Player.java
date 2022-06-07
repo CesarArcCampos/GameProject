@@ -17,7 +17,7 @@ public class Player extends Entity {
 	public Player (Panel panel, KeyHandler keyHandler) {
 		this.panel = panel;
 		this.keyHandler = keyHandler;
-		
+
 		setDefaultValues();
 		getPlayerImage();
 	}
@@ -29,11 +29,11 @@ public class Player extends Entity {
 		speed = 4;
 		direction = "down";
 	}
-	
+
 	public void getPlayerImage() {
-		
+
 		try {
-			
+
 			up1 = ImageIO.read(getClass().getResourceAsStream("/player/survivor-up.png"));
 			up2 = ImageIO.read(getClass().getResourceAsStream("/player/survivor-up.png"));
 			down1 = ImageIO.read(getClass().getResourceAsStream("/player/survivor-down.png"));
@@ -42,7 +42,7 @@ public class Player extends Entity {
 			right2 = ImageIO.read(getClass().getResourceAsStream("/player/survivor-right.png"));
 			left1 = ImageIO.read(getClass().getResourceAsStream("/player/survivor-left.png"));
 			left2 = ImageIO.read(getClass().getResourceAsStream("/player/survivor-left.png"));
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -50,41 +50,73 @@ public class Player extends Entity {
 
 	public void update() {
 
-		if (keyHandler.upPressed == true) {
-			direction = "up";
-			y -= speed;
-		} else if (keyHandler.downPressed == true) {
-			direction = "down";
-			y += speed;
-		} else if (keyHandler.leftPressed == true) {
-			direction = "left";
-			x -= speed;
-		} else if (keyHandler.rightPressed == true) {
-			direction = "right";
-			x += speed;
-		}
+		if(keyHandler.upPressed == true || keyHandler.downPressed == true || keyHandler.leftPressed == true || keyHandler.rightPressed == true) {
 
+			if (keyHandler.upPressed == true) {
+				direction = "up";
+				y -= speed;
+			} else if (keyHandler.downPressed == true) {
+				direction = "down";
+				y += speed;
+			} else if (keyHandler.leftPressed == true) {
+				direction = "left";
+				x -= speed;
+			} else if (keyHandler.rightPressed == true) {
+				direction = "right";
+				x += speed;
+			}
+
+			spriteCounter++;
+			if (spriteCounter > 12) {
+				if (spriteNumber == 1) {
+					spriteNumber = 2;
+				} else if (spriteNumber == 2) {
+					spriteNumber = 1;
+				}
+				spriteCounter = 0;
+			}
+		}
 	}
-	
+
 	public void draw(Graphics2D g2) {
 
 		BufferedImage image = null;
-		
+
 		switch(direction) {
 		case "up":
-			image = up1;
+			if(spriteNumber == 1) {
+				image = up1;
+			}
+			if(spriteNumber == 2) {
+				image = up2;
+			}	
 			break;
 		case "down":
-			image = down1;
+			if(spriteNumber == 1) {
+				image = down1;
+			}
+			if(spriteNumber == 2) {
+				image = down2;
+			}	
 			break;
 		case "left":
-			image = left1;
+			if(spriteNumber == 1) {
+				image = left1;
+			}
+			if(spriteNumber == 2) {
+				image = left2;
+			}	
 			break;
 		case "right":
-			image = right1;
+			if(spriteNumber == 1) {
+				image = right1;
+			}
+			if(spriteNumber == 2) {
+				image = right2;
+			}	
 			break;
 		}
-		
+
 		g2.drawImage(image, x, y, panel.tileSize, panel.tileSize, null);
 
 	}
