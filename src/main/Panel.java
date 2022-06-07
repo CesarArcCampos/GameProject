@@ -33,7 +33,7 @@ public class Panel extends JPanel implements Runnable {
 	
 	public Panel() {
 		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
-		this.setBackground(Color.black);
+		this.setBackground(Color.white);
 		this.setDoubleBuffered(true);
 		this.addKeyListener(keyHandler);
 		this.setFocusable(true);
