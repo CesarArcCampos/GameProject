@@ -17,13 +17,13 @@ public class TileManager {
 	int mapTileNum[][];
 
 	public TileManager(Panel panel) {
-		
+
 		this.panel = panel;
 		tile = new Tile [10];
 		mapTileNum = new int[panel.maxWorldCol][panel.maxWorldRow];
 
 		getTileImage();
-		
+
 		loadMap("/maps/worldMap01.txt");
 	}
 
@@ -36,12 +36,12 @@ public class TileManager {
 
 			tile[1] = new Tile();
 			tile[1].image = ImageIO.read(getClass().getResourceAsStream("/tiles/wall.png"));
-			
+
 			tile[2] = new Tile();
 			tile[2].image = ImageIO.read(getClass().getResourceAsStream("/tiles/bush.png"));
-			
+
 			tile[3] = new Tile();
-			tile[3].image = ImageIO.read(getClass().getResourceAsStream("/tiles/grave.png"));
+			tile[3].image = ImageIO.read(getClass().getResourceAsStream("/tiles/tree.png"));
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -87,20 +87,25 @@ public class TileManager {
 		while (worldCol < panel.maxWorldCol && worldRow < panel.maxWorldRow ) {
 
 			int tileNum = mapTileNum[worldCol][worldRow];
-			
+
 			int worldX = worldCol * panel.tileSize;
 			int worldY = worldRow * panel.tileSize;
 			int screenX = worldX - panel.player.worldX + panel.player.screenX;
-			int screenY = worldY - panel.player.worldX + panel.player.screenY;
+			int screenY = worldY - panel.player.worldY + panel.player.screenY;
 
-			g2.drawImage(tile[tileNum].image, screenX, screenY, panel.tileSize, panel.tileSize, null);
+			if (worldX + panel.tileSize > panel.player.worldX - panel.player.screenX &&
+				worldX - panel.tileSize < panel.player.worldX + panel.player.screenX &&
+				worldY + panel.tileSize > panel.player.worldY - panel.player.screenY &&
+				worldY - panel.tileSize < panel.player.worldY + panel.player.screenY) {
+				
+				g2.drawImage(tile[tileNum].image, screenX, screenY, panel.tileSize, panel.tileSize, null);
+			}
+			
 			worldCol++;
-
 
 			if (worldCol == panel.maxWorldCol) {
 				worldCol = 0;
 				worldRow++;
-	
 			}
 		}
 

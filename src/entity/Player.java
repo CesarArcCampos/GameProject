@@ -21,8 +21,8 @@ public class Player extends Entity {
 		this.panel = panel;
 		this.keyHandler = keyHandler;
 		
-		screenX = panel.screenWidth/2 - panel.tileSize/2;
-		screenY = panel.screenHeight/2 - panel.tileSize/2;
+		screenX = panel.screenWidth/2 - (panel.tileSize/2);
+		screenY = panel.screenHeight/2 - (panel.tileSize/2);
 
 		setDefaultValues();
 		getPlayerImage();
@@ -30,8 +30,8 @@ public class Player extends Entity {
 
 	public void setDefaultValues() {
 
-		worldX = panel.tileSize * 3;
-		worldY = panel.tileSize * 3;
+		worldX = panel.tileSize * 23;
+		worldY = panel.tileSize * 21;
 		speed = 4;
 		direction = "down";
 	}
