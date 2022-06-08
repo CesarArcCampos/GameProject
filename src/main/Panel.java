@@ -29,11 +29,11 @@ public class Panel extends JPanel implements Runnable {
 	
 	Thread gameThread;
 	KeyHandler keyHandler = new KeyHandler();
-	public Player player = new Player(this, keyHandler);
 	TileManager tm = new TileManager(this);
+	public Player player = new Player(this, keyHandler);
+	public CollisionChecker checker = new CollisionChecker(this);
 	
 	final int FPS = 60;
-	
 	
 	public Panel() {
 		this.setPreferredSize(new Dimension(screenWidth, screenHeight));

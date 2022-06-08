@@ -13,8 +13,8 @@ import main.Panel;
 public class TileManager {
 
 	Panel panel;
-	Tile[] tile;
-	int mapTileNum[][];
+	public Tile[] tile;
+	public int mapTileNum[][];
 
 	public TileManager(Panel panel) {
 
@@ -36,12 +36,15 @@ public class TileManager {
 
 			tile[1] = new Tile();
 			tile[1].image = ImageIO.read(getClass().getResourceAsStream("/tiles/wall.png"));
-
+			tile[1].collision = true;
+			
 			tile[2] = new Tile();
 			tile[2].image = ImageIO.read(getClass().getResourceAsStream("/tiles/bush.png"));
+			tile[2].collision = true;
 
 			tile[3] = new Tile();
 			tile[3].image = ImageIO.read(getClass().getResourceAsStream("/tiles/tree.png"));
+			tile[3].collision = true;
 
 		} catch (IOException e) {
 			e.printStackTrace();
