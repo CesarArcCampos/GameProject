@@ -18,6 +18,7 @@ public class Player extends Entity {
 	public final int screenX;
 	public final int screenY;
 	int hasKey = 0;
+	int hasChest = 0;
 
 	public Player (Panel panel, KeyHandler keyHandler) {
 		this.panel = panel;
@@ -121,16 +122,21 @@ public class Player extends Entity {
 			
 			switch (objectName) {
 			case "Key":
+				panel.playSFX(2);
 				hasKey++;
 				panel.obj[i] = null;
 				break;
 			case "Gate":
 				if (hasKey > 0) {
+					panel.playSFX(1);
 					panel.obj[i] = null;
 					hasKey--;
 				}
 				break;
 			case "Chest":
+				panel.playSFX(2);
+				hasChest++;
+				panel.obj[i] = null;
 				break;
 			}
 		}
