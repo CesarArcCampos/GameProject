@@ -26,7 +26,7 @@ public class Panel extends JPanel implements Runnable {
 	public final int maxWorldCol = 50;
 	public final int maxWorldRow = 50;
 	
-	KeyHandler keyHandler = new KeyHandler();
+	KeyHandler keyHandler = new KeyHandler(this);
 	TileManager tm = new TileManager(this);
 	Sound music = new Sound();
 	Sound sfx = new Sound();
@@ -38,6 +38,10 @@ public class Panel extends JPanel implements Runnable {
 	public AssetSetter aSetter = new AssetSetter(this);
 	public SuperObject obj[] = new SuperObject[10];
 	public UI ui = new UI(this);
+	
+	public int gameState;
+	public final int playState = 1;
+	public final int pauseState = 2;
 	
 	final int FPS = 60;
 	
@@ -52,8 +56,9 @@ public class Panel extends JPanel implements Runnable {
 	public void setUpGame() {
 		
 		aSetter.setObject();
-		
 		playMusic(0);
+		//stopMusic();
+		gameState = playState;
 		
 	}
 	
@@ -93,7 +98,12 @@ public class Panel extends JPanel implements Runnable {
 	
 	public void update() {
 		
-		player.update();
+		if (gameState == playState) {
+			player.update();
+		}
+		if (gameState == pauseState) {
+			//NOTHING
+		}
 		
 	}
 	
