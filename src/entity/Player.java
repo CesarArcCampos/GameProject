@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 
 import main.KeyHandler;
 import main.Panel;
+import main.UtilityTool;
 
 public class Player extends Entity {
 
@@ -17,8 +18,8 @@ public class Player extends Entity {
 	
 	public final int screenX;
 	public final int screenY;
-	int hasKey = 0;
-	int hasChest = 0;
+	public int hasKey = 0;
+	public int hasChest = 0;
 
 	public Player (Panel panel, KeyHandler keyHandler) {
 		this.panel = panel;
@@ -44,21 +45,31 @@ public class Player extends Entity {
 	}
 
 	public void getPlayerImage() {
-
+		
+		up1 = setup("survivor-up");
+		up2 = setup("survivor-up");
+		down1 = setup("survivor-down");
+		down2 = setup("survivor-down");
+		right1 = setup("survivor-right");
+		right2 = setup("survivor-right");
+		left1 = setup("survivor-left");
+		left2 = setup("survivor-left");
+	}
+	
+	public BufferedImage setup(String imageName) {
+		
+		UtilityTool uTool = new UtilityTool();
+		BufferedImage image = null;
+		
 		try {
-
-			up1 = ImageIO.read(getClass().getResourceAsStream("/player/survivor-up.png"));
-			up2 = ImageIO.read(getClass().getResourceAsStream("/player/survivor-up.png"));
-			down1 = ImageIO.read(getClass().getResourceAsStream("/player/survivor-down.png"));
-			down2 = ImageIO.read(getClass().getResourceAsStream("/player/survivor-down.png"));
-			right1 = ImageIO.read(getClass().getResourceAsStream("/player/survivor-right.png"));
-			right2 = ImageIO.read(getClass().getResourceAsStream("/player/survivor-right.png"));
-			left1 = ImageIO.read(getClass().getResourceAsStream("/player/survivor-left.png"));
-			left2 = ImageIO.read(getClass().getResourceAsStream("/player/survivor-left.png"));
-
+			image = ImageIO.read(getClass().getResourceAsStream("/player/" + imageName + ".png"));
+			image = uTool.scaleImage(image, panel.tileSize, panel.tileSize);
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		return image;
 	}
 
 	public void update() {
@@ -125,18 +136,25 @@ public class Player extends Entity {
 				panel.playSFX(2);
 				hasKey++;
 				panel.obj[i] = null;
+				panel.ui.showMessage("You got a key!");
 				break;
 			case "Gate":
 				if (hasKey > 0) {
 					panel.playSFX(1);
 					panel.obj[i] = null;
 					hasKey--;
+					panel.ui.showMessage("You opened the gate!");
+				} else {
+					panel.ui.showMessage("You need a Key!");
 				}
 				break;
 			case "Chest":
 				panel.playSFX(2);
 				hasChest++;
 				panel.obj[i] = null;
+				panel.ui.gameFinished = true;
+				panel.stopMusic();
+				panel.playSFX(2);
 				break;
 			}
 		}
@@ -181,7 +199,7 @@ public class Player extends Entity {
 			break;
 		}
 
-		g2.drawImage(image, screenX, screenY, panel.tileSize, panel.tileSize, null);
+		g2.drawImage(image, screenX, screenY, null);
 
 	}
 

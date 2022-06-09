@@ -14,15 +14,15 @@ public class AssetSetter {
 	
 	public void setObject() {
 		
-		panel.obj[0] = new Key();
+		panel.obj[0] = new Key(panel);
 		panel.obj[0].worldX = 45 * panel.tileSize;
 		panel.obj[0].worldY = 2 * panel.tileSize;
 		
-		panel.obj[1] = new Gate();
+		panel.obj[1] = new Gate(panel);
 		panel.obj[1].worldX = 46 * panel.tileSize;
 		panel.obj[1].worldY = 36 * panel.tileSize;
 		
-		panel.obj[2] = new Chest();
+		panel.obj[2] = new Chest(panel);
 		panel.obj[2].worldX = 2 * panel.tileSize;
 		panel.obj[2].worldY = 48 * panel.tileSize;
 	}

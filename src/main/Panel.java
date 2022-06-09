@@ -28,13 +28,16 @@ public class Panel extends JPanel implements Runnable {
 	
 	KeyHandler keyHandler = new KeyHandler();
 	TileManager tm = new TileManager(this);
-	Sound sound = new Sound();
+	Sound music = new Sound();
+	Sound sfx = new Sound();
+
 	Thread gameThread;
 	
 	public Player player = new Player(this, keyHandler);
 	public CollisionChecker checker = new CollisionChecker(this);
 	public AssetSetter aSetter = new AssetSetter(this);
 	public SuperObject obj[] = new SuperObject[10];
+	public UI ui = new UI(this);
 	
 	final int FPS = 60;
 	
@@ -108,27 +111,31 @@ public class Panel extends JPanel implements Runnable {
 				obj[i].draw(g2, this);
 			}
 		}
+		
 		// PLAYER
 		player.draw(g2);
+		
+		// UI
+		ui.draw(g2);
 		
 		g2.dispose();
 	}
 	
 	public void playMusic(int i) {
 		
-		sound.setFile(i);
-		sound.play();
-		sound.loop();
+		music.setFile(i);
+		music.play();
+		music.loop();
 	}
 	
 	public void stopMusic() {
 		
-		sound.stop();
+		music.stop();
 	}
 	
 	public void playSFX(int i) {
 		
-		sound.setFile(i);
-		sound.play();
+		sfx.setFile(i);
+		sfx.play();
 	}
 }
