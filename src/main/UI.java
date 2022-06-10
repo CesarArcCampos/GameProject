@@ -12,12 +12,16 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
+import object.Heart;
+import object.SuperObject;
+
 public class UI {
 
 	Panel panel;
 	Graphics2D g2;
 	//Font arial20, arial40;
 	Font futuristicFont;
+	BufferedImage heart_full, heart_half, heart_blank;
 	public boolean messageOn = false;
 	public String message = "";
 	public int messageCounter = 0;
@@ -38,6 +42,11 @@ public class UI {
 		} catch (FontFormatException | IOException e) {
 			e.printStackTrace();
 		}
+		
+		SuperObject heart = new Heart(panel);
+		heart_full = heart.image;
+		heart_half = heart.image2;
+		heart_blank = heart.image3;
 
 	}
 
@@ -61,17 +70,50 @@ public class UI {
 
 		//PlayState
 		if (panel.gameState == panel.playState) {
-			//something
+			drawPlayerLife();
 		}
 		//PauseState
 		if (panel.gameState == panel.pauseState) {
 			drawPauseScreen();
+			drawPlayerLife();
 		}
 		//DialogueState
 		if (panel.gameState == panel.dialogueState) {
 			drawDialogueScreen();
+			drawPlayerLife();
 		}
 
+	}
+	
+	public void drawPlayerLife() {
+		
+		int x = panel.tileSize/2;
+		int y = panel.tileSize/2;
+		int i = 0;
+		
+		// Draw maximum life
+		while (i < panel.player.maxLife/2) {
+			g2.drawImage(heart_blank, x, y, null);
+			i++;
+			x += panel.tileSize/2;
+		}
+		
+		// Reset the values
+		x = panel.tileSize/2;
+		y = panel.tileSize/2;
+		i = 0;
+		
+		// Draw current life
+		while (i < panel.player.life) {
+			g2.drawImage(heart_half, x, y, null);
+			i++;
+			if (i < panel.player.life) {
+				g2.drawImage(heart_full, x, y, null);
+			}
+			i++;
+			x += panel.tileSize/2;
+		}
+		
 	}
 
 	public void drawTitleScreen() {
