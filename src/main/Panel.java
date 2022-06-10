@@ -55,7 +55,7 @@ public class Panel extends JPanel implements Runnable {
 		this.addKeyListener(keyHandler);
 		this.setFocusable(true);
 	}
-	
+
 	public void setUpGame() {
 		
 		aSetter.setObject();
@@ -111,6 +111,7 @@ public class Panel extends JPanel implements Runnable {
 				}
 			}
 		}
+		
 		if (gameState == pauseState) {
 			//NOTHING
 		}

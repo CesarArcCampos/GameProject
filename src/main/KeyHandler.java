@@ -39,9 +39,11 @@ public class KeyHandler implements KeyListener {
 			if (code == KeyEvent.VK_D) {
 				rightPressed = true;
 			}
+			
 			if (code == KeyEvent.VK_P) {
 				panel.gameState = panel.pauseState;	
 			}
+			
 			if (code == KeyEvent.VK_ENTER) {
 				enterPressed = true;
 			}
