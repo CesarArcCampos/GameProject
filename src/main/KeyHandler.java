@@ -92,8 +92,12 @@ public class KeyHandler implements KeyListener {
 				panel.gameState = panel.playState;
 			}
 		}
-
-
+		
+		if (panel.gameState == panel.warningState) {
+			if (code == KeyEvent.VK_ENTER) {
+				panel.gameState = panel.playState;
+			}
+		}
 	}
 
 	@Override

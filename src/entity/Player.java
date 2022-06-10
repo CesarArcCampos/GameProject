@@ -82,7 +82,10 @@ public class Player extends Entity {
 			int npcIndex = panel.checker.checkEntity(this, panel.npc);
 			interactNPC(npcIndex);
 			
+			// CHECK EVENT
+			panel.eHandler.checkEvent();
 			
+			panel.keyHandler.enterPressed = false;
 			
 			// IF THERE IS NO COLLISION, PLAYER CAN MOVE
 			if (collisionON == false) {
@@ -159,8 +162,6 @@ public class Player extends Entity {
 				panel.npc[i].speak();
 			}
 		}
-		
-		panel.keyHandler.enterPressed = false;
 	}
 
 	public void draw(Graphics2D g2) {

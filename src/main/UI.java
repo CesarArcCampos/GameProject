@@ -33,8 +33,6 @@ public class UI {
 	public UI(Panel panel) {
 
 		this.panel = panel;
-		//arial20 = new Font("Arial", Font.PLAIN, 20);
-		//arial40 = new Font("Arial", Font.BOLD, 40);
 
 		try {
 			InputStream is = getClass().getResourceAsStream("/fonts/FuturisticArmour-1p84.ttf");
@@ -81,6 +79,11 @@ public class UI {
 		if (panel.gameState == panel.dialogueState) {
 			drawDialogueScreen();
 			drawPlayerLife();
+		}
+		
+		//WarningState
+		if (panel.gameState == panel.warningState) {
+			drawWarningScreen();
 		}
 
 	}
@@ -210,6 +213,29 @@ public class UI {
 		drawPicture(x, y, width, height);
 
 	}
+	
+	public void drawWarningScreen() {
+
+		//Window
+		int x = panel.tileSize*2;
+		int y = panel.tileSize/2;
+		int width = panel.screenWidth - (panel.tileSize*8);
+		int height = panel.tileSize*4;
+
+		drawSubWindow(x, y, width, height);
+
+		g2.setFont(g2.getFont().deriveFont(Font.PLAIN,22F));
+		g2.setColor(Color.GREEN);
+		x += panel.tileSize;
+		y += panel.tileSize;
+
+		for (String line : currentDialogue.split("\n")) {
+			g2.drawString(line, x, y);
+			y += 40;
+		}
+	}
+	
+	
 
 	public void drawSubWindow(int x, int y, int width, int height) {
 

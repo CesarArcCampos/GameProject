@@ -27,6 +27,7 @@ public class Panel extends JPanel implements Runnable {
 	public final int maxWorldCol = 50;
 	public final int maxWorldRow = 50;
 	
+	public EventHandler eHandler = new EventHandler(this);
 	public KeyHandler keyHandler = new KeyHandler(this);
 	TileManager tm = new TileManager(this);
 	Sound music = new Sound();
@@ -46,6 +47,7 @@ public class Panel extends JPanel implements Runnable {
 	public final int playState = 1;
 	public final int pauseState = 2;
 	public final int dialogueState = 3;
+	public final int warningState = 4;
 	
 	final int FPS = 60;
 	
