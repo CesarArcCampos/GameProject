@@ -3,17 +3,12 @@ package entity;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import main.KeyHandler;
 import main.Panel;
-import main.UtilityTool;
 
 public class Player extends Entity {
 
-	Panel panel;
 	KeyHandler keyHandler;
 	
 	public final int screenX;
@@ -22,7 +17,9 @@ public class Player extends Entity {
 	public int hasChest = 0;
 
 	public Player (Panel panel, KeyHandler keyHandler) {
-		this.panel = panel;
+		
+		super(panel);
+		
 		this.keyHandler = keyHandler;
 		
 		screenX = panel.screenWidth/2 - (panel.tileSize/2);
@@ -46,30 +43,14 @@ public class Player extends Entity {
 
 	public void getPlayerImage() {
 		
-		up1 = setup("survivor-up");
-		up2 = setup("survivor-up");
-		down1 = setup("survivor-down");
-		down2 = setup("survivor-down");
-		right1 = setup("survivor-right");
-		right2 = setup("survivor-right");
-		left1 = setup("survivor-left");
-		left2 = setup("survivor-left");
-	}
-	
-	public BufferedImage setup(String imageName) {
-		
-		UtilityTool uTool = new UtilityTool();
-		BufferedImage image = null;
-		
-		try {
-			image = ImageIO.read(getClass().getResourceAsStream("/player/" + imageName + ".png"));
-			image = uTool.scaleImage(image, panel.tileSize, panel.tileSize);
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		return image;
+		up1 = setup("/player/survivor-up");
+		up2 = setup("/player/survivor-up");
+		down1 = setup("/player/survivor-down");
+		down2 = setup("/player/survivor-down");
+		right1 = setup("/player/survivor-right");
+		right2 = setup("/player/survivor-right");
+		left1 = setup("/player/survivor-left");
+		left2 = setup("/player/survivor-left");
 	}
 
 	public void update() {
@@ -93,6 +74,12 @@ public class Player extends Entity {
 			// CHECK OBJECT COLLISION
 			int objIndex = panel.checker.checkObject(this, true);
 			pickUpObject(objIndex);
+			
+			// CHECK NPC COLLISION
+			int npcIndex = panel.checker.checkEntity(this, panel.npc);
+			interactNPC(npcIndex);
+			
+			
 			
 			// IF THERE IS NO COLLISION, PLAYER CAN MOVE
 			if (collisionON == false) {
@@ -158,6 +145,19 @@ public class Player extends Entity {
 				break;
 			}
 		}
+	}
+	
+	public void interactNPC(int i) {
+		
+		if (i != 999) {
+			
+			if(panel.keyHandler.enterPressed == true) {
+				panel.gameState = panel.dialogueState;
+				panel.npc[i].speak();
+			}
+		}
+		
+		panel.keyHandler.enterPressed = false;
 	}
 
 	public void draw(Graphics2D g2) {

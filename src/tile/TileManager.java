@@ -20,7 +20,7 @@ public class TileManager {
 	public TileManager(Panel panel) {
 
 		this.panel = panel;
-		tile = new Tile [10];
+		tile = new Tile [50];
 		mapTileNum = new int[panel.maxWorldCol][panel.maxWorldRow];
 
 		getTileImage();
@@ -30,10 +30,18 @@ public class TileManager {
 
 	public void getTileImage() {
 
-		setup(0,"grass", false);
-		setup(1,"wall", true);
-		setup(2,"bush", true);
-		setup(3,"tree", true);
+		setup(0,"pav1", false);
+		setup(1,"pav2", false);
+		setup(2,"pav3", false);
+		setup(3,"pav4", false);
+		setup(4,"wall1", true);
+		setup(5,"wall2", true);
+		setup(6,"wall3", true);
+		setup(7,"wall4", true);
+		setup(8,"wall5", true);
+		setup(9,"wall6", true);
+		setup(10,"wall7", true);
+		setup(11,"wall8", true);
 	}
 
 	public void setup(int index, String imageName, boolean collision) {

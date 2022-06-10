@@ -17,7 +17,7 @@ public class Key extends SuperObject {
 		try {
 			
 			image = ImageIO.read(getClass().getResourceAsStream("/object/key.png"));
-			uTool.scaleImage(image, panel.tileSize, panel.tileSize);
+			uTool.scaleImage(image, panel.tileSize/2, panel.tileSize/2);
 			
 		} catch (IOException e) {
 			e.printStackTrace();
