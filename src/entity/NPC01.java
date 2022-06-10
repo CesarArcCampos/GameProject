@@ -1,10 +1,13 @@
 package entity;
 
+import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import main.Panel;
 
 public class NPC01 extends Entity{
+
+	public BufferedImage picture;
 
 	public NPC01(Panel panel) {
 		super(panel);
@@ -26,14 +29,15 @@ public class NPC01 extends Entity{
 		right2 = setup("/npc/npc-right");
 		left1 = setup("/npc/npc-left");
 		left2 = setup("/npc/npc-left");
+		
 	}
 
 	public void setDialogue() {
 
 		dialogues[0] = "Hello, friend.";
 		dialogues[1] = "I am glad that you arrived";
-		dialogues[2] = "The Walkers took over this complex...";
-		dialogues[3] = "We need your help to clean this place!";
+		dialogues[2] = "The Walkers took over \nthis complex...";
+		dialogues[3] = "We need your help to \nclean this place!";
 	}
 
 	public void setAction() {
@@ -66,6 +70,8 @@ public class NPC01 extends Entity{
 
 		super.speak();
 	}
+
+
 
 
 }

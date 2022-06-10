@@ -4,6 +4,10 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 public class UI {
 
@@ -67,7 +71,7 @@ public class UI {
 		//Window
 		int x = panel.tileSize*2;
 		int y = panel.tileSize/2;
-		int width = panel.screenWidth - (panel.tileSize*4);
+		int width = panel.screenWidth - (panel.tileSize*8);
 		int height = panel.tileSize*4;
 		
 		drawSubWindow(x, y, width, height);
@@ -75,12 +79,19 @@ public class UI {
 		g2.setFont(g2.getFont().deriveFont(Font.PLAIN,22F));
 		x += panel.tileSize;
 		y += panel.tileSize;
-		g2.drawString(currentDialogue, x, y);
 		
 		for (String line : currentDialogue.split("\n")) {
 			g2.drawString(line, x, y);
 			y += 40;
 		}
+		
+		x = panel.tileSize * 10;
+		y = panel.tileSize / 2;
+		width = panel.screenWidth - (panel.tileSize*12);
+		height = panel.tileSize*4;
+		drawSubWindow(x, y, width, height);
+		drawPicture(x, y, width, height);
+		
 	}
 	
 	public void drawSubWindow(int x, int y, int width, int height) {
@@ -102,5 +113,36 @@ public class UI {
 		int x = panel.screenWidth/2 - length/2;
 		return x;
 	}
+	
+	public void drawPicture(int x, int y, int width, int height) {
+		
+		BufferedImage image = null;
+		image = setup("/npc/npc-picture");
+
+		x += panel.tileSize/4;
+		y += panel.tileSize/4;
+		width -= panel.tileSize/2;
+		height -= panel.tileSize/2;
+
+		g2.drawImage(image, x, y, width, height, null);
+	}
+	
+	public BufferedImage setup(String imagePath) {
+		
+		UtilityTool uTool = new UtilityTool();
+		BufferedImage image = null;
+		
+		try {
+			image = ImageIO.read(getClass().getResourceAsStream(imagePath + ".png"));
+			image = uTool.scaleImage(image, panel.tileSize, panel.tileSize);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return image;
+	}
+	
+	
 
 }

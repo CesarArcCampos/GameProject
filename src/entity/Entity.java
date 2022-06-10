@@ -167,6 +167,5 @@ public class Entity {
 		return image;
 	}
 	
-	
 
 }
