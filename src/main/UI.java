@@ -6,20 +6,20 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
+import entity.Entity;
 import object.Heart;
-import object.SuperObject;
 
 public class UI {
 
 	Panel panel;
 	Graphics2D g2;
-	//Font arial20, arial40;
 	Font futuristicFont;
 	BufferedImage heart_full, heart_half, heart_blank;
 	public boolean messageOn = false;
@@ -40,8 +40,8 @@ public class UI {
 		} catch (FontFormatException | IOException e) {
 			e.printStackTrace();
 		}
-		
-		SuperObject heart = new Heart(panel);
+
+		Entity heart = new Heart(panel);
 		heart_full = heart.image;
 		heart_half = heart.image2;
 		heart_blank = heart.image3;
@@ -80,32 +80,32 @@ public class UI {
 			drawDialogueScreen();
 			drawPlayerLife();
 		}
-		
+
 		//WarningState
 		if (panel.gameState == panel.warningState) {
 			drawWarningScreen();
 		}
 
 	}
-	
+
 	public void drawPlayerLife() {
-		
+
 		int x = panel.tileSize/2;
 		int y = panel.tileSize/2;
 		int i = 0;
-		
+
 		// Draw maximum life
 		while (i < panel.player.maxLife/2) {
 			g2.drawImage(heart_blank, x, y, null);
 			i++;
-			x += panel.tileSize/2;
+			x += panel.tileSize;
 		}
-		
+
 		// Reset the values
 		x = panel.tileSize/2;
 		y = panel.tileSize/2;
 		i = 0;
-		
+
 		// Draw current life
 		while (i < panel.player.life) {
 			g2.drawImage(heart_half, x, y, null);
@@ -114,9 +114,9 @@ public class UI {
 				g2.drawImage(heart_full, x, y, null);
 			}
 			i++;
-			x += panel.tileSize/2;
+			x += panel.tileSize;
 		}
-		
+
 	}
 
 	public void drawTitleScreen() {
@@ -141,9 +141,29 @@ public class UI {
 		x = panel.screenWidth/2 - (panel.tileSize)*2;
 		y += panel.tileSize*2;
 
+		/*
 		BufferedImage image = null;
 		image = setup("/pictures/zombie-picture");
 		g2.drawImage(image, x, y, panel.tileSize*3, panel.tileSize*3, null);
+		 */
+
+		try{
+			BufferedImage image = ImageIO.read(getClass().getResource("/pictures/zombie-picture.png"));
+			AffineTransform at = new AffineTransform();
+			//at.translate((int)x,(int)y);
+	        //at.rotate(Math.PI/2);
+	        //at.translate(-image.getWidth()/2, -image.getHeight()/2);
+	        g2.drawImage(image, x + panel.tileSize/2, y - panel.tileSize, panel.tileSize*3, panel.tileSize*3, null);
+			
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		} 
+		
+		
+
 
 		// Menu
 		g2.setFont(g2.getFont().deriveFont(Font.BOLD,48F));
@@ -213,7 +233,7 @@ public class UI {
 		drawPicture(x, y, width, height);
 
 	}
-	
+
 	public void drawWarningScreen() {
 
 		//Window
@@ -234,8 +254,8 @@ public class UI {
 			y += 40;
 		}
 	}
-	
-	
+
+
 
 	public void drawSubWindow(int x, int y, int width, int height) {
 

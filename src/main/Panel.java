@@ -4,12 +4,14 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import javax.swing.JPanel;
 
 import entity.Entity;
 import entity.Player;
-import object.SuperObject;
 import tile.TileManager;
 
 public class Panel extends JPanel implements Runnable {
@@ -38,9 +40,10 @@ public class Panel extends JPanel implements Runnable {
 	public Player player = new Player(this, keyHandler);
 	public CollisionChecker checker = new CollisionChecker(this);
 	public AssetSetter aSetter = new AssetSetter(this);
-	public SuperObject obj[] = new SuperObject[10];
+	public Entity obj[] = new Entity[10];
 	public Entity npc[] = new Entity[10];
 	public UI ui = new UI(this);
+	ArrayList<Entity> entityList = new ArrayList<>();
 	
 	public int gameState;
 	public final int titleState = 0;
@@ -128,37 +131,52 @@ public class Panel extends JPanel implements Runnable {
 		
 		// TITLE SCREEN		
 		if ( gameState == titleState) {
-			
 			ui.draw(g2);
+			
 		} else {
 			
-			// TILES
+			// DRAW TILES
 			tm.draw(g2);
 			
-			// OBJECTS
-			for (int i = 0; i < obj.length; i++) {
-				if (obj[i] != null) {
-					obj[i].draw(g2, this);
-				}
-			}
+			// ADD ENTITIES TO LIST
+			entityList.add(player);
 			
-			// NPC
 			for (int i = 0; i < npc.length; i++) {
 				if (npc[i] != null) {
-					npc[i].draw(g2);
+					entityList.add(npc[i]);
 				}
 			}
 			
-			// PLAYER
-			player.draw(g2);
+			for (int i = 0; i < obj.length; i++) {
+				if (obj[i] != null) {
+					entityList.add(obj[i]);
+				}
+			}
 			
-			// UI
+			//SORT THE ENTITIES LIST
+			Collections.sort(entityList, new Comparator<Entity>() {
+				
+				@Override
+				public int compare(Entity e1, Entity e2) {
+					
+					int result = Integer.compare(e1.worldY, e2.worldY);
+					return result;
+				}
+			});
+			
+			//DRAW ENTITIES
+			
+			for (int i = 0; i < entityList.size(); i++) {
+				entityList.get(i).draw(g2);
+			}
+			
+			//CLEAR ENTITIES LIST
+			entityList.clear();
+
+			// DRAW UI
 			ui.draw(g2);
 			
 		}
-		
-
-		
 		g2.dispose();
 	}
 	

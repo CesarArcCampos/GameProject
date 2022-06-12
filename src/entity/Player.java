@@ -47,13 +47,17 @@ public class Player extends Entity {
 	public void getPlayerImage() {
 		
 		up1 = setup("/player/survivor-up");
-		up2 = setup("/player/survivor-up");
+		up2 = setup("/player/survivor-up1");
+		up3 = setup("/player/survivor-up2");
 		down1 = setup("/player/survivor-down");
-		down2 = setup("/player/survivor-down");
+		down2 = setup("/player/survivor-down1");
+		down3 = setup("/player/survivor-down2");
 		right1 = setup("/player/survivor-right");
-		right2 = setup("/player/survivor-right");
+		right2 = setup("/player/survivor-right1");
+		right3 = setup("/player/survivor-right2");
 		left1 = setup("/player/survivor-left");
-		left2 = setup("/player/survivor-left");
+		left2 = setup("/player/survivor-left1");
+		left3 = setup("/player/survivor-left2");
 	}
 
 	public void update() {
@@ -111,6 +115,8 @@ public class Player extends Entity {
 				if (spriteNumber == 1) {
 					spriteNumber = 2;
 				} else if (spriteNumber == 2) {
+					spriteNumber = 3;
+				} else if (spriteNumber == 3) {
 					spriteNumber = 1;
 				}
 				spriteCounter = 0;
@@ -175,6 +181,9 @@ public class Player extends Entity {
 			}
 			if(spriteNumber == 2) {
 				image = up2;
+			}
+			if(spriteNumber == 3) {
+				image = up3;
 			}	
 			break;
 		case "down":
@@ -182,7 +191,10 @@ public class Player extends Entity {
 				image = down1;
 			}
 			if(spriteNumber == 2) {
-				image = down2;
+				image = down2;	
+			}	
+			if(spriteNumber == 3) {
+				image = down3;	
 			}	
 			break;
 		case "left":
@@ -191,7 +203,10 @@ public class Player extends Entity {
 			}
 			if(spriteNumber == 2) {
 				image = left2;
-			}	
+			}
+			if(spriteNumber == 3) {
+				image = left3;	
+			}
 			break;
 		case "right":
 			if(spriteNumber == 1) {
@@ -200,13 +215,12 @@ public class Player extends Entity {
 			if(spriteNumber == 2) {
 				image = right2;
 			}	
+			if(spriteNumber == 3) {
+				image = right3;	
+			}
 			break;
 		}
 
 		g2.drawImage(image, screenX, screenY, null);
-
 	}
-
-
-
 }

@@ -34,14 +34,31 @@ public class TileManager {
 		setup(1,"pav2", false);
 		setup(2,"pav3", false);
 		setup(3,"pav4", false);
-		setup(4,"wall1", true);
-		setup(5,"wall2", true);
-		setup(6,"wall3", true);
-		setup(7,"wall4", true);
-		setup(8,"wall5", true);
-		setup(9,"wall6", true);
-		setup(10,"wall7", true);
-		setup(11,"wall8", true);
+		setup(4,"pav5",false);
+		setup(5,"pav6",false);
+		setup(6,"pav7",false);
+		
+		setup(7,"wall1", true);
+		setup(8,"wall2", true);
+		setup(9,"wall3", true);
+		setup(10,"wall4", true);
+		setup(11,"wall5", true);
+		setup(12,"wall6", true);
+		setup(13,"wall7", true);
+		setup(14,"wall8", true);
+		
+		setup(15,"int1", true);
+		setup(16,"int3", true);
+		setup(17,"int5", true);
+		setup(18,"int6", true);
+		setup(19,"int2", true);
+		setup(20,"int4", true);
+		
+		setup(21,"inter1", true);
+		setup(22,"inter2", true);
+		setup(23,"pav8", false);
+		setup(24,"inter3", true);
+		setup(25,"inter4", true);
 	}
 
 	public void setup(int index, String imageName, boolean collision) {
