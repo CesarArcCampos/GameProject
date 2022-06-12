@@ -1,5 +1,6 @@
 package entity;
 
+import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -86,6 +87,10 @@ public class Player extends Entity {
 			int npcIndex = panel.checker.checkEntity(this, panel.npc);
 			interactNPC(npcIndex);
 			
+			// CHECK ZOMBIE COLLISION
+			int monsterIndex = panel.checker.checkEntity(this, panel.monster);
+			contactMonster(monsterIndex);
+			
 			// CHECK EVENT
 			panel.eHandler.checkEvent();
 			
@@ -120,6 +125,16 @@ public class Player extends Entity {
 					spriteNumber = 1;
 				}
 				spriteCounter = 0;
+			}
+		}
+		
+		//Way to fix problem when player touch zombie, all the life is drain, because the 
+		//update method is called 60 times per second, so there is 60 contacts per second.
+		if (invincible == true) {
+			invincibleCounter++;
+			if (invincibleCounter > 60) {
+				invincible = false;
+				invincibleCounter = 0;
 			}
 		}
 	}
@@ -167,6 +182,17 @@ public class Player extends Entity {
 				panel.gameState = panel.dialogueState;
 				panel.npc[i].speak();
 			}
+		}
+	}
+	
+	public void contactMonster(int i) {
+		
+		if (i != 999) {
+			if (invincible == false) {
+				life -= 1;
+				invincible = true;
+			}
+			
 		}
 	}
 
@@ -220,7 +246,15 @@ public class Player extends Entity {
 			}
 			break;
 		}
+		
+		//set transparency damage
+		if (invincible == true) {
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+		}
 
 		g2.drawImage(image, screenX, screenY, null);
+		
+		//reset transparency damage
+		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
 	}
 }

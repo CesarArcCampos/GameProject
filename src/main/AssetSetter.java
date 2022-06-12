@@ -1,6 +1,7 @@
 package main;
 
 import entity.NPC01;
+import monster.Mon_Zombie;
 import object.Key;
 
 public class AssetSetter {
@@ -24,6 +25,13 @@ public class AssetSetter {
 		panel.npc[0] = new NPC01(panel);
 		panel.npc[0].worldX = panel.tileSize*21;
 		panel.npc[0].worldY = panel.tileSize*21;
+	}
+	
+	public void setMonster() {
+		
+		panel.monster[0] = new Mon_Zombie(panel);
+		panel.monster[0].worldX = panel.tileSize*45;
+		panel.monster[0].worldY = panel.tileSize*45;
 	}
 
 }

@@ -27,8 +27,11 @@ public class Entity {
 	public int solidAreaDefaultX, solidAreaDefaultY;
 	public boolean collisionON = false;
 	public int actionLockerCounter = 0;
+	public boolean invincible = false;
+	public int invincibleCounter = 0;
 	String dialogues[] = new String[20];
 	int dialogueIndex = 0;
+	public int type;
 	
 	public BufferedImage image, image2, image3;
 	public String name;
@@ -78,8 +81,16 @@ public class Entity {
 		collisionON = false;
 		panel.checker.checkTile(this);
 		panel.checker.checkObject(this, false);
-		panel.checker.checkPlayer(this);
+		boolean contactPlayer = panel.checker.checkPlayer(this);
+		panel.checker.checkEntity(this, panel.npc);
+		panel.checker.checkEntity(this, panel.monster);
 		
+		if (this.type == 2 && contactPlayer == true) {
+			if (panel.player.invincible == false) {
+				panel.player.life -= 1;
+				panel.player.invincible = true;
+			}
+		}
 		
 		if (collisionON == false) {
 			
