@@ -16,6 +16,7 @@ public class Player extends Entity {
 	public final int screenY;
 	public int hasKey = 0;
 	public int hasChest = 0;
+	int standCounter = 0;
 
 	public Player (Panel panel, KeyHandler keyHandler) {
 
@@ -265,6 +266,7 @@ public class Player extends Entity {
 				panel.npc[i].speak();
 			}
 			else {
+				panel.playSFX(6);
 				attacking = true;	
 			}
 		}
@@ -274,6 +276,7 @@ public class Player extends Entity {
 
 		if (i != 999) {
 			if (invincible == false) {
+				panel.playSFX(5);
 				life -= 1;
 				invincible = true;
 			}
@@ -285,11 +288,13 @@ public class Player extends Entity {
 		if (i != 999) {
 			
 			if(panel.monster[i].invincible == false) {
+				
+				panel.playSFX(4);
 				panel.monster[i].life -= 1;
 				panel.monster[i].invincible = true;
 				
 				if (panel.monster[i].life <= 0) {
-					panel.monster[i] = null;
+					panel.monster[i].dying = true;
 				}
 			}
 		}
