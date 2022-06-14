@@ -66,6 +66,12 @@ public class Mon_Zombie extends Entity {
 		}
 	}
 	
+	public void damageReaction() {
+		
+		actionLockerCounter = 0;
+		direction = panel.player.direction;
+	}
+	
 	
 
 }

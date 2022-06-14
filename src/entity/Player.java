@@ -292,6 +292,7 @@ public class Player extends Entity {
 				panel.playSFX(4);
 				panel.monster[i].life -= 1;
 				panel.monster[i].invincible = true;
+				panel.monster[i].damageReaction();
 				
 				if (panel.monster[i].life <= 0) {
 					panel.monster[i].dying = true;
