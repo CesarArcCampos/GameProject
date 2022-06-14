@@ -11,9 +11,9 @@ public class Heart extends Entity{
 
 		name = "Heart";
 		
-		image = setup("/object/heart_full");
-		image2 = setup("/object/heart_half");
-		image3 = setup("/object/heart_blank");
+		image = setup("/object/heart_full", panel.tileSize, panel.tileSize);
+		image2 = setup("/object/heart_half", panel.tileSize, panel.tileSize);
+		image3 = setup("/object/heart_blank", panel.tileSize, panel.tileSize);
 	
 	}
 }

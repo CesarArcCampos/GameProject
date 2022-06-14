@@ -10,6 +10,6 @@ public class Key extends Entity {
 		super(panel);
 		
 		name = "Key";
-		down1 = setup("/object/key");
+		down1 = setup("/object/key", panel.tileSize, panel.tileSize);
 	}
 }

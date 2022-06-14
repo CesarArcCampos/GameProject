@@ -21,14 +21,14 @@ public class NPC01 extends Entity{
 
 	public void getImage() {
 
-		up1 = setup("/npc/npc-up");
-		up2 = setup("/npc/npc-up");
-		down1 = setup("/npc/npc-down");
-		down2 = setup("/npc/npc-down");
-		right1 = setup("/npc/npc-right");
-		right2 = setup("/npc/npc-right");
-		left1 = setup("/npc/npc-left");
-		left2 = setup("/npc/npc-left");
+		up1 = setup("/npc/npc-up", panel.tileSize, panel.tileSize);
+		up2 = setup("/npc/npc-up", panel.tileSize, panel.tileSize);
+		down1 = setup("/npc/npc-down", panel.tileSize, panel.tileSize);
+		down2 = setup("/npc/npc-down", panel.tileSize, panel.tileSize);
+		right1 = setup("/npc/npc-right", panel.tileSize, panel.tileSize);
+		right2 = setup("/npc/npc-right", panel.tileSize, panel.tileSize);
+		left1 = setup("/npc/npc-left", panel.tileSize, panel.tileSize);
+		left2 = setup("/npc/npc-left", panel.tileSize, panel.tileSize);
 		
 	}
 

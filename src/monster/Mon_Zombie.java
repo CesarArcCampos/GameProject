@@ -7,9 +7,13 @@ import entity.Entity;
 import main.Panel;
 
 public class Mon_Zombie extends Entity {
+	
+	Panel panel;
 
 	public Mon_Zombie(Panel panel) {
 		super(panel);
+		
+		this.panel = panel;
 		
 		type = 2;
 		name = "Zombie";
@@ -26,14 +30,14 @@ public class Mon_Zombie extends Entity {
 	
 	public void getImage() {
 		
-		up1 = setup("/monster/zombie_1_up");
-		up2 = setup("/monster/zombie_2_up");
-		down1 = setup("/monster/zombie_1_down");
-		down2 = setup("/monster/zombie_2_down");
-		right1 = setup("/monster/zombie_1_right");
-		right2 = setup("/monster/zombie_2_right");
-		left1 = setup("/monster/zombie_1_left");
-		left2 = setup("/monster/zombie_2_left");
+		up1 = setup("/monster/zombie_1_up", panel.tileSize, panel.tileSize);
+		up2 = setup("/monster/zombie_2_up", panel.tileSize, panel.tileSize);
+		down1 = setup("/monster/zombie_1_down", panel.tileSize, panel.tileSize);
+		down2 = setup("/monster/zombie_2_down", panel.tileSize, panel.tileSize);
+		right1 = setup("/monster/zombie_1_right", panel.tileSize, panel.tileSize);
+		right2 = setup("/monster/zombie_2_right", panel.tileSize, panel.tileSize);
+		left1 = setup("/monster/zombie_1_left", panel.tileSize, panel.tileSize);
+		left2 = setup("/monster/zombie_2_left", panel.tileSize, panel.tileSize);
 	}
 	
 	public void setAction() {
