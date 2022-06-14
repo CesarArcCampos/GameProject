@@ -17,6 +17,7 @@ public class Player extends Entity {
 	public int hasKey = 0;
 	public int hasChest = 0;
 	int standCounter = 0;
+	public boolean attackCanceled = false;
 
 	public Player (Panel panel, KeyHandler keyHandler) {
 
@@ -129,20 +130,21 @@ public class Player extends Entity {
 			if (collisionON == false && keyHandler.enterPressed == false) {
 
 				switch (direction) {
-				case "up":
-					worldY -= speed;
-					break;
-				case "down":
-					worldY += speed;
-					break;
-				case "left":
-					worldX -= speed;
-					break;
-				case "right":
-					worldX += speed;
-					break;
+				case "up": worldY -= speed;break;
+				case "down": worldY += speed;break;
+				case "left": worldX -= speed;break;
+				case "right": worldX += speed;break;
 				}	
 			}
+			
+			if (keyHandler.enterPressed == true 
+					&& attackCanceled == false) {
+				panel.playSFX(6);
+				attacking = true;
+				spriteCounter = 0;
+			}
+			
+			attackCanceled = false;
 
 			panel.keyHandler.enterPressed = false;
 
@@ -262,12 +264,9 @@ public class Player extends Entity {
 		if (panel.keyHandler.enterPressed == true) {
 
 			if (i != 999) {
+				attackCanceled = true;
 				panel.gameState = panel.dialogueState;
 				panel.npc[i].speak();
-			}
-			else {
-				panel.playSFX(6);
-				attacking = true;	
 			}
 		}
 	}

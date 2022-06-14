@@ -93,6 +93,7 @@ public class EventHandler {
 
 		if (panel.keyHandler.enterPressed == true) {
 			panel.gameState = gameState;
+			panel.player.attackCanceled = true;
 			panel.ui.currentDialogue = "You used the \nhealing zone! Your health \nis recovered";
 			panel.player.life = panel.player.maxLife;
 		}
