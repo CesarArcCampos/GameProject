@@ -47,6 +47,17 @@ public class Entity {
 	public boolean hpBarOn = false;
 	int hpBarCounter = 0;
 	
+	public int level;
+	public int strength;
+	public int dexterity;
+	public int attack;
+	public int defense;
+	public int exp;
+	public int nextLevelExp;
+	public int coin;
+	public Entity currentWeapon;
+	public Entity currentShield;
+	
 	public BufferedImage image, image2, image3;
 	public String name;
 	public boolean collision = false;
@@ -54,6 +65,10 @@ public class Entity {
 	// Character Status
 	public int maxLife;
 	public int life;
+	
+	// Item Attributes
+	public int attackValue;
+	public int defenseValue;
 	
 	
 	public Entity(Panel panel) {

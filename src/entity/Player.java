@@ -7,6 +7,8 @@ import java.awt.image.BufferedImage;
 
 import main.KeyHandler;
 import main.Panel;
+import object.Rifle;
+import object.Shield;
 
 public class Player extends Entity {
 
@@ -46,9 +48,30 @@ public class Player extends Entity {
 		worldY = panel.tileSize * 21;
 		speed = 4;
 		direction = "down";
+		
+		level = 1;
+		strength = 1;
+		dexterity = 1;
+		exp = 0;
+		nextLevelExp = 5;
+		coin = 0;
+		currentWeapon = new Rifle(panel);
+		currentShield = new Shield(panel);
+		attack = getAttack();
+		defense = getDefense();
 
 		maxLife = 6;
 		life = maxLife;
+	}
+	
+	public int getDefense() {
+		
+		return defense = dexterity * currentShield.defenseValue;
+	}
+
+	public int getAttack() {
+
+		return attack = strength * currentWeapon.attackValue;
 	}
 
 	public void getPlayerImage() {
