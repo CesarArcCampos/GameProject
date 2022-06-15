@@ -8,7 +8,7 @@ public class Shield extends Entity {
 	public Shield(Panel panel) {
 		super(panel);
 
-		name = "shield";
+		name = "Basic";
 		down1 = setup("/object/Shield",panel.tileSize,panel.tileSize);
 		defenseValue = 1;
 	}

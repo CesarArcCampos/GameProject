@@ -52,6 +52,7 @@ public class Panel extends JPanel implements Runnable {
 	public final int pauseState = 2;
 	public final int dialogueState = 3;
 	public final int warningState = 4;
+	public final int characterState = 5;
 
 	final int FPS = 60;
 
@@ -130,7 +131,6 @@ public class Panel extends JPanel implements Runnable {
 					}
 				}
 			}
-
 		}
 
 		if (gameState == pauseState) {
@@ -174,7 +174,6 @@ public class Panel extends JPanel implements Runnable {
 				}
 			}
 
-
 			//SORT THE ENTITIES LIST
 			Collections.sort(entityList, new Comparator<Entity>() {
 
@@ -186,20 +185,20 @@ public class Panel extends JPanel implements Runnable {
 				}
 			});
 
-			// DRAW UI
-			ui.draw(g2);
-
 			//DRAW ENTITIES
 
 			for (int i = 0; i < entityList.size(); i++) {
 				entityList.get(i).draw(g2);
 			}
 
+			// DRAW UI
+			ui.draw(g2);
+
 			//CLEAR ENTITIES LIST
 			entityList.clear();
 
 		}
-		
+
 		g2.dispose();
 	}
 

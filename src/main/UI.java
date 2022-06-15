@@ -85,9 +85,14 @@ public class UI {
 		if (panel.gameState == panel.warningState) {
 			drawWarningScreen();
 		}
+		
+		//CharacterState
+		if (panel.gameState == panel.characterState) {
+			drawCharacterScreen();
+		}
 
 	}
-
+	
 	public void drawPlayerLife() {
 
 		int x = panel.tileSize/2;
@@ -276,6 +281,13 @@ public class UI {
 		int x = panel.screenWidth/2 - length/2;
 		return x;
 	}
+	
+	public int getXforAlignRightText(String text, int tailX) {
+
+		int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
+		int x = tailX - length;
+		return x;
+	}
 
 	public void drawPicture(int x, int y, int width, int height) {
 
@@ -304,6 +316,118 @@ public class UI {
 		}
 
 		return image;
+	}
+	
+	public void drawCharacterScreen() {
+		
+		//create frame
+		final int frameX = panel.tileSize;
+		final int frameY = panel.tileSize;
+		final int frameWidth = panel.tileSize * 5;
+		final int frameHeight = panel.tileSize * 10;
+		
+		drawSubWindow(frameX, frameY, frameWidth, frameHeight);
+		
+		//text
+		g2.setColor(Color.white);
+		g2.setFont(g2.getFont().deriveFont(25F));
+		
+		int textX = frameX + 20;
+		int textY = frameY + panel.tileSize;
+		final int lineHeight = 35;
+		
+		//parameters name
+		g2.drawString("Level", textX, textY);
+		textY += lineHeight;
+		g2.drawString("Life", textX, textY);
+		textY += lineHeight;
+		g2.drawString("Strength", textX, textY);
+		textY += lineHeight;
+		g2.drawString("Dexterity", textX, textY);
+		textY += lineHeight;
+		g2.drawString("Attack", textX, textY);
+		textY += lineHeight;
+		g2.drawString("Defense", textX, textY);
+		textY += lineHeight;
+		g2.drawString("EXP", textX, textY);
+		textY += lineHeight;
+		g2.drawString("Next Level", textX, textY);
+		textY += lineHeight;
+		g2.drawString("Coin", textX, textY);
+		textY += lineHeight + 20;
+		g2.drawString("Weapon", textX, textY);
+		textY += lineHeight + 15;
+		g2.drawString("Shield", textX, textY);
+		textY += lineHeight;
+		
+		// parameters values
+		int tailX = (frameX + frameWidth) - 30;
+		textY = frameY + panel.tileSize;
+		String value;
+		
+		value = String.valueOf(panel.player.level);
+		textX = getXforAlignRightText(value,tailX);
+		g2.drawString(value, textX, textY);
+		textY += lineHeight;
+		
+		value = String.valueOf(panel.player.life + "/" + panel.player.maxLife);
+		textX = getXforAlignRightText(value,tailX);
+		g2.drawString(value, textX, textY);
+		textY += lineHeight;
+		
+		value = String.valueOf(panel.player.strength);
+		textX = getXforAlignRightText(value,tailX);
+		g2.drawString(value, textX, textY);
+		textY += lineHeight;
+		
+		value = String.valueOf(panel.player.dexterity);
+		textX = getXforAlignRightText(value,tailX);
+		g2.drawString(value, textX, textY);
+		textY += lineHeight;
+		
+		value = String.valueOf(panel.player.attack);
+		textX = getXforAlignRightText(value,tailX);
+		g2.drawString(value, textX, textY);
+		textY += lineHeight;
+		
+		value = String.valueOf(panel.player.defense);
+		textX = getXforAlignRightText(value,tailX);
+		g2.drawString(value, textX, textY);
+		textY += lineHeight;
+		
+		value = String.valueOf(panel.player.exp);
+		textX = getXforAlignRightText(value,tailX);
+		g2.drawString(value, textX, textY);
+		textY += lineHeight;
+		
+		value = String.valueOf(panel.player.nextLevelExp);
+		textX = getXforAlignRightText(value,tailX);
+		g2.drawString(value, textX, textY);
+		textY += lineHeight;
+		
+		value = String.valueOf(panel.player.coin);
+		textX = getXforAlignRightText(value,tailX);
+		g2.drawString(value, textX, textY);
+		textY += lineHeight + 20;
+		
+		//OPTION WITHOUT IMAGES
+		value = String.valueOf(panel.player.currentWeapon.name);
+		textX = getXforAlignRightText(value,tailX);
+		g2.drawString(value, textX, textY);
+		textY += lineHeight + 15;
+		
+		value = String.valueOf(panel.player.currentShield.name);
+		textX = getXforAlignRightText(value,tailX);
+		g2.drawString(value, textX, textY);
+		textY += lineHeight;
+		
+		//OPTION WITH IMAGES
+		/*
+		g2.drawImage(panel.player.currentWeapon.down1, tailX - panel.tileSize, textY, null);
+		textY += panel.tileSize;
+		g2.drawImage(panel.player.currentShield.down1, tailX - panel.tileSize, textY - 5, null);
+		*/
+		
 	}
 
 

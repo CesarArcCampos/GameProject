@@ -299,7 +299,13 @@ public class Player extends Entity {
 		if (i != 999) {
 			if (invincible == false) {
 				panel.playSFX(5);
-				life -= 1;
+				
+				int damage = panel.monster[i].attack - defense;
+				if (damage < 0) {
+					damage = 0;
+				}
+				
+				life -= damage;
 				invincible = true;
 			}
 		}
@@ -312,7 +318,12 @@ public class Player extends Entity {
 			if(panel.monster[i].invincible == false) {
 				
 				panel.playSFX(4);
-				panel.monster[i].life -= 1;
+				
+				int damage = attack - panel.monster[i].defense;
+				if (damage < 0) {
+					damage = 0;
+				}
+				panel.monster[i].life -= damage;
 				panel.monster[i].invincible = true;
 				panel.monster[i].damageReaction();
 				

@@ -20,6 +20,8 @@ public class Mon_Zombie extends Entity {
 		speed = 1;
 		maxLife = 4;
 		life = maxLife;
+		attack = 5;
+		defense = 0;
 		
 		solidArea = new Rectangle(16,16,16,16);
 		solidAreaDefaultX = solidArea.x;

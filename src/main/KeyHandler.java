@@ -21,82 +21,127 @@ public class KeyHandler implements KeyListener {
 	public void keyPressed(KeyEvent e) {
 
 		int code = e.getKeyCode();
-		
+
 		//Title State
 		if (panel.gameState == panel.titleState) {
-			
-			if (code == KeyEvent.VK_W) {
-				panel.ui.commandNum--;
-				if (panel.ui.commandNum < 0) {
-					panel.ui.commandNum = 2;
-				}
-			}
-			if (code == KeyEvent.VK_S) {
-				panel.ui.commandNum++;
-				if (panel.ui.commandNum > 2) {
-					panel.ui.commandNum = 0;
-				}
-			}
-			if (code == KeyEvent.VK_ENTER) {
-				if (panel.ui.commandNum == 0) {
-					panel.gameState = panel.playState;
-					panel.playMusic(0);
-				}
-				if (panel.ui.commandNum == 1) {
-					// later
-				}
-				if (panel.ui.commandNum == 2) {
-					System.exit(0);
-				}
-			}
+			titleState(code);
 		}
-		
-		
+
 		//Play State
 		else if (panel.gameState == panel.playState) {
-
-			if (code == KeyEvent.VK_W) {
-				upPressed = true;
-			}
-
-			if (code == KeyEvent.VK_S) {
-				downPressed = true;
-			}
-
-			if (code == KeyEvent.VK_A) {
-				leftPressed = true;
-			}
-
-			if (code == KeyEvent.VK_D) {
-				rightPressed = true;
-			}
-			
-			if (code == KeyEvent.VK_P) {
-				panel.gameState = panel.pauseState;	
-			}
-			
-			if (code == KeyEvent.VK_ENTER) {
-				enterPressed = true;
-			}
+			playState(code);
 		}
 
-		if (panel.gameState == panel.pauseState) {
+		//Pause State
 
-			if (code == KeyEvent.VK_P) {
-				panel.gameState = panel.playState;	
-			}
+		else if (panel.gameState == panel.pauseState) {
+			pauseState(code);
 		}
 
-		if (panel.gameState == panel.dialogueState) {
-			if (code == KeyEvent.VK_ENTER) {
+		//Dialogue State
+
+		else if (panel.gameState == panel.dialogueState) {
+			dialogueState(code);
+		}
+
+		//Warning State
+
+		else if (panel.gameState == panel.warningState) {
+			warningState(code);
+		}
+
+		//Character State
+
+		else if (panel.gameState == panel.characterState) {
+			characterState(code);
+		}
+	}
+
+	public void titleState(int code) {
+
+		if (code == KeyEvent.VK_W) {
+			panel.ui.commandNum--;
+			if (panel.ui.commandNum < 0) {
+				panel.ui.commandNum = 2;
+			}
+		}
+		if (code == KeyEvent.VK_S) {
+			panel.ui.commandNum++;
+			if (panel.ui.commandNum > 2) {
+				panel.ui.commandNum = 0;
+			}
+		}
+		if (code == KeyEvent.VK_ENTER) {
+			if (panel.ui.commandNum == 0) {
 				panel.gameState = panel.playState;
+				panel.playMusic(0);
+			}
+			if (panel.ui.commandNum == 1) {
+				// later
+			}
+			if (panel.ui.commandNum == 2) {
+				System.exit(0);
 			}
 		}
-		
-		if (panel.gameState == panel.warningState) {
-			if (code == KeyEvent.VK_ENTER) {
-				panel.gameState = panel.playState;
-			}
+	}
+
+	public void playState(int code) {
+
+		if (code == KeyEvent.VK_W) {
+			upPressed = true;
+		}
+
+		if (code == KeyEvent.VK_S) {
+			downPressed = true;
+		}
+
+		if (code == KeyEvent.VK_A) {
+			leftPressed = true;
+		}
+
+		if (code == KeyEvent.VK_D) {
+			rightPressed = true;
+		}
+
+		if (code == KeyEvent.VK_P) {
+			panel.gameState = panel.pauseState;	
+		}
+
+		if (code == KeyEvent.VK_C) {
+			panel.gameState = panel.characterState;
+		}
+
+		if (code == KeyEvent.VK_ENTER) {
+			enterPressed = true;
+		}
+	}
+
+	public void pauseState(int code) {
+
+		if (code == KeyEvent.VK_P) {
+			panel.gameState = panel.playState;	
+		}
+	}
+
+
+	public void dialogueState(int code) {
+
+		if (code == KeyEvent.VK_ENTER) {
+			panel.gameState = panel.playState;
+		}
+	}
+
+	public void warningState(int code) {
+
+		if (code == KeyEvent.VK_ENTER) {
+			panel.gameState = panel.playState;
+		}
+	}
+
+	public void characterState(int code) {
+
+		if (code == KeyEvent.VK_C) {
+			panel.gameState = panel.playState;
 		}
 	}
 

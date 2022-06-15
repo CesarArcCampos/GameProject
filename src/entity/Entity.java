@@ -119,7 +119,13 @@ public class Entity {
 		if (this.type == 2 && contactPlayer == true) {
 			if (panel.player.invincible == false) {
 				panel.playSFX(5);
-				panel.player.life -= 1;
+				
+				int damage = attack - panel.player.defense;
+				if (damage < 0) {
+					damage = 0;
+				}
+				
+				panel.player.life -= damage;
 				panel.player.invincible = true;
 			}
 		}
