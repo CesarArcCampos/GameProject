@@ -11,6 +11,7 @@ public class Shield extends Entity {
 		name = "Basic";
 		down1 = setup("/object/Shield",panel.tileSize,panel.tileSize);
 		defenseValue = 1;
+		description = "(" + name + ")\nShield.";
 	}
 
 }

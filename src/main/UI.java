@@ -31,6 +31,8 @@ public class UI {
 	public boolean gameFinished = false;
 	public String currentDialogue = "";
 	public int commandNum = 0;
+	public int slotCol = 0;
+	public int slotRow = 0;
 
 
 	public UI(Panel panel) {
@@ -52,7 +54,7 @@ public class UI {
 	}
 
 	public void addMessage(String text) {
-		
+
 		message.add(text);
 		messageCounter.add(0);
 	}
@@ -90,14 +92,15 @@ public class UI {
 		if (panel.gameState == panel.warningState) {
 			drawWarningScreen();
 		}
-		
+
 		//CharacterState
 		if (panel.gameState == panel.characterState) {
 			drawCharacterScreen();
+			drawInventory();
 		}
 
 	}
-	
+
 	public void drawPlayerLife() {
 
 		int x = panel.tileSize/2;
@@ -127,30 +130,89 @@ public class UI {
 			x += panel.tileSize;
 		}
 	}
-	
+
 	public void drawMessage() {
-		
+
 		int messageX = panel.tileSize;
 		int messageY = panel.tileSize * 4;
 		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 20F));
-		
+
 		for (int i = 0; i <message.size(); i++) {
-			
+
 			if (message.get(i) != null) {
-				
+
 				g2.setColor(Color.black);
 				g2.drawString(message.get(i), messageX + 2, messageY + 2);
 				g2.setColor(Color.white);
 				g2.drawString(message.get(i), messageX, messageY);
-				
+
 				int counter = messageCounter.get(i) + 1;
 				messageCounter.set(i, counter);
 				messageY += 30;
-				
+
 				if (messageCounter.get(i) > 180) {
 					message.remove(i);
 					messageCounter.remove(i);
 				}
+			}
+		}
+	}
+
+	public void drawInventory() {
+
+		//frame
+		int frameX = panel.tileSize * 9;
+		int frameY = panel.tileSize;
+		int frameWidth = panel.tileSize * 6;
+		int frameHeight = panel.tileSize * 5;
+		drawSubWindow(frameX ,frameY, frameWidth, frameHeight);
+
+		//slot
+		final int slotXstart = frameX + 20;
+		final int slotYstart = frameY + 20;
+		int slotX = slotXstart;
+		int slotY = slotYstart;
+		int slotSize = panel.tileSize + 3;
+
+		//draw items
+		for (int i = 0; i < panel.player.inventory.size(); i++) {
+
+			g2.drawImage(panel.player.inventory.get(i).down1, 
+					slotX, slotY, null);
+			slotX += slotSize;
+
+			if (i == 4 || i == 9 || i == 14) {
+				slotX = slotXstart;
+				slotY += slotSize;
+			}
+		}
+
+		//cursor
+		int cursorX = slotXstart + (slotSize * slotCol);
+		int cursorY = slotYstart + (slotSize * slotRow);
+		int cursorWidth = panel.tileSize;
+		int cursorHeight = panel.tileSize;
+		g2.setColor(Color.white);
+		g2.setStroke(new BasicStroke(3));
+		g2.drawRoundRect(cursorX, cursorY, cursorWidth, cursorHeight, 10, 10);
+
+		//description frame
+		int dFrameX = frameX;
+		int dFrameY = frameY + frameHeight;
+		int dFrameWidth = frameWidth;
+		int dFrameHeight = panel.tileSize * 3;
+		drawSubWindow(dFrameX, dFrameY, dFrameWidth, dFrameHeight);
+		int textX = dFrameX + 20;
+		int textY = dFrameY + panel.tileSize;
+		g2.setFont(g2.getFont().deriveFont(20F));
+		int itemIndex = getItemIndexOnSlot();
+
+		if (itemIndex < panel.player.inventory.size()) {
+
+			for (String line: panel.player.inventory.get(itemIndex).description.split("\n")) {
+
+				g2.drawString(line, textX, textY);
+				textY += 24;
 			}
 		}
 	}
@@ -177,29 +239,17 @@ public class UI {
 		x = panel.screenWidth/2 - (panel.tileSize)*2;
 		y += panel.tileSize*2;
 
-		/*
-		BufferedImage image = null;
-		image = setup("/pictures/zombie-picture");
-		g2.drawImage(image, x, y, panel.tileSize*3, panel.tileSize*3, null);
-		 */
-
 		try{
 			BufferedImage image = ImageIO.read(getClass().getResource("/pictures/zombie-picture.png"));
 			AffineTransform at = new AffineTransform();
-			//at.translate((int)x,(int)y);
-	        //at.rotate(Math.PI/2);
-	        //at.translate(-image.getWidth()/2, -image.getHeight()/2);
-	        g2.drawImage(image, x + panel.tileSize/2, y - panel.tileSize, panel.tileSize*3, panel.tileSize*3, null);
-			
+			g2.drawImage(image, x + panel.tileSize/2, y - panel.tileSize, panel.tileSize*3, panel.tileSize*3, null);
+
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 		} 
-		
-		
-
 
 		// Menu
 		g2.setFont(g2.getFont().deriveFont(Font.BOLD,48F));
@@ -291,8 +341,6 @@ public class UI {
 		}
 	}
 
-
-
 	public void drawSubWindow(int x, int y, int width, int height) {
 
 		Color c = new Color(0,0,0,150);
@@ -306,13 +354,19 @@ public class UI {
 
 	}
 
+	public int getItemIndexOnSlot() {
+
+		int itemIndex = slotCol + (slotRow * 5);
+		return itemIndex;
+	}
+
 	public int getXforCenteredText(String text) {
 
 		int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
 		int x = panel.screenWidth/2 - length/2;
 		return x;
 	}
-	
+
 	public int getXforAlignRightText(String text, int tailX) {
 
 		int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
@@ -348,25 +402,25 @@ public class UI {
 
 		return image;
 	}
-	
+
 	public void drawCharacterScreen() {
-		
+
 		//create frame
 		final int frameX = panel.tileSize;
 		final int frameY = panel.tileSize;
 		final int frameWidth = panel.tileSize * 5;
 		final int frameHeight = panel.tileSize * 10;
-		
+
 		drawSubWindow(frameX, frameY, frameWidth, frameHeight);
-		
+
 		//text
 		g2.setColor(Color.white);
 		g2.setFont(g2.getFont().deriveFont(25F));
-		
+
 		int textX = frameX + 20;
 		int textY = frameY + panel.tileSize;
 		final int lineHeight = 35;
-		
+
 		//parameters name
 		g2.drawString("Level", textX, textY);
 		textY += lineHeight;
@@ -390,75 +444,75 @@ public class UI {
 		textY += lineHeight + 15;
 		g2.drawString("Shield", textX, textY);
 		textY += lineHeight;
-		
+
 		// parameters values
 		int tailX = (frameX + frameWidth) - 30;
 		textY = frameY + panel.tileSize;
 		String value;
-		
+
 		value = String.valueOf(panel.player.level);
 		textX = getXforAlignRightText(value,tailX);
 		g2.drawString(value, textX, textY);
 		textY += lineHeight;
-		
+
 		value = String.valueOf(panel.player.life + "/" + panel.player.maxLife);
 		textX = getXforAlignRightText(value,tailX);
 		g2.drawString(value, textX, textY);
 		textY += lineHeight;
-		
+
 		value = String.valueOf(panel.player.strength);
 		textX = getXforAlignRightText(value,tailX);
 		g2.drawString(value, textX, textY);
 		textY += lineHeight;
-		
+
 		value = String.valueOf(panel.player.dexterity);
 		textX = getXforAlignRightText(value,tailX);
 		g2.drawString(value, textX, textY);
 		textY += lineHeight;
-		
+
 		value = String.valueOf(panel.player.attack);
 		textX = getXforAlignRightText(value,tailX);
 		g2.drawString(value, textX, textY);
 		textY += lineHeight;
-		
+
 		value = String.valueOf(panel.player.defense);
 		textX = getXforAlignRightText(value,tailX);
 		g2.drawString(value, textX, textY);
 		textY += lineHeight;
-		
+
 		value = String.valueOf(panel.player.exp);
 		textX = getXforAlignRightText(value,tailX);
 		g2.drawString(value, textX, textY);
 		textY += lineHeight;
-		
+
 		value = String.valueOf(panel.player.nextLevelExp);
 		textX = getXforAlignRightText(value,tailX);
 		g2.drawString(value, textX, textY);
 		textY += lineHeight;
-		
+
 		value = String.valueOf(panel.player.coin);
 		textX = getXforAlignRightText(value,tailX);
 		g2.drawString(value, textX, textY);
 		textY += lineHeight + 20;
-		
+
 		//OPTION WITHOUT IMAGES
 		value = String.valueOf(panel.player.currentWeapon.name);
 		textX = getXforAlignRightText(value,tailX);
 		g2.drawString(value, textX, textY);
 		textY += lineHeight + 15;
-		
+
 		value = String.valueOf(panel.player.currentShield.name);
 		textX = getXforAlignRightText(value,tailX);
 		g2.drawString(value, textX, textY);
 		textY += lineHeight;
-		
+
 		//OPTION WITH IMAGES
 		/*
 		g2.drawImage(panel.player.currentWeapon.down1, tailX - panel.tileSize, textY, null);
 		textY += panel.tileSize;
 		g2.drawImage(panel.player.currentShield.down1, tailX - panel.tileSize, textY - 5, null);
-		*/
-		
+		 */
+
 	}
 
 

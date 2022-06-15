@@ -4,9 +4,11 @@ import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import main.KeyHandler;
 import main.Panel;
+import object.Key;
 import object.Rifle;
 import object.Shield;
 
@@ -20,6 +22,8 @@ public class Player extends Entity {
 	public int hasChest = 0;
 	int standCounter = 0;
 	public boolean attackCanceled = false;
+	public ArrayList<Entity> inventory = new ArrayList<>();
+	public final int maxInventorySize = 20;
 
 	public Player (Panel panel, KeyHandler keyHandler) {
 
@@ -40,6 +44,7 @@ public class Player extends Entity {
 		setDefaultValues();
 		getPlayerImage();
 		getAttackImage();
+		setItems();
 	}
 
 	public void setDefaultValues() {
@@ -62,6 +67,13 @@ public class Player extends Entity {
 
 		maxLife = 6;
 		life = maxLife;
+	}
+	
+	public void setItems() {
+		
+		inventory.add(currentWeapon);
+		inventory.add(new Key(panel));
+		inventory.add(new Key(panel));
 	}
 	
 	public int getDefense() {
@@ -343,6 +355,7 @@ public class Player extends Entity {
 	public void checkLevelUp() {
 		
 		if (exp >= nextLevelExp) {
+			panel.playSFX(7);
 			level ++;
 			nextLevelExp = nextLevelExp * 2;
 			maxLife += 2;
@@ -351,8 +364,7 @@ public class Player extends Entity {
 			attack = getAttack();
 			defense = getDefense();
 			
-			panel.playSFX(7);
-			panel.gameState = panel.dialogueState;
+			panel.gameState = panel.warningState;
 			panel.ui.currentDialogue = "You are level " + level + " now\n"
 									 + "You feel stronger";
 		}

@@ -11,6 +11,7 @@ public class Rifle extends Entity{
 		name = "AR-15";
 		down1 = setup("/object/rifle",panel.tileSize,panel.tileSize);
 		attackValue = 4;
+		description = "(" + name + ")\nRifle.";
 	}
 	
 	

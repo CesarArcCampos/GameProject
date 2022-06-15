@@ -69,6 +69,7 @@ public class Entity {
 	// Item Attributes
 	public int attackValue;
 	public int defenseValue;
+	public String description = "";
 	
 	
 	public Entity(Panel panel) {
