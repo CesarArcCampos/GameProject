@@ -96,6 +96,7 @@ public class EventHandler {
 			panel.player.attackCanceled = true;
 			panel.ui.currentDialogue = "You used the \nhealing zone! Your health \nis recovered";
 			panel.player.life = panel.player.maxLife;
+			panel.aSetter.setMonster(); // respawn the monsters
 		}
 	}
 
