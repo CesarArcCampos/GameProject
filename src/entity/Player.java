@@ -258,16 +258,16 @@ public class Player extends Entity {
 				panel.playSFX(2);
 				hasKey++;
 				panel.obj[i] = null;
-				panel.ui.showMessage("You got a key!");
+				//panel.ui.showMessage("You got a key!");
 				break;
 			case "Gate":
 				if (hasKey > 0) {
 					panel.playSFX(1);
 					panel.obj[i] = null;
 					hasKey--;
-					panel.ui.showMessage("You opened the gate!");
+					//panel.ui.showMessage("You opened the gate!");
 				} else {
-					panel.ui.showMessage("You need a Key!");
+					//panel.ui.showMessage("You need a Key!");
 				}
 				break;
 			case "Chest":
@@ -324,11 +324,14 @@ public class Player extends Entity {
 					damage = 0;
 				}
 				panel.monster[i].life -= damage;
+				panel.ui.addMessage("> " + damage + " damage");
+				
 				panel.monster[i].invincible = true;
 				panel.monster[i].damageReaction();
 				
 				if (panel.monster[i].life <= 0) {
 					panel.monster[i].dying = true;
+					panel.ui.addMessage("> killed the " + panel.monster[i].name);
 				}
 			}
 		}
