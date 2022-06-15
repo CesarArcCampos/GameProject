@@ -123,7 +123,6 @@ public class KeyHandler implements KeyListener {
 		}
 	}
 
-
 	public void dialogueState(int code) {
 
 		if (code == KeyEvent.VK_ENTER) {
@@ -166,6 +165,9 @@ public class KeyHandler implements KeyListener {
 				panel.ui.slotCol++;
 				panel.playSFX(8);
 			}
+		}
+		if (code == KeyEvent.VK_ENTER) {
+			panel.player.selectItem();
 		}
 	}
 

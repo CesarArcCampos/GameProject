@@ -176,6 +176,13 @@ public class UI {
 
 		//draw items
 		for (int i = 0; i < panel.player.inventory.size(); i++) {
+			
+			if (panel.player.inventory.get(i) == panel.player.currentWeapon ||
+				panel.player.inventory.get(i) == panel.player.currentShield) {
+				
+				g2.setColor(new Color(240,190,90));
+				g2.fillRoundRect(slotX,slotY,panel.tileSize,panel.tileSize,10,10);
+			}
 
 			g2.drawImage(panel.player.inventory.get(i).down1, 
 					slotX, slotY, null);
@@ -201,13 +208,15 @@ public class UI {
 		int dFrameY = frameY + frameHeight;
 		int dFrameWidth = frameWidth;
 		int dFrameHeight = panel.tileSize * 3;
-		drawSubWindow(dFrameX, dFrameY, dFrameWidth, dFrameHeight);
+		
 		int textX = dFrameX + 20;
 		int textY = dFrameY + panel.tileSize;
 		g2.setFont(g2.getFont().deriveFont(20F));
 		int itemIndex = getItemIndexOnSlot();
 
 		if (itemIndex < panel.player.inventory.size()) {
+			
+			drawSubWindow(dFrameX, dFrameY, dFrameWidth, dFrameHeight);
 
 			for (String line: panel.player.inventory.get(itemIndex).description.split("\n")) {
 
@@ -343,7 +352,7 @@ public class UI {
 
 	public void drawSubWindow(int x, int y, int width, int height) {
 
-		Color c = new Color(0,0,0,150);
+		Color c = new Color(105,105,105,150);
 		g2.setColor(c);
 		g2.fillRoundRect(x, y, width, height, 35, 35);
 
@@ -501,7 +510,7 @@ public class UI {
 		g2.drawString(value, textX, textY);
 		textY += lineHeight + 15;
 
-		value = String.valueOf(panel.player.currentShield.name);
+		value = String.valueOf(panel.player.currentShield.name1);
 		textX = getXforAlignRightText(value,tailX);
 		g2.drawString(value, textX, textY);
 		textY += lineHeight;

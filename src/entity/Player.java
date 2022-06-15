@@ -8,9 +8,9 @@ import java.util.ArrayList;
 
 import main.KeyHandler;
 import main.Panel;
+import object.BasicShield;
 import object.Key;
-import object.Rifle;
-import object.Shield;
+import object.M16;
 
 public class Player extends Entity {
 
@@ -37,9 +37,6 @@ public class Player extends Entity {
 		solidArea = new Rectangle(16,16,16,16);
 		solidAreaDefaultX = solidArea.x;
 		solidAreaDefaultY = solidArea.y;
-		
-		attackArea.width = 25;
-		attackArea.height = 25;
 
 		setDefaultValues();
 		getPlayerImage();
@@ -60,8 +57,8 @@ public class Player extends Entity {
 		exp = 0;
 		nextLevelExp = 5;
 		coin = 0;
-		currentWeapon = new Rifle(panel);
-		currentShield = new Shield(panel);
+		currentWeapon = new M16(panel);
+		currentShield = new BasicShield(panel);
 		attack = getAttack();
 		defense = getDefense();
 
@@ -83,6 +80,7 @@ public class Player extends Entity {
 
 	public int getAttack() {
 
+		attackArea = currentWeapon.attackArea;
 		return attack = strength * currentWeapon.attackValue;
 	}
 
@@ -262,35 +260,21 @@ public class Player extends Entity {
 	public void pickUpObject(int i) {
 
 		if (i != 999) {
+			
+			String text;
 
-			String objectName = panel.obj[i].name;
-
-			switch (objectName) {
-			case "Key":
+			if (inventory.size() != maxInventorySize) {
+				
+				inventory.add(panel.obj[i]);
 				panel.playSFX(2);
-				hasKey++;
-				panel.obj[i] = null;
-				//panel.ui.showMessage("You got a key!");
-				break;
-			case "Gate":
-				if (hasKey > 0) {
-					panel.playSFX(1);
-					panel.obj[i] = null;
-					hasKey--;
-					//panel.ui.showMessage("You opened the gate!");
-				} else {
-					//panel.ui.showMessage("You need a Key!");
-				}
-				break;
-			case "Chest":
-				panel.playSFX(2);
-				hasChest++;
-				panel.obj[i] = null;
-				panel.ui.gameFinished = true;
-				panel.stopMusic();
-				panel.playSFX(2);
-				break;
+				text = "Got a " + panel.obj[i].name + "!";
+			} else {
+				
+				text = "Your inventory is full";
 			}
+			
+			panel.ui.addMessage(text);
+			panel.obj[i] = null;
 		}
 	}
 
@@ -370,6 +354,34 @@ public class Player extends Entity {
 		}
 	}
 
+	public void selectItem() {
+		
+		int itemIndex = panel.ui.getItemIndexOnSlot();
+		
+		if (itemIndex < inventory.size()) {
+			
+			Entity selectedItem = inventory.get(itemIndex);
+			
+			if (selectedItem.type == type_weapon) {
+				
+				currentWeapon = selectedItem;
+				attack = getAttack();
+			}
+			
+			if(selectedItem.type == type_shield) {
+				
+				currentShield = selectedItem;
+				defense = getDefense();
+			}
+			
+			if(selectedItem.type == type_consumable) {
+
+				selectedItem.use(this);
+				inventory.remove(itemIndex);
+			}
+		}
+	}
+	
 	public void draw(Graphics2D g2) {
 
 		BufferedImage image = null;

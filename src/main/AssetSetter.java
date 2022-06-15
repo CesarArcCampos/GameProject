@@ -2,7 +2,12 @@ package main;
 
 import entity.NPC01;
 import monster.Mon_Zombie;
+import object.AK;
+import object.AssaultRifle;
 import object.Key;
+import object.MedicKit;
+import object.MediumShield;
+import object.Shotgun;
 
 public class AssetSetter {
 
@@ -13,11 +18,33 @@ public class AssetSetter {
 	}
 
 	public void setObject() {
-
-		panel.obj[0] = new Key(panel);
-		panel.obj[0].worldX = 45 * panel.tileSize;
-		panel.obj[0].worldY = 2 * panel.tileSize;
-
+		
+		int i = 0;
+		panel.obj[i] = new Key(panel);
+		panel.obj[i].worldX = 45 * panel.tileSize;
+		panel.obj[i].worldY = 2 * panel.tileSize;
+		i++;
+		panel.obj[i] = new Shotgun(panel);
+		panel.obj[i].worldX = 2 * panel.tileSize;
+		panel.obj[i].worldY = 30 * panel.tileSize;
+		i++;
+		panel.obj[i] = new AK(panel);
+		panel.obj[i].worldX = 19 * panel.tileSize;
+		panel.obj[i].worldY = 20 * panel.tileSize;
+		i++;
+		panel.obj[i] = new AssaultRifle(panel);
+		panel.obj[i].worldX = 19 * panel.tileSize;
+		panel.obj[i].worldY = 20 * panel.tileSize;
+		i++;
+		panel.obj[i] = new MediumShield(panel);
+		panel.obj[i].worldX = 23 * panel.tileSize;
+		panel.obj[i].worldY = 30 * panel.tileSize;
+		i++;
+		panel.obj[i] = new MedicKit(panel);
+		panel.obj[i].worldX = 06 * panel.tileSize;
+		panel.obj[i].worldY = 02 * panel.tileSize;
+		i++;
+		
 	}
 
 	public void setNPC() {

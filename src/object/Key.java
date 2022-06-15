@@ -9,6 +9,7 @@ public class Key extends Entity {
 		
 		super(panel);
 		
+		type = type_consumable;
 		name = "Key";
 		down1 = setup("/object/key", panel.tileSize, panel.tileSize);
 		description = "(" + name + ")\nIt opens a door.";

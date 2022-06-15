@@ -15,7 +15,7 @@ public class Mon_Zombie extends Entity {
 		
 		this.panel = panel;
 		
-		type = 2;
+		type = type_zombie;
 		name = "Zombie";
 		speed = 1;
 		maxLife = 4;

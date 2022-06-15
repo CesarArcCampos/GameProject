@@ -40,12 +40,21 @@ public class Entity {
 	public int invincibleCounter = 0;
 	String dialogues[] = new String[20];
 	int dialogueIndex = 0;
-	public int type;
 	public boolean alive = true;
 	public boolean dying = false;
 	int dyingCounter = 0;
 	public boolean hpBarOn = false;
 	int hpBarCounter = 0;
+	
+	//TYPE
+	public int type;
+	public final int type_player = 0;
+	public final int type_npc = 1;
+	public final int type_zombie = 2;
+	public final int type_weapon = 3;
+	public final int type_shield = 4;
+	public final int type_consumable = 5;
+	
 	
 	public int level;
 	public int strength;
@@ -60,6 +69,7 @@ public class Entity {
 	
 	public BufferedImage image, image2, image3;
 	public String name;
+	public String name1;
 	public boolean collision = false;
 	
 	// Character Status
@@ -106,6 +116,10 @@ public class Entity {
 		}
 	}
 	
+	public void use(Entity entity) {
+		
+	}
+
 	public void update() {
 		
 		setAction();
@@ -117,7 +131,7 @@ public class Entity {
 		panel.checker.checkEntity(this, panel.npc);
 		panel.checker.checkEntity(this, panel.monster);
 		
-		if (this.type == 2 && contactPlayer == true) {
+		if (this.type == type_zombie && contactPlayer == true) {
 			if (panel.player.invincible == false) {
 				panel.playSFX(5);
 				
@@ -261,6 +275,7 @@ public class Entity {
 		
 		try {
 			image = ImageIO.read(getClass().getResourceAsStream(imagePath + ".png"));
+			int imageType = image.getType();
 			image = uTool.scaleImage(image, width, height);
 			
 		} catch (IOException e) {
