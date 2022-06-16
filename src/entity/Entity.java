@@ -45,6 +45,10 @@ public class Entity {
 	int dyingCounter = 0;
 	public boolean hpBarOn = false;
 	int hpBarCounter = 0;
+	public int shotAvailableCounter;
+	public int maxBullets;
+	public int bullets;
+	public Projectile projectile;
 	
 	//TYPE
 	public int type;
@@ -80,6 +84,7 @@ public class Entity {
 	public int attackValue;
 	public int defenseValue;
 	public String description = "";
+	public int useCost;
 	
 	
 	public Entity(Panel panel) {
@@ -132,17 +137,8 @@ public class Entity {
 		panel.checker.checkEntity(this, panel.monster);
 		
 		if (this.type == type_zombie && contactPlayer == true) {
-			if (panel.player.invincible == false) {
-				panel.playSFX(5);
-				
-				int damage = attack - panel.player.defense;
-				if (damage < 0) {
-					damage = 0;
-				}
-				
-				panel.player.life -= damage;
-				panel.player.invincible = true;
-			}
+			
+			damagePlayer(attack);
 		}
 		
 		if (collisionON == false) {
@@ -179,6 +175,21 @@ public class Entity {
 				invincible = false;
 				invincibleCounter = 0;
 			}
+		}
+	}
+	
+	public void damagePlayer(int attack) {
+		
+		if (panel.player.invincible == false) {
+			panel.playSFX(5);
+			
+			int damage = attack - panel.player.defense;
+			if (damage < 0) {
+				damage = 0;
+			}
+			
+			panel.player.life -= damage;
+			panel.player.invincible = true;
 		}
 	}
 	
@@ -259,7 +270,7 @@ public class Entity {
 		if (dyingCounter > i*6 && dyingCounter <= i*7) {changeAlpha(g2,0f);}
 		if (dyingCounter > i*7 && dyingCounter <= i*8) {changeAlpha(g2,1f);}
 		if (dyingCounter > i*8) {
-			dying = false;
+			
 			alive = false;
 		}
 	}
@@ -275,7 +286,6 @@ public class Entity {
 		
 		try {
 			image = ImageIO.read(getClass().getResourceAsStream(imagePath + ".png"));
-			int imageType = image.getType();
 			image = uTool.scaleImage(image, width, height);
 			
 		} catch (IOException e) {

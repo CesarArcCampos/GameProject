@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import main.KeyHandler;
 import main.Panel;
 import object.BasicShield;
+import object.Bullet;
 import object.Key;
 import object.M16;
 
@@ -59,11 +60,14 @@ public class Player extends Entity {
 		coin = 0;
 		currentWeapon = new M16(panel);
 		currentShield = new BasicShield(panel);
+		projectile = new Bullet(panel);
 		attack = getAttack();
 		defense = getDefense();
 
 		maxLife = 6;
 		life = maxLife;
+		maxBullets = 10;
+		bullets = maxBullets;
 	}
 	
 	public void setItems() {
@@ -182,6 +186,7 @@ public class Player extends Entity {
 			panel.keyHandler.enterPressed = false;
 
 			spriteCounter++;
+			
 			if (spriteCounter > 12) {
 				if (spriteNumber == 1) {
 					spriteNumber = 2;
@@ -193,6 +198,21 @@ public class Player extends Entity {
 				spriteCounter = 0;
 			}
 		}
+			
+		if(panel.keyHandler.shotKeyPressed == true 
+				&& shotAvailableCounter == 30
+				&& projectile.checkBullets(this) == true) {
+			
+			projectile.set(worldX, worldY, direction, true, this);
+			
+			projectile.subtractBullets(this);
+			
+			panel.projectileList.add(projectile);
+			
+			panel.playSFX(9);
+			
+			shotAvailableCounter = 0;
+		}
 
 		//Way to fix problem when player touch zombie, all the life is drain, because the 
 		//update method is called 60 times per second, so there is 60 contacts per second.
@@ -203,6 +223,11 @@ public class Player extends Entity {
 				invincibleCounter = 0;
 			}
 		}
+		
+		if (shotAvailableCounter < 30) {
+			shotAvailableCounter++;
+		}
+		
 	}
 	
 	public void attacking() {
@@ -240,7 +265,7 @@ public class Player extends Entity {
 			
 			//check monster collision with new player area
 			int monsterIndex = panel.checker.checkEntity(this, panel.monster);
-			damageMonster(monsterIndex);
+			damageMonster(monsterIndex, attack);
 			
 			//reset position and solid area
 			worldX = currentWorldX;
@@ -293,7 +318,7 @@ public class Player extends Entity {
 	public void contactMonster(int i) {
 
 		if (i != 999) {
-			if (invincible == false) {
+			if (invincible == false && panel.monster[i].dying == false) {
 				panel.playSFX(5);
 				
 				int damage = panel.monster[i].attack - defense;
@@ -307,7 +332,7 @@ public class Player extends Entity {
 		}
 	}
 	
-	public void damageMonster(int i) {
+	public void damageMonster(int i, int attack) {
 		
 		if (i != 999) {
 			
@@ -381,7 +406,7 @@ public class Player extends Entity {
 			}
 		}
 	}
-	
+		
 	public void draw(Graphics2D g2) {
 
 		BufferedImage image = null;

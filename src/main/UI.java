@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 import entity.Entity;
+import object.BulletMagazine;
 import object.Heart;
 
 public class UI {
@@ -22,7 +23,7 @@ public class UI {
 	Panel panel;
 	Graphics2D g2;
 	Font futuristicFont;
-	BufferedImage heart_full, heart_half, heart_blank;
+	BufferedImage heart_full, heart_half, heart_blank, bulletMagazine;
 	public boolean messageOn = false;
 	//public String message = "";
 	//public int messageCounter = 0;
@@ -50,7 +51,8 @@ public class UI {
 		heart_full = heart.image;
 		heart_half = heart.image2;
 		heart_blank = heart.image3;
-
+		Entity magazine = new BulletMagazine(panel);
+		bulletMagazine = magazine.image;
 	}
 
 	public void addMessage(String text) {
@@ -129,6 +131,19 @@ public class UI {
 			i++;
 			x += panel.tileSize;
 		}
+		
+		//Draw bullets number
+		x = panel.tileSize/2;
+		y = panel.tileSize*2 - panel.tileSize/2;
+		
+		g2.drawImage(bulletMagazine, x, y, null);
+		x += panel.tileSize;
+		y += panel.tileSize - 12;
+		String text = Integer.toString(panel.player.bullets);
+		
+		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 30F));
+		g2.setColor(Color.white);
+		g2.drawString(text, x, y);
 	}
 
 	public void drawMessage() {
