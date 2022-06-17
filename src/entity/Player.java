@@ -227,6 +227,12 @@ public class Player extends Entity {
 		if (shotAvailableCounter < 30) {
 			shotAvailableCounter++;
 		}
+		if (life > maxLife) {
+			life = maxLife;
+		}
+		if (life < 0) {
+			life = 0;
+		}
 		
 	}
 	
@@ -286,20 +292,30 @@ public class Player extends Entity {
 
 		if (i != 999) {
 			
-			String text;
-
-			if (inventory.size() != maxInventorySize) {
+			//PICK UP ONLY ITEM
+			if (panel.obj[i].type == type_pickUpOnly) {
 				
-				inventory.add(panel.obj[i]);
-				panel.playSFX(2);
-				text = "Got a " + panel.obj[i].name + "!";
-			} else {
-				
-				text = "Your inventory is full";
+				panel.obj[i].use(this);
+				panel.obj[i] = null;
 			}
-			
-			panel.ui.addMessage(text);
-			panel.obj[i] = null;
+			//PICK UP TO INVENTORY
+			else {
+				
+				String text;
+
+				if (inventory.size() != maxInventorySize) {
+					
+					inventory.add(panel.obj[i]);
+					panel.playSFX(2);
+					text = "Got a " + panel.obj[i].name + "!";
+				} else {
+					
+					text = "Your inventory is full";
+				}
+				
+				panel.ui.addMessage(text);
+				panel.obj[i] = null;
+			}
 		}
 	}
 

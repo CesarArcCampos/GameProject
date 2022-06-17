@@ -29,6 +29,7 @@ public class Projectile extends Entity {
 		
 		if (this.collisionON == true) {
 			alive = false;
+			panel.playSFX(10);
 		}
 		
 		if (user == panel.player) {

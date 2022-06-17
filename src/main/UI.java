@@ -35,7 +35,6 @@ public class UI {
 	public int slotCol = 0;
 	public int slotRow = 0;
 
-
 	public UI(Panel panel) {
 
 		this.panel = panel;
@@ -199,8 +198,7 @@ public class UI {
 				g2.fillRoundRect(slotX,slotY,panel.tileSize,panel.tileSize,10,10);
 			}
 
-			g2.drawImage(panel.player.inventory.get(i).down1, 
-					slotX, slotY, null);
+			g2.drawImage(panel.player.inventory.get(i).down1, slotX, slotY, panel.tileSize, panel.tileSize, null);
 			slotX += slotSize;
 
 			if (i == 4 || i == 9 || i == 14) {

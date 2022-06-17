@@ -40,7 +40,7 @@ public class Panel extends JPanel implements Runnable {
 	public Player player = new Player(this, keyHandler);
 	public CollisionChecker checker = new CollisionChecker(this);
 	public AssetSetter aSetter = new AssetSetter(this);
-	public Entity obj[] = new Entity[10];
+	public Entity obj[] = new Entity[20];
 	public Entity npc[] = new Entity[10];
 	public Entity monster[] = new Entity[20];
 	public UI ui = new UI(this);
@@ -128,6 +128,7 @@ public class Panel extends JPanel implements Runnable {
 						monster[i].update();
 					}
 					if (monster[i].alive != true) {
+						monster[i].checkDrop();
 						monster[i] = null;
 					}
 				}

@@ -5,6 +5,8 @@ import java.util.Random;
 
 import entity.Entity;
 import main.Panel;
+import object.Coins;
+import object.MedicKit;
 
 public class Mon_Zombie extends Entity {
 	
@@ -73,6 +75,21 @@ public class Mon_Zombie extends Entity {
 		
 		actionLockerCounter = 0;
 		direction = panel.player.direction;
+	}
+	
+	public void checkDrop() {
+		
+		int i = new Random().nextInt(100) + 1;
+		
+		if (i < 25) {
+			//DO NOTHING
+		} 
+		if (i >= 25 && i < 75) {
+			dropItem(new Coins(panel));
+		}
+		if (i >= 75) {
+			dropItem(new MedicKit(panel));
+		}
 	}
 	
 	

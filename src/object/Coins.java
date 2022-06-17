@@ -12,37 +12,29 @@ import javax.imageio.ImageIO;
 import entity.Entity;
 import main.Panel;
 
-public class MedicKit extends Entity{
-	
-	Panel panel;
-	int value = 5;
+public class Coins extends Entity {
 
-	public MedicKit(Panel panel) {
+	Panel panel;
+	
+	public Coins(Panel panel) {
 		super(panel);
-		
 		this.panel = panel;
 		
-		type = type_consumable;
-		name = "Medicine";
-		down1 = setupKit("/object/medickit");
-		description = "(Medicine)\nHeals your life by" + value + ".";			
+		type = type_pickUpOnly;
+		name = "Coins";
+		down1 = setupCoin("/object/coin");
+		value = 1;
 	}
 	
 	public void use(Entity entity) {
 		
-		panel.gameState = panel.warningState;
-		panel.ui.currentDialogue = "You took the " + name +
-			"!\n" + "Your life as been recovered\n by" + value + ".";
-		entity.life += value;
+		panel.playSFX(2);
+		panel.ui.addMessage("Coin +" + value);
+		panel.player.coin += value;
 		
-		if (panel.player.life > panel.player.maxLife) {
-			panel.player.life = panel.player.maxLife;
-		}
-		
-		panel.playSFX(7);
 	}
 	
-	public BufferedImage setupKit(String imagePath) {
+	public BufferedImage setupCoin(String imagePath) {
 
 		BufferedImage image = new BufferedImage(60, 60, BufferedImage.TYPE_INT_ARGB);
 	    Color transparent = new Color(0x00FFFFFF, true);

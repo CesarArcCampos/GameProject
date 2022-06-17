@@ -44,22 +44,6 @@ public class Bullet extends Projectile {
 
 	}
 	
-	
-	public BufferedImage setupBullet(String imagePath) {
-
-		BufferedImage image = null;
-
-		try {
-			image = ImageIO.read(getClass().getResourceAsStream(imagePath + ".png"));
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return image;
-	}
-	
-	
 	public BufferedImage setupBullet(String imagePath, String direction) {
 
 		BufferedImage image = new BufferedImage(60, 60, BufferedImage.TYPE_INT_ARGB);

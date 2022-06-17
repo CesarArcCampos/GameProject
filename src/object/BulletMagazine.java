@@ -12,6 +12,7 @@ public class BulletMagazine extends Entity {
 		this.panel = panel;
 		
 		name = "Magazine";
+		type = type_pickUpOnly;
 		image = setup("/projectile/bullet_up", panel.tileSize, panel.tileSize);
 		
 	}

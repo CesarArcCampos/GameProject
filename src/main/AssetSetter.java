@@ -4,6 +4,7 @@ import entity.NPC01;
 import monster.Mon_Zombie;
 import object.AK;
 import object.AssaultRifle;
+import object.Coins;
 import object.Key;
 import object.MedicKit;
 import object.MediumShield;
@@ -43,6 +44,14 @@ public class AssetSetter {
 		panel.obj[i] = new MedicKit(panel);
 		panel.obj[i].worldX = 06 * panel.tileSize;
 		panel.obj[i].worldY = 02 * panel.tileSize;
+		i++;
+		panel.obj[i] = new Coins(panel);
+		panel.obj[i].worldX = 10 * panel.tileSize;
+		panel.obj[i].worldY = 01 * panel.tileSize;
+		i++;
+		panel.obj[i] = new Coins(panel);
+		panel.obj[i].worldX = 45 * panel.tileSize;
+		panel.obj[i].worldY = 45 * panel.tileSize;
 		i++;
 		
 	}
