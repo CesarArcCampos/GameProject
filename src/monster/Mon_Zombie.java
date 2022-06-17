@@ -91,7 +91,5 @@ public class Mon_Zombie extends Entity {
 			dropItem(new MedicKit(panel));
 		}
 	}
-	
-	
 
 }

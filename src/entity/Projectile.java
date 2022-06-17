@@ -36,8 +36,8 @@ public class Projectile extends Entity {
 			int monsterIndex = panel.checker.checkEntity(this, panel.monster);
 			
 			if (monsterIndex != 999) {
-				
 				panel.player.damageMonster(monsterIndex, attack);
+				generateParticle(user.projectile, panel.monster[monsterIndex]);
 				alive = false;
 			}
 			
@@ -66,20 +66,6 @@ public class Projectile extends Entity {
 			alive = false;
 			
 		}
-
-		
-		/*
-		spriteCounter++;
-		if (spriteCounter > 12) {
-			if (spriteCounter == 1) {
-				spriteNumber = 2;
-			}
-			else if (spriteCounter == 2) {
-				spriteNumber = 1;
-			}
-			spriteNumber = 0;
-		}
-		*/
 	}
 	
 	public boolean checkBullets(Entity user) {
