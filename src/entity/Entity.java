@@ -152,6 +152,7 @@ public class Entity {
 		boolean contactPlayer = panel.checker.checkPlayer(this);
 		panel.checker.checkEntity(this, panel.npc);
 		panel.checker.checkEntity(this, panel.monster);
+		panel.checker.checkEntity(this, panel.iTile);
 
 		if (this.type == type_zombie && contactPlayer == true) {
 

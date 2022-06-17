@@ -59,6 +59,9 @@ public class TileManager {
 		setup(23,"pav8", false);
 		setup(24,"inter3", true);
 		setup(25,"inter4", true);
+		
+		setup(26,"gate_right", true); //gate right
+		setup(27,"gate_left", true); //gate left
 	}
 
 	public void setup(int index, String imageName, boolean collision) {

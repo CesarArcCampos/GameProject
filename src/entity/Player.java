@@ -51,7 +51,7 @@ public class Player extends Entity {
 		worldY = panel.tileSize * 21;
 		speed = 4;
 		direction = "down";
-		
+
 		level = 1;
 		strength = 1;
 		dexterity = 1;
@@ -69,16 +69,16 @@ public class Player extends Entity {
 		maxBullets = 50;
 		bullets = maxBullets;
 	}
-	
+
 	public void setItems() {
-		
+
 		inventory.add(currentWeapon);
 		inventory.add(new Key(panel));
 		inventory.add(new Key(panel));
 	}
-	
+
 	public int getDefense() {
-		
+
 		return defense = dexterity * currentShield.defenseValue;
 	}
 
@@ -126,7 +126,7 @@ public class Player extends Entity {
 	}
 
 	public void update() {
-		
+
 		if (attacking == true) {
 			attacking();
 		} 
@@ -160,6 +160,10 @@ public class Player extends Entity {
 			int monsterIndex = panel.checker.checkEntity(this, panel.monster);
 			contactMonster(monsterIndex);
 
+			// CHECK INTERACTIVE TILE COLLISION
+			int iTileIndex = panel.checker.checkEntity(this, panel.iTile);
+			contactMonster(monsterIndex);
+
 			// CHECK EVENT
 			panel.eHandler.checkEvent();
 
@@ -173,20 +177,20 @@ public class Player extends Entity {
 				case "right": worldX += speed;break;
 				}	
 			}
-			
+
 			if (keyHandler.enterPressed == true 
 					&& attackCanceled == false) {
 				panel.playSFX(6);
 				attacking = true;
 				spriteCounter = 0;
 			}
-			
+
 			attackCanceled = false;
 
 			panel.keyHandler.enterPressed = false;
 
 			spriteCounter++;
-			
+
 			if (spriteCounter > 12) {
 				if (spriteNumber == 1) {
 					spriteNumber = 2;
@@ -198,19 +202,19 @@ public class Player extends Entity {
 				spriteCounter = 0;
 			}
 		}
-			
+
 		if(panel.keyHandler.shotKeyPressed == true 
 				&& shotAvailableCounter == 30
 				&& projectile.checkBullets(this) == true) {
-			
+
 			projectile.set(worldX, worldY, direction, true, this);
-			
+
 			projectile.subtractBullets(this);
-			
+
 			panel.projectileList.add(projectile);
-			
+
 			panel.playSFX(9);
-			
+
 			shotAvailableCounter = 0;
 		}
 
@@ -223,7 +227,7 @@ public class Player extends Entity {
 				invincibleCounter = 0;
 			}
 		}
-		
+
 		if (shotAvailableCounter < 30) {
 			shotAvailableCounter++;
 		}
@@ -233,13 +237,13 @@ public class Player extends Entity {
 		if (life < 0) {
 			life = 0;
 		}
-		
+
 	}
-	
+
 	public void attacking() {
-		
+
 		spriteCounter++;
-		
+
 		if (spriteCounter <= 5) {
 			spriteNumber = 1;
 		}
@@ -251,13 +255,13 @@ public class Player extends Entity {
 		}
 		if (spriteCounter > 15 && spriteCounter <= 20) {
 			spriteNumber = 4;
-			
+
 			//save the current position
 			int currentWorldX = worldX;
 			int currentWorldY = worldY;
 			int solidAreaWidth = solidArea.width;
 			int solidAreaHeight = solidArea.height;
-			
+
 			//adjust the player worldX and worldY for the attack area
 			switch (direction) {
 			case "up": worldY -= attackArea.height; break;
@@ -265,22 +269,25 @@ public class Player extends Entity {
 			case "right": worldX += attackArea.width; break;
 			case "left": worldX -= attackArea.width; break;
 			}
-			
+
 			solidArea.width = attackArea.width;
 			solidArea.height = attackArea.height;
-			
+
 			//check monster collision with new player area
 			int monsterIndex = panel.checker.checkEntity(this, panel.monster);
 			damageMonster(monsterIndex, attack);
 			
+			int iTileIndex = panel.checker.checkEntity(this, panel.iTile);
+			damageInteractiveTile(iTileIndex);
+
 			//reset position and solid area
 			worldX = currentWorldX;
 			worldY = currentWorldY;
 			solidArea.width = solidAreaWidth;
 			solidArea.height = solidAreaHeight;
-			
+
 		}
-		
+
 		if (spriteCounter > 25) {
 			spriteNumber = 3;
 			spriteCounter = 0;
@@ -291,28 +298,28 @@ public class Player extends Entity {
 	public void pickUpObject(int i) {
 
 		if (i != 999) {
-			
+
 			//PICK UP ONLY ITEM
 			if (panel.obj[i].type == type_pickUpOnly) {
-				
+
 				panel.obj[i].use(this);
 				panel.obj[i] = null;
 			}
 			//PICK UP TO INVENTORY
 			else {
-				
+
 				String text;
 
 				if (inventory.size() != maxInventorySize) {
-					
+
 					inventory.add(panel.obj[i]);
 					panel.playSFX(2);
 					text = "Got a " + panel.obj[i].name + "!";
 				} else {
-					
+
 					text = "Your inventory is full";
 				}
-				
+
 				panel.ui.addMessage(text);
 				panel.obj[i] = null;
 			}
@@ -336,36 +343,36 @@ public class Player extends Entity {
 		if (i != 999) {
 			if (invincible == false && panel.monster[i].dying == false) {
 				panel.playSFX(5);
-				
+
 				int damage = panel.monster[i].attack - defense;
 				if (damage < 0) {
 					damage = 0;
 				}
-				
+
 				life -= damage;
 				invincible = true;
 			}
 		}
 	}
-	
+
 	public void damageMonster(int i, int attack) {
-		
+
 		if (i != 999) {
-			
+
 			if(panel.monster[i].invincible == false) {
-				
+
 				panel.playSFX(4);
-				
+
 				int damage = attack - panel.monster[i].defense;
 				if (damage < 0) {
 					damage = 0;
 				}
 				panel.monster[i].life -= damage;
 				panel.ui.addMessage("> " + damage + " damage");
-				
+
 				panel.monster[i].invincible = true;
 				panel.monster[i].damageReaction();
-				
+
 				if (panel.monster[i].life <= 0) {
 					panel.monster[i].dying = true;
 					panel.ui.addMessage("> killed the " + panel.monster[i].name);
@@ -376,9 +383,24 @@ public class Player extends Entity {
 			}
 		}
 	}
+
+	public void damageInteractiveTile(int i) {
+		
+		if (i != 999 && panel.iTile[i].destructible == true
+				&& panel.iTile[i].invincible == false) {
+			
+			panel.iTile[i].playSFX();
+			panel.iTile[i].life--;
+			panel.iTile[i].invincible = true;
+			
+			if (panel.iTile[i].life == 0) {
+				panel.iTile[i] = panel.iTile[i].getOpenedGate();
+			}
+		}	
+	}
 	
 	public void checkLevelUp() {
-		
+
 		if (exp >= nextLevelExp) {
 			panel.playSFX(7);
 			level ++;
@@ -388,33 +410,33 @@ public class Player extends Entity {
 			dexterity++;
 			attack = getAttack();
 			defense = getDefense();
-			
+
 			panel.gameState = panel.warningState;
 			panel.ui.currentDialogue = "You are level " + level + " now\n"
-									 + "You feel stronger";
+					+ "You feel stronger";
 		}
 	}
 
 	public void selectItem() {
-		
+
 		int itemIndex = panel.ui.getItemIndexOnSlot();
-		
+
 		if (itemIndex < inventory.size()) {
-			
+
 			Entity selectedItem = inventory.get(itemIndex);
-			
+
 			if (selectedItem.type == type_weapon) {
-				
+
 				currentWeapon = selectedItem;
 				attack = getAttack();
 			}
-			
+
 			if(selectedItem.type == type_shield) {
-				
+
 				currentShield = selectedItem;
 				defense = getDefense();
 			}
-			
+
 			if(selectedItem.type == type_consumable) {
 
 				selectedItem.use(this);
@@ -422,7 +444,7 @@ public class Player extends Entity {
 			}
 		}
 	}
-		
+
 	public void draw(Graphics2D g2) {
 
 		BufferedImage image = null;

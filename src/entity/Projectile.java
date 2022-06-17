@@ -40,6 +40,13 @@ public class Projectile extends Entity {
 				panel.player.damageMonster(monsterIndex, attack);
 				alive = false;
 			}
+			
+			int interactiveIndex = panel.checker.checkEntity(this, panel.iTile);
+			
+			if (interactiveIndex != 999 && panel.iTile[interactiveIndex].destructible == true) {
+				
+				panel.player.damageInteractiveTile(interactiveIndex);
+			}
 		} 
 		
 		if (user != panel.player) {

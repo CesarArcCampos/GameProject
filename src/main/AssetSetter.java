@@ -9,6 +9,7 @@ import object.Key;
 import object.MedicKit;
 import object.MediumShield;
 import object.Shotgun;
+import tile_interactive.InteractiveGate;
 
 public class AssetSetter {
 
@@ -78,6 +79,13 @@ public class AssetSetter {
 		panel.monster[i] = new Mon_Zombie(panel);
 		panel.monster[i].worldX = panel.tileSize*40;
 		panel.monster[i].worldY = panel.tileSize*40;
+	}
+	
+	public void setInteractiveTile() {
+		
+		int i = 0;
+		panel.iTile[i] = new InteractiveGate(panel, 8, 43);
+		
 	}
 
 }
