@@ -55,6 +55,12 @@ public class KeyHandler implements KeyListener {
 		else if (panel.gameState == panel.characterState) {
 			characterState(code);
 		}
+
+		//Option State
+
+		else if (panel.gameState == panel.optionState) {
+			optionState(code);
+		}
 	}
 
 	public void titleState(int code) {
@@ -114,11 +120,15 @@ public class KeyHandler implements KeyListener {
 		if (code == KeyEvent.VK_ENTER) {
 			enterPressed = true;
 		}
-		
+
 		if (code == KeyEvent.VK_SHIFT) {
 			shotKeyPressed = true;
 		}
-		
+
+		if (code == KeyEvent.VK_ESCAPE) {
+			panel.gameState = panel.optionState;
+		}
+
 	}
 
 	public void pauseState(int code) {
@@ -176,6 +186,66 @@ public class KeyHandler implements KeyListener {
 		}
 	}
 
+	public void optionState(int code) {
+
+		if (code == KeyEvent.VK_ESCAPE) {
+			panel.gameState = panel.playState;	
+		}
+		if (code == KeyEvent.VK_ENTER) {
+			enterPressed = true;
+		}
+
+		int maxCommandNum = 0;
+
+		switch(panel.ui.subState)  {
+		case 0: maxCommandNum = 4; break;
+		case 2: maxCommandNum = 1; break;
+		}
+
+		if (code == KeyEvent.VK_W) {
+			panel.ui.commandNum--;
+			panel.playSFX(8);
+			if (panel.ui.commandNum < 0) {
+				panel.ui.commandNum = maxCommandNum;
+			}
+		}
+		if (code == KeyEvent.VK_S) {
+			panel.ui.commandNum++;
+			panel.playSFX(8);
+			if (panel.ui.commandNum > maxCommandNum) {
+				panel.ui.commandNum = 0;
+			}
+		}
+
+		if (code == KeyEvent.VK_A) {
+			if(panel.ui.subState == 0) {
+				if(panel.ui.commandNum == 0 && panel.music.volumeScale > 0) {
+					panel.music.volumeScale--;
+					panel.music.checkVolume();
+					panel.playSFX(8);
+				}
+				if(panel.ui.commandNum == 1 && panel.sfx.volumeScale > 0) {
+					panel.sfx.volumeScale--;
+					panel.playSFX(8);
+				}
+			}
+		}
+
+		if (code == KeyEvent.VK_D) {
+			if(panel.ui.subState == 0) {
+				if(panel.ui.commandNum == 0 && panel.music.volumeScale < 5) {
+					panel.music.volumeScale++;
+					panel.music.checkVolume();
+					panel.playSFX(8);
+				}
+				if(panel.ui.commandNum == 1 && panel.sfx.volumeScale < 5) {
+					panel.sfx.volumeScale++;
+					panel.playSFX(8);
+				}
+			}
+		}
+	}
+
 	@Override
 	public void keyReleased(KeyEvent e) {
 
@@ -197,6 +267,10 @@ public class KeyHandler implements KeyListener {
 			rightPressed = false;
 		}
 		
+		if (code == KeyEvent.VK_ENTER) {
+			enterPressed = false;
+		}
+
 		if (code == KeyEvent.VK_SHIFT) {
 			shotKeyPressed = false;
 		}

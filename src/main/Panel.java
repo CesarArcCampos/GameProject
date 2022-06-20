@@ -17,27 +17,29 @@ import tile_interactive.InteractiveTile;
 
 public class Panel extends JPanel implements Runnable {
 
+	//Screen settings
 	final int originalTileSize = 16;
 	final int scale = 3;
-
 	public final int tileSize = originalTileSize * scale;
-	public final int MaxScreenColumn = 16;
+	public final int MaxScreenColumn = 20;
 	public final int MaxScreenRow = 12;
-
-	public final int screenWidth = tileSize * MaxScreenColumn; //768 pixels
+	public final int screenWidth = tileSize * MaxScreenColumn; //960 pixels
 	public final int screenHeight = tileSize * MaxScreenRow; //576 pixels
-
+	
+	//World settings
 	public final int maxWorldCol = 50;
 	public final int maxWorldRow = 50;
-
-	public EventHandler eHandler = new EventHandler(this);
-	public KeyHandler keyHandler = new KeyHandler(this);
+	
+	//FPS
+	final int FPS = 60;
+	
+	//System
 	TileManager tm = new TileManager(this);
+	public KeyHandler keyHandler = new KeyHandler(this);
+	public EventHandler eHandler = new EventHandler(this);
+	Thread gameThread;
 	Sound music = new Sound();
 	Sound sfx = new Sound();
-
-	Thread gameThread;
-
 	public Player player = new Player(this, keyHandler);
 	public CollisionChecker checker = new CollisionChecker(this);
 	public AssetSetter aSetter = new AssetSetter(this);
@@ -49,7 +51,9 @@ public class Panel extends JPanel implements Runnable {
 	ArrayList<Entity> entityList = new ArrayList<>();
 	public ArrayList<Entity> projectileList = new ArrayList<>();
 	public ArrayList<Entity> particleList = new ArrayList<>();
-
+	Config config = new Config(this);
+	
+	// Game State
 	public int gameState;
 	public final int titleState = 0;
 	public final int playState = 1;
@@ -57,8 +61,8 @@ public class Panel extends JPanel implements Runnable {
 	public final int dialogueState = 3;
 	public final int warningState = 4;
 	public final int characterState = 5;
-
-	final int FPS = 60;
+	public final int optionState = 6;
+	
 
 	public Panel() {
 		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
