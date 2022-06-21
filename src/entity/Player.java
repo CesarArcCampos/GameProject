@@ -140,7 +140,11 @@ public class Player extends Entity {
 	}
 
 	public void update() {
-
+		
+		if(maxLife > 10) {
+			maxLife = 10;
+		}
+		
 		if (attacking == true) {
 			attacking();
 		} 
@@ -321,10 +325,10 @@ public class Player extends Entity {
 		if (i != 999) {
 
 			//PICK UP ONLY ITEM
-			if (panel.obj[i].type == type_pickUpOnly) {
+			if (panel.obj[panel.currentMap][i].type == type_pickUpOnly) {
 
-				panel.obj[i].use(this);
-				panel.obj[i] = null;
+				panel.obj[panel.currentMap][i].use(this);
+				panel.obj[panel.currentMap][i] = null;
 			}
 			//PICK UP TO INVENTORY
 			else {
@@ -333,16 +337,16 @@ public class Player extends Entity {
 
 				if (inventory.size() != maxInventorySize) {
 
-					inventory.add(panel.obj[i]);
+					inventory.add(panel.obj[panel.currentMap][i]);
 					panel.playSFX(2);
-					text = "Got a " + panel.obj[i].name + "!";
+					text = "Got a " + panel.obj[panel.currentMap][i].name + "!";
 				} else {
 
 					text = "Your inventory is full";
 				}
 
 				panel.ui.addMessage(text);
-				panel.obj[i] = null;
+				panel.obj[panel.currentMap][i] = null;
 			}
 		}
 	}
@@ -354,7 +358,7 @@ public class Player extends Entity {
 			if (i != 999) {
 				attackCanceled = true;
 				panel.gameState = panel.dialogueState;
-				panel.npc[i].speak();
+				panel.npc[panel.currentMap][i].speak();
 			}
 		}
 	}
@@ -362,10 +366,10 @@ public class Player extends Entity {
 	public void contactMonster(int i) {
 
 		if (i != 999) {
-			if (invincible == false && panel.monster[i].dying == false) {
+			if (invincible == false && panel.monster[panel.currentMap][i].dying == false) {
 				panel.playSFX(5);
 
-				int damage = panel.monster[i].attack - defense;
+				int damage = panel.monster[panel.currentMap][i].attack - defense;
 				if (damage < 0) {
 					damage = 0;
 				}
@@ -380,25 +384,25 @@ public class Player extends Entity {
 
 		if (i != 999) {
 
-			if(panel.monster[i].invincible == false) {
+			if(panel.monster[panel.currentMap][i].invincible == false) {
 
 				panel.playSFX(4);
 
-				int damage = attack - panel.monster[i].defense;
+				int damage = attack - panel.monster[panel.currentMap][i].defense;
 				if (damage < 0) {
 					damage = 0;
 				}
-				panel.monster[i].life -= damage;
+				panel.monster[panel.currentMap][i].life -= damage;
 				panel.ui.addMessage("> " + damage + " damage");
 
-				panel.monster[i].invincible = true;
-				panel.monster[i].damageReaction();
+				panel.monster[panel.currentMap][i].invincible = true;
+				panel.monster[panel.currentMap][i].damageReaction();
 
-				if (panel.monster[i].life <= 0) {
-					panel.monster[i].dying = true;
-					panel.ui.addMessage("> killed the " + panel.monster[i].name);
-					panel.ui.addMessage("> Exp " + panel.monster[i].exp);
-					exp += panel.monster[i].exp;
+				if (panel.monster[panel.currentMap][i].life <= 0) {
+					panel.monster[panel.currentMap][i].dying = true;
+					panel.ui.addMessage("> killed the " + panel.monster[panel.currentMap][i].name);
+					panel.ui.addMessage("> Exp " + panel.monster[panel.currentMap][i].exp);
+					exp += panel.monster[panel.currentMap][i].exp;
 					checkLevelUp();
 				}
 			}
@@ -407,15 +411,15 @@ public class Player extends Entity {
 
 	public void damageInteractiveTile(int i) {
 
-		if (i != 999 && panel.iTile[i].destructible == true
-				&& panel.iTile[i].invincible == false) {
+		if (i != 999 && panel.iTile[panel.currentMap][i].destructible == true
+				&& panel.iTile[panel.currentMap][i].invincible == false) {
 
-			panel.iTile[i].playSFX();
-			panel.iTile[i].life--;
-			panel.iTile[i].invincible = true;
+			panel.iTile[panel.currentMap][i].playSFX();
+			panel.iTile[panel.currentMap][i].life--;
+			panel.iTile[panel.currentMap][i].invincible = true;
 
-			if (panel.iTile[i].life == 0) {
-				panel.iTile[i] = panel.iTile[i].getOpenedGate();
+			if (panel.iTile[panel.currentMap][i].life == 0) {
+				panel.iTile[panel.currentMap][i] = panel.iTile[panel.currentMap][i].getOpenedGate();
 			}
 		}	
 	}
@@ -427,6 +431,7 @@ public class Player extends Entity {
 			level ++;
 			nextLevelExp = nextLevelExp * 2;
 			maxLife += 2;
+			life = maxLife;
 			strength++;
 			dexterity++;
 			attack = getAttack();

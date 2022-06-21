@@ -3,7 +3,7 @@ package main;
 public class EventHandler {
 
 	Panel panel;
-	EventRect eventRect[][];
+	EventRect eventRect[][][];
 
 	int previousEventX, previousEventY;
 	boolean canTouchEvent = true;
@@ -12,25 +12,31 @@ public class EventHandler {
 
 		this.panel = panel;
 
-		eventRect = new EventRect[panel.maxWorldCol][panel.maxWorldRow];
+		eventRect = new EventRect[panel.maxMap][panel.maxWorldCol][panel.maxWorldRow];
 
+		int map = 0;
 		int col = 0;
 		int row = 0;
 
-		while (col < panel.maxWorldCol && row < panel.MaxScreenRow ) {
+		while (map < panel.maxMap && col < panel.maxWorldCol && row < panel.maxWorldRow ) {
 
-			eventRect[col][row] = new EventRect();
-			eventRect[col][row].x = 23;
-			eventRect[col][row].y = 23;
-			eventRect[col][row].width = 2;
-			eventRect[col][row].height = 2;
-			eventRect[col][row].eventRectDefaultX = eventRect[col][row].x;
-			eventRect[col][row].eventRectDefaultY = eventRect[col][row].y;
+			eventRect[map][col][row] = new EventRect();
+			eventRect[map][col][row].x = 23;
+			eventRect[map][col][row].y = 23;
+			eventRect[map][col][row].width = 2;
+			eventRect[map][col][row].height = 2;
+			eventRect[map][col][row].eventRectDefaultX = eventRect[map][col][row].x;
+			eventRect[map][col][row].eventRectDefaultY = eventRect[map][col][row].y;
 
 			col++;
 			if (col == panel.maxWorldCol) {
 				col = 0;
 				row++;
+
+				if (row == panel.maxWorldRow) {
+					row = 0;
+					map++;
+				}
 			}
 		}
 	}
@@ -46,42 +52,55 @@ public class EventHandler {
 		}
 
 		if (canTouchEvent == true) {
-			if (hit(1,1,"any") == true) {
-				damagePit(1, 1, panel.warningState);
+			if (hit(0,1,1,"any") == true) {
+				damagePit(panel.warningState);
 			}
-			if (hit(2,1,"any") == true) {
-				healingPool(2, 1, panel.warningState);
+
+			else if (hit(0,2,1,"any") == true) {
+				healingPool(panel.warningState);
+			}
+
+			else if (hit(0,48,4,"any") == true) {
+				teleport(1,24,21);
+			}
+
+			else if (hit(1,24,21,"any") == true) {
+				teleport(0,48,4);
+				panel.aSetter.setMonster();
 			}
 		}
 	}
 
-	public boolean hit(int col, int row, String reqDirection) {
+	public boolean hit(int map, int col, int row, String reqDirection) {
 
 		boolean hit = false;
 
-		panel.player.solidArea.x = panel.player.worldX + panel.player.solidArea.x;
-		panel.player.solidArea.y = panel.player.worldY + panel.player.solidArea.y;
-		eventRect[col][row].x = col * panel.tileSize + eventRect[col][row].x;
-		eventRect[col][row].y = row * panel.tileSize + eventRect[col][row].y;
+		if (map == panel.currentMap) {
 
-		if (panel.player.solidArea.intersects(eventRect[col][row]) && eventRect[col][row].eventDone == false) {
-			if (panel.player.direction.contentEquals(reqDirection) || reqDirection.contentEquals("any")) {
-				hit = true;
+			panel.player.solidArea.x = panel.player.worldX + panel.player.solidArea.x;
+			panel.player.solidArea.y = panel.player.worldY + panel.player.solidArea.y;
+			eventRect[map][col][row].x = col * panel.tileSize + eventRect[map][col][row].x;
+			eventRect[map][col][row].y = row * panel.tileSize + eventRect[map][col][row].y;
 
-				previousEventX = panel.player.worldX;
-				previousEventY = panel.player.worldY;
+			if (panel.player.solidArea.intersects(eventRect[map][col][row]) && eventRect[map][col][row].eventDone == false) {
+				if (panel.player.direction.contentEquals(reqDirection) || reqDirection.contentEquals("any")) {
+					hit = true;
+
+					previousEventX = panel.player.worldX;
+					previousEventY = panel.player.worldY;
+				}
 			}
-		}
 
-		panel.player.solidArea.x = panel.player.solidAreaDefaultX;
-		panel.player.solidArea.y = panel.player.solidAreaDefaultY;
-		eventRect[col][row].x = eventRect[col][row].eventRectDefaultX;
-		eventRect[col][row].y = eventRect[col][row].eventRectDefaultY;
+			panel.player.solidArea.x = panel.player.solidAreaDefaultX;
+			panel.player.solidArea.y = panel.player.solidAreaDefaultY;
+			eventRect[map][col][row].x = eventRect[map][col][row].eventRectDefaultX;
+			eventRect[map][col][row].y = eventRect[map][col][row].eventRectDefaultY;
+		}
 
 		return hit;
 	}
 
-	public void damagePit(int col, int row, int gameState) {
+	public void damagePit(int gameState) {
 
 		panel.gameState = gameState;
 		panel.ui.currentDialogue = "You fall into a \nradioactive zone!";
@@ -89,7 +108,7 @@ public class EventHandler {
 		canTouchEvent = false;
 	}
 
-	public void healingPool(int col, int row, int gameState) {
+	public void healingPool(int gameState) {
 
 		if (panel.keyHandler.enterPressed == true) {
 			panel.gameState = gameState;
@@ -98,6 +117,21 @@ public class EventHandler {
 			panel.player.life = panel.player.maxLife;
 			panel.aSetter.setMonster(); // respawn the monsters
 		}
+	}
+
+	public void teleport(int map, int col, int row) {
+
+		if (panel.keyHandler.enterPressed == true) {
+			panel.currentMap = map;
+			panel.ui.addMessage("You used a teleport");
+			panel.player.worldX = panel.tileSize * col;
+			panel.player.worldY = panel.tileSize * row;
+			previousEventX = panel.player.worldX;
+			previousEventY = panel.player.worldY;
+			canTouchEvent = false;
+			panel.playSFX(13);
+		}
+
 	}
 
 }

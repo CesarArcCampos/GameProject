@@ -15,17 +15,18 @@ public class TileManager {
 
 	Panel panel;
 	public Tile[] tile;
-	public int mapTileNum[][];
+	public int mapTileNum[][][];
 
 	public TileManager(Panel panel) {
 
 		this.panel = panel;
 		tile = new Tile [50];
-		mapTileNum = new int[panel.maxWorldCol][panel.maxWorldRow];
+		mapTileNum = new int[panel.maxMap][panel.maxWorldCol][panel.maxWorldRow];
 
 		getTileImage();
 
-		loadMap("/maps/worldMap01.txt");
+		loadMap("/maps/worldMap01.txt",0);
+		loadMap("/maps/worldMap02.txt",1);
 	}
 
 	public void getTileImage() {
@@ -82,7 +83,7 @@ public class TileManager {
 		}
 	}
 
-	public void loadMap(String filePath) {
+	public void loadMap(String filePath, int map) {
 
 		try {
 			InputStream is = getClass().getResourceAsStream(filePath);
@@ -99,7 +100,7 @@ public class TileManager {
 					String numbers[] = line.split(" ");
 					int number = Integer.parseInt(numbers[col]);
 
-					mapTileNum[col][row] = number;
+					mapTileNum[map][col][row] = number;
 					col++;
 				}
 				if (col == panel.maxWorldCol) {
@@ -120,7 +121,7 @@ public class TileManager {
 
 		while (worldCol < panel.maxWorldCol && worldRow < panel.maxWorldRow ) {
 
-			int tileNum = mapTileNum[worldCol][worldRow];
+			int tileNum = mapTileNum[panel.currentMap][worldCol][worldRow];
 
 			int worldX = worldCol * panel.tileSize;
 			int worldY = worldRow * panel.tileSize;

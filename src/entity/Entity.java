@@ -132,11 +132,11 @@ public class Entity {
 
 	public void dropItem(Entity entity) {
 		
-		for (int i = 0; i < panel.obj.length; i++) {
-			if (panel.obj[i] == null) {
-				panel.obj[i] = entity;
-				panel.obj[i].worldX = worldX;
-				panel.obj[i].worldY = worldY;
+		for (int i = 0; i < panel.obj[1].length; i++) {
+			if (panel.obj[panel.currentMap][i] == null) {
+				panel.obj[panel.currentMap][i] = entity;
+				panel.obj[panel.currentMap][i].worldX = worldX;
+				panel.obj[panel.currentMap][i].worldY = worldY;
 				break;
 			}
 		}
