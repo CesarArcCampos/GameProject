@@ -70,10 +70,24 @@ public class Player extends Entity {
 		bullets = maxBullets;
 	}
 
-	public void setItems() {
+	public void setDefaultPositions() {
 
+		worldX = panel.tileSize * 23;
+		worldY = panel.tileSize * 23;
+		direction = "down";
+	}
+
+	public void restoreLifeAndBullets() {
+
+		life = maxLife;
+		bullets = maxBullets;
+		invincible = false;
+	}
+
+	public void setItems() {
+		
+		inventory.clear();
 		inventory.add(currentWeapon);
-		inventory.add(new Key(panel));
 		inventory.add(new Key(panel));
 	}
 
@@ -238,6 +252,13 @@ public class Player extends Entity {
 			life = 0;
 		}
 
+		if (life <= 0) {
+			panel.stopMusic();
+			panel.ui.commandNum = -1;
+			panel.gameState = panel.gameOverState;
+			panel.playSFX(12);
+		}
+
 	}
 
 	public void attacking() {
@@ -276,7 +297,7 @@ public class Player extends Entity {
 			//check monster collision with new player area
 			int monsterIndex = panel.checker.checkEntity(this, panel.monster);
 			damageMonster(monsterIndex, attack);
-			
+
 			int iTileIndex = panel.checker.checkEntity(this, panel.iTile);
 			damageInteractiveTile(iTileIndex);
 
@@ -385,20 +406,20 @@ public class Player extends Entity {
 	}
 
 	public void damageInteractiveTile(int i) {
-		
+
 		if (i != 999 && panel.iTile[i].destructible == true
 				&& panel.iTile[i].invincible == false) {
-			
+
 			panel.iTile[i].playSFX();
 			panel.iTile[i].life--;
 			panel.iTile[i].invincible = true;
-			
+
 			if (panel.iTile[i].life == 0) {
 				panel.iTile[i] = panel.iTile[i].getOpenedGate();
 			}
 		}	
 	}
-	
+
 	public void checkLevelUp() {
 
 		if (exp >= nextLevelExp) {

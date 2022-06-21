@@ -61,7 +61,15 @@ public class KeyHandler implements KeyListener {
 		else if (panel.gameState == panel.optionState) {
 			optionState(code);
 		}
+
+		//Game Over State
+
+		else if (panel.gameState == panel.gameOverState) {
+			gameOverState(code);
+		}
 	}
+
+
 
 	public void titleState(int code) {
 
@@ -246,6 +254,43 @@ public class KeyHandler implements KeyListener {
 		}
 	}
 
+	private void gameOverState(int code) {
+
+		if (code == KeyEvent.VK_W) {
+
+			panel.ui.commandNum--;
+			if (panel.ui.commandNum < 0) {
+				panel.ui.commandNum = 1;
+			}
+			
+			panel.playSFX(8);
+		}
+
+		if (code == KeyEvent.VK_S) {
+
+			panel.ui.commandNum++;
+			if (panel.ui.commandNum > 1) {
+				panel.ui.commandNum = 0;
+			}
+			
+			panel.playSFX(8);
+		}
+		
+		if (code == KeyEvent.VK_ENTER) {
+			if (panel.ui.commandNum == 0) {
+				panel.gameState = panel.playState;
+				panel.retry();
+			}
+			if (panel.ui.commandNum == 1) {
+				panel.gameState = panel.titleState;
+				panel.restart();
+			}
+		}
+		
+		
+
+	}
+
 	@Override
 	public void keyReleased(KeyEvent e) {
 
@@ -266,7 +311,7 @@ public class KeyHandler implements KeyListener {
 		if (code == KeyEvent.VK_D) {
 			rightPressed = false;
 		}
-		
+
 		if (code == KeyEvent.VK_ENTER) {
 			enterPressed = false;
 		}

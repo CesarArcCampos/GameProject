@@ -25,14 +25,14 @@ public class Panel extends JPanel implements Runnable {
 	public final int MaxScreenRow = 12;
 	public final int screenWidth = tileSize * MaxScreenColumn; //960 pixels
 	public final int screenHeight = tileSize * MaxScreenRow; //576 pixels
-	
+
 	//World settings
 	public final int maxWorldCol = 50;
 	public final int maxWorldRow = 50;
-	
+
 	//FPS
 	final int FPS = 60;
-	
+
 	//System
 	TileManager tm = new TileManager(this);
 	public KeyHandler keyHandler = new KeyHandler(this);
@@ -52,7 +52,7 @@ public class Panel extends JPanel implements Runnable {
 	public ArrayList<Entity> projectileList = new ArrayList<>();
 	public ArrayList<Entity> particleList = new ArrayList<>();
 	Config config = new Config(this);
-	
+
 	// Game State
 	public int gameState;
 	public final int titleState = 0;
@@ -62,7 +62,8 @@ public class Panel extends JPanel implements Runnable {
 	public final int warningState = 4;
 	public final int characterState = 5;
 	public final int optionState = 6;
-	
+	public final int gameOverState = 7;
+
 
 	public Panel() {
 		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -82,6 +83,28 @@ public class Panel extends JPanel implements Runnable {
 		//stopMusic();
 		gameState = titleState;
 
+	}
+
+	public void retry() {
+		
+		stopSFX();
+		playMusic(0);
+		player.setDefaultPositions();
+		player.restoreLifeAndBullets();
+		aSetter.setNPC();
+		aSetter.setMonster();
+	}
+
+	public void restart() {
+		
+		stopSFX();
+		player.setDefaultValues();
+		player.restoreLifeAndBullets();
+		player.setItems();
+		aSetter.setObject();
+		aSetter.setNPC();
+		aSetter.setMonster();
+		aSetter.setInteractiveTile();
 	}
 
 	public void startGameThread() {
@@ -141,7 +164,7 @@ public class Panel extends JPanel implements Runnable {
 					}
 				}
 			}
-			
+
 			for (int i = 0; i < projectileList.size(); i++) {
 				if (projectileList.get(i) != null) {
 					if (projectileList.get(i).alive == true) {
@@ -152,7 +175,7 @@ public class Panel extends JPanel implements Runnable {
 					}
 				}
 			}
-			
+
 			for (int i = 0; i < particleList.size(); i++) {
 				if (particleList.get(i) != null) {
 					if (particleList.get(i).alive == true) {
@@ -163,9 +186,9 @@ public class Panel extends JPanel implements Runnable {
 					}
 				}
 			}
-			
+
 			for (int i = 0; i < iTile.length; i++) {
-				
+
 				if (iTile[i] != null) {
 					iTile[i].update();
 				}
@@ -191,12 +214,12 @@ public class Panel extends JPanel implements Runnable {
 
 			// DRAW TILES
 			tm.draw(g2);
-			
+
 			// DRAW INTERACTIVE TILES
 			for (int i = 0; i < iTile.length; i++) {
-				
+
 				if (iTile[i] != null) {
-					
+
 					iTile[i].draw(g2);
 				}
 			}
@@ -221,13 +244,13 @@ public class Panel extends JPanel implements Runnable {
 					entityList.add(monster[i]);
 				}
 			}
-			
+
 			for (int i = 0; i < projectileList.size(); i++) {
 				if (projectileList.get(i) != null) {
 					entityList.add(projectileList.get(i));
 				}
 			}
-			
+
 			for (int i = 0; i < particleList.size(); i++) {
 				if (particleList.get(i) != null) {
 					entityList.add(particleList.get(i));
@@ -279,4 +302,13 @@ public class Panel extends JPanel implements Runnable {
 		sfx.setFile(i);
 		sfx.play();
 	}
+
+	public void stopSFX() {	
+		
+		sfx.stop();
+	}
+
+
 }
+
+

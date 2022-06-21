@@ -62,6 +62,8 @@ public class TileManager {
 		
 		setup(26,"gate_right", true); //gate right
 		setup(27,"gate_left", true); //gate left
+		
+		setup(28,"portal", false);
 	}
 
 	public void setup(int index, String imageName, boolean collision) {
