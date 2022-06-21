@@ -35,6 +35,7 @@ public class UI {
 	public int slotCol = 0;
 	public int slotRow = 0;
 	public int subState = 0;
+	int counter = 0;
 
 	public UI(Panel panel) {
 
@@ -105,24 +106,51 @@ public class UI {
 		if (panel.gameState == panel.optionState) {
 			drawOptionScreen();
 		}
-		
+
 		//GameOverState
 		if (panel.gameState == panel.gameOverState) {
 			drawGameOverScreen();
 		}
 
+		//TransitionState
+		if (panel.gameState == panel.transitionState) {
+			drawTransition();
+		}
+
+
+	}
+
+	private void drawTransition() {
+		
+		counter++;
+		g2.setColor(new Color(0, 0, 0, counter * 5));
+		g2.fillRect(0, 0, panel.screenWidth, panel.screenHeight);
+		
+		if (counter == 50 ) {
+			
+			counter = 0;
+			panel.ui.addMessage("You used a teleport");
+			panel.gameState = panel.playState;
+			panel.currentMap = panel.eHandler.tempMap;
+			panel.player.worldX = panel.tileSize * panel.eHandler.tempCol;
+			panel.player.worldY = panel.tileSize * panel.eHandler.tempRow;
+			panel.eHandler.previousEventX = panel.player.worldX;
+			panel.eHandler.previousEventY = panel.player.worldY;
+			
+		}
+
 	}
 
 	private void drawGameOverScreen() {
-		
+
 		g2.setColor(new Color(0,0,0,150));
 		g2.fillRect(0, 0, panel.screenWidth, panel.screenHeight);
-		
+
 		int x;
 		int y;
 		String text;
 		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 110f));
-		
+
 		text = "Game Over!";
 		g2.setColor(Color.black);
 		x = getXforCenteredText(text);
@@ -130,7 +158,7 @@ public class UI {
 		g2.drawString(text, x, y);
 		g2.setColor(Color.white);
 		g2.drawString(text, x - 4, y - 4);
-		
+
 		// Retry
 		g2.setFont(g2.getFont().deriveFont(50f));
 		text = "Retry";
@@ -140,7 +168,7 @@ public class UI {
 		if (commandNum == 0) {
 			g2.drawString(">", x - 40, y);
 		}
-		
+
 		// Back to the title screen
 		text = "Quit";
 		x = getXforCenteredText(text);
@@ -245,7 +273,7 @@ public class UI {
 		g2.drawRect(textX, textY, 120, 24);
 		volumeWidth = 24 * panel.sfx.volumeScale;
 		g2.fillRect(textX, textY, volumeWidth, 24);
-		
+
 		panel.config.saveConfig();
 	}
 

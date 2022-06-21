@@ -68,6 +68,7 @@ public class Panel extends JPanel implements Runnable {
 	public final int characterState = 5;
 	public final int optionState = 6;
 	public final int gameOverState = 7;
+	public final int transitionState = 8;
 
 
 	public Panel() {

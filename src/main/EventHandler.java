@@ -7,6 +7,7 @@ public class EventHandler {
 
 	int previousEventX, previousEventY;
 	boolean canTouchEvent = true;
+	int tempMap, tempCol, tempRow;
 
 	public EventHandler(Panel panel) {
 
@@ -122,16 +123,14 @@ public class EventHandler {
 	public void teleport(int map, int col, int row) {
 
 		if (panel.keyHandler.enterPressed == true) {
-			panel.currentMap = map;
-			panel.ui.addMessage("You used a teleport");
-			panel.player.worldX = panel.tileSize * col;
-			panel.player.worldY = panel.tileSize * row;
-			previousEventX = panel.player.worldX;
-			previousEventY = panel.player.worldY;
+			panel.gameState = panel.transitionState;
+			tempMap = map;
+			tempCol = col;
+			tempRow = row;
+
 			canTouchEvent = false;
 			panel.playSFX(13);
 		}
-
 	}
 
 }
