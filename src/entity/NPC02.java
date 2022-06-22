@@ -1,24 +1,27 @@
 package entity;
 
 import java.awt.image.BufferedImage;
-import java.util.Random;
 
 import main.Panel;
+import object.AK;
+import object.AssaultRifle;
+import object.M16;
+import object.MedicKit;
+import object.Shotgun;
 
-public class NPC01 extends Entity{
+public class NPC02 extends Entity {
 
 	public BufferedImage picture;
-
-	public NPC01(Panel panel) {
+	
+	public NPC02(Panel panel) {
 		super(panel);
-
-		direction = "down";
-		speed = 1;
-
+		
 		getImage();
 		setDialogue();
+		setItems();
+		
 	}
-
+	
 	public void getImage() {
 
 		up1 = setup("/npc/npc-up", panel.tileSize, panel.tileSize);
@@ -29,52 +32,31 @@ public class NPC01 extends Entity{
 		right2 = setup("/npc/npc-right", panel.tileSize, panel.tileSize);
 		left1 = setup("/npc/npc-left", panel.tileSize, panel.tileSize);
 		left2 = setup("/npc/npc-left", panel.tileSize, panel.tileSize);
-
+		
 	}
 
 	public void setDialogue() {
-
-		dialogues[0] = "Hello, friend.";
-		dialogues[1] = "I am glad that you \narrived";
-		dialogues[2] = "The Walkers \ntook over \nthis complex...";
-		dialogues[3] = "We need your help \nto clean this \nplace!";
+		
+		dialogues[0] = "Hello, friend! \nDo you need supplies?";
 	}
-
-	public void setAction() {
-
-
-		actionLockerCounter++;
-
-		if (actionLockerCounter == 120) {
-
-			Random random = new Random();
-			int i = random.nextInt(100)+1;
-
-			if (i <= 25) {
-				direction = "up";
-			}
-			if (i > 25 && i <= 50) {
-				direction = "down";
-			}
-			if (i > 50 && i <= 75) {
-				direction = "left";
-			}
-			if (i > 75) {
-				direction = "right";
-			}
-
-			actionLockerCounter = 0;
-		}
-
-
+	
+	public void setItems() {
+		
+		inventory.add(new AK(panel));
+		inventory.add(new AssaultRifle(panel));
+		inventory.add(new M16(panel));
+		inventory.add(new MedicKit(panel));
+		inventory.add(new Shotgun(panel));
 	}
-
+	
 	public void speak() {
-
+		
+		dialogueIndex = 0;
 		super.speak();
+		panel.gameState = panel.tradeState;
+		panel.ui.npc = this;
 	}
-
-
-
+	
+	
 
 }

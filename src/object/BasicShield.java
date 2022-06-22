@@ -14,6 +14,8 @@ public class BasicShield extends Entity {
 		down1 = setup("/object/shield",panel.tileSize,panel.tileSize);
 		defenseValue = 1;
 		description = "(" + name + ")\nHas poor \nprotection.";
+		
+		price = 10;
 	}
 
 }

@@ -18,6 +18,8 @@ public class AK extends Entity{
 		attackArea.width = 25;
 		attackArea.height = 25;
 		
+		price = 20;
+		
 	}
 
 }

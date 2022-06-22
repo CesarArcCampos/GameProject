@@ -10,6 +10,7 @@ import java.util.Comparator;
 
 import javax.swing.JPanel;
 
+import ai.PathFinder;
 import entity.Entity;
 import entity.Player;
 import tile.TileManager;
@@ -36,7 +37,7 @@ public class Panel extends JPanel implements Runnable {
 	final int FPS = 60;
 
 	//System
-	TileManager tm = new TileManager(this);
+	public TileManager tm = new TileManager(this);
 	public KeyHandler keyHandler = new KeyHandler(this);
 	public EventHandler eHandler = new EventHandler(this);
 	Thread gameThread;
@@ -46,6 +47,7 @@ public class Panel extends JPanel implements Runnable {
 	public AssetSetter aSetter = new AssetSetter(this);
 	public UI ui = new UI(this);
 	Config config = new Config(this);
+	public PathFinder pFinder = new PathFinder(this);
 	
 	//Entity and Object
 	public Player player = new Player(this, keyHandler);
@@ -69,6 +71,7 @@ public class Panel extends JPanel implements Runnable {
 	public final int optionState = 6;
 	public final int gameOverState = 7;
 	public final int transitionState = 8;
+	public final int tradeState = 9;
 
 
 	public Panel() {
@@ -249,6 +252,7 @@ public class Panel extends JPanel implements Runnable {
 				if (monster[currentMap][i] != null) {
 					entityList.add(monster[currentMap][i]);
 				}
+
 			}
 
 			for (int i = 0; i < projectileList.size(); i++) {

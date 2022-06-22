@@ -1,6 +1,7 @@
 package main;
 
 import entity.NPC01;
+import entity.NPC02;
 import monster.Mon_Zombie;
 import object.AK;
 import object.AssaultRifle;
@@ -65,6 +66,17 @@ public class AssetSetter {
 		panel.npc[mapNum][i] = new NPC01(panel);
 		panel.npc[mapNum][i].worldX = panel.tileSize*21;
 		panel.npc[mapNum][i].worldY = panel.tileSize*21;
+		i++;
+		
+		mapNum = 1;
+		i = 0;
+		panel.npc[mapNum][i] = new NPC01(panel);
+		panel.npc[mapNum][i].worldX = panel.tileSize*20;
+		panel.npc[mapNum][i].worldY = panel.tileSize*20;
+		i++;
+		panel.npc[mapNum][i] = new NPC02(panel);
+		panel.npc[mapNum][i].worldX = panel.tileSize*25;
+		panel.npc[mapNum][i].worldY = panel.tileSize*25;
 		i++;
 	}
 	

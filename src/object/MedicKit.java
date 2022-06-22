@@ -25,7 +25,9 @@ public class MedicKit extends Entity{
 		type = type_consumable;
 		name = "Medicine";
 		down1 = setupKit("/object/medickit");
-		description = "(Medicine)\nHeals your life by" + value + ".";			
+		description = "(Medicine)\nHeals your life by" + value + ".";	
+		
+		price = 20;
 	}
 	
 	public void use(Entity entity) {

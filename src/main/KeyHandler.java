@@ -67,9 +67,53 @@ public class KeyHandler implements KeyListener {
 		else if (panel.gameState == panel.gameOverState) {
 			gameOverState(code);
 		}
+
+		//Trade State
+
+		else if (panel.gameState == panel.tradeState) {
+			tradeState(code);
+		}
 	}
 
 
+
+	private void tradeState(int code) {
+		
+		if (code == KeyEvent.VK_ENTER) {
+			enterPressed = true;
+		}
+		
+		if (panel.ui.subState == 0) {
+			if (code == KeyEvent.VK_W) {
+				panel.ui.commandNum--;
+				if (panel.ui.commandNum < 0) {
+					panel.ui.commandNum = 2;
+				}
+				panel.playSFX(8);
+			}
+			if (code == KeyEvent.VK_S) {
+				panel.ui.commandNum++;
+				if (panel.ui.commandNum > 2) {
+					panel.ui.commandNum = 0;
+				}
+				panel.playSFX(8);
+			}	
+		}	
+		
+		if (panel.ui.subState == 1) {
+			npcInventory(code);
+			if (code == KeyEvent.VK_ESCAPE) {
+				panel.ui.subState = 0;
+			}
+		}
+		
+		if (panel.ui.subState == 2) {
+			playerInventory(code);
+			if (code == KeyEvent.VK_ESCAPE) {
+				panel.ui.subState = 0;
+			}
+		}
+	}
 
 	public void titleState(int code) {
 
@@ -165,33 +209,12 @@ public class KeyHandler implements KeyListener {
 		if (code == KeyEvent.VK_C) {
 			panel.gameState = panel.playState;
 		}
-		if (code == KeyEvent.VK_W) {
-			if (panel.ui.slotRow != 0) {
-				panel.ui.slotRow--;
-				panel.playSFX(8);
-			}
-		}
-		if (code == KeyEvent.VK_S) {
-			if (panel.ui.slotRow != 3) {
-				panel.ui.slotRow++;
-				panel.playSFX(8);
-			}
-		}
-		if (code == KeyEvent.VK_A) {
-			if (panel.ui.slotCol != 0) {
-				panel.ui.slotCol--;
-				panel.playSFX(8);
-			}
-		}
-		if (code == KeyEvent.VK_D) {
-			if (panel.ui.slotCol != 4) {
-				panel.ui.slotCol++;
-				panel.playSFX(8);
-			}
-		}
+		
 		if (code == KeyEvent.VK_ENTER) {
 			panel.player.selectItem();
 		}
+		
+		playerInventory(code);
 	}
 
 	public void optionState(int code) {
@@ -262,7 +285,7 @@ public class KeyHandler implements KeyListener {
 			if (panel.ui.commandNum < 0) {
 				panel.ui.commandNum = 1;
 			}
-			
+
 			panel.playSFX(8);
 		}
 
@@ -272,10 +295,10 @@ public class KeyHandler implements KeyListener {
 			if (panel.ui.commandNum > 1) {
 				panel.ui.commandNum = 0;
 			}
-			
+
 			panel.playSFX(8);
 		}
-		
+
 		if (code == KeyEvent.VK_ENTER) {
 			if (panel.ui.commandNum == 0) {
 				panel.gameState = panel.playState;
@@ -286,9 +309,62 @@ public class KeyHandler implements KeyListener {
 				panel.restart();
 			}
 		}
+	}
+	
+	public void playerInventory(int code) {
 		
+		if (code == KeyEvent.VK_W) {
+			if (panel.ui.playerSlotRow != 0) {
+				panel.ui.playerSlotRow--;
+				panel.playSFX(8);
+			}
+		}
+		if (code == KeyEvent.VK_S) {
+			if (panel.ui.playerSlotRow != 3) {
+				panel.ui.playerSlotRow++;
+				panel.playSFX(8);
+			}
+		}
+		if (code == KeyEvent.VK_A) {
+			if (panel.ui.playerSlotCol != 0) {
+				panel.ui.playerSlotCol--;
+				panel.playSFX(8);
+			}
+		}
+		if (code == KeyEvent.VK_D) {
+			if (panel.ui.playerSlotCol != 4) {
+				panel.ui.playerSlotCol++;
+				panel.playSFX(8);
+			}
+		}
+	}
+	
+	public void npcInventory(int code) {
 		
-
+		if (code == KeyEvent.VK_W) {
+			if (panel.ui.npcSlotRow != 0) {
+				panel.ui.npcSlotRow--;
+				panel.playSFX(8);
+			}
+		}
+		if (code == KeyEvent.VK_S) {
+			if (panel.ui.npcSlotRow != 3) {
+				panel.ui.npcSlotRow++;
+				panel.playSFX(8);
+			}
+		}
+		if (code == KeyEvent.VK_A) {
+			if (panel.ui.npcSlotCol != 0) {
+				panel.ui.npcSlotCol--;
+				panel.playSFX(8);
+			}
+		}
+		if (code == KeyEvent.VK_D) {
+			if (panel.ui.npcSlotCol != 4) {
+				panel.ui.npcSlotCol++;
+				panel.playSFX(8);
+			}
+		}
 	}
 
 	@Override

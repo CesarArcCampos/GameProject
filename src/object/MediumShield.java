@@ -14,6 +14,8 @@ public class MediumShield extends Entity{
 		down1 = setup("/object/shield",panel.tileSize,panel.tileSize);
 		defenseValue = 2;
 		description = "(" + name + ")\nHas standart \nprotection.";
+		
+		price = 25;
 	}
 
 }

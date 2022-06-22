@@ -32,10 +32,13 @@ public class UI {
 	public boolean gameFinished = false;
 	public String currentDialogue = "";
 	public int commandNum = 0;
-	public int slotCol = 0;
-	public int slotRow = 0;
+	public int playerSlotCol = 0;
+	public int playerSlotRow = 0;
+	public int npcSlotCol = 0;
+	public int npcSlotRow = 0;
 	public int subState = 0;
 	int counter = 0;
+	public Entity npc;
 
 	public UI(Panel panel) {
 
@@ -88,7 +91,6 @@ public class UI {
 		//DialogueState
 		if (panel.gameState == panel.dialogueState) {
 			drawDialogueScreen();
-			drawPlayerLife();
 		}
 
 		//WarningState
@@ -99,7 +101,7 @@ public class UI {
 		//CharacterState
 		if (panel.gameState == panel.characterState) {
 			drawCharacterScreen();
-			drawInventory();
+			drawInventory(panel.player, true);
 		}
 
 		//OptionState
@@ -117,17 +119,181 @@ public class UI {
 			drawTransition();
 		}
 
+		//TradeState
+		if (panel.gameState == panel.tradeState) {
+			drawTradeScreen();
+		}
 
 	}
 
+	private void drawTradeScreen() {
+
+		switch(subState) {
+		case 0: trade_select(); break;
+		case 1: trade_buy(); break;
+		case 2: trade_sell(); break;
+		}
+
+		panel.keyHandler.enterPressed = false;
+	}
+
+	public void trade_select() {
+
+		drawDialogueScreen();
+
+		//draw window
+		int x = panel.tileSize * 2;
+		int y = panel.tileSize * 5;
+		int width = panel.tileSize * 3;
+		int height = (int) (panel.tileSize * 3.5);
+		drawSubWindow(x, y, width, height);
+
+		//draw texts
+		x += 3 * panel.tileSize/4;
+		y += 3 * panel.tileSize/4 + 10;
+		g2.drawString("Buy", x, y);
+		if (commandNum == 0) {
+			g2.drawString(">", x - 14, y);
+			if (panel.keyHandler.enterPressed == true) {
+				subState = 1;
+			}
+		}
+		y += panel.tileSize;
+		g2.drawString("Sell", x, y);
+		if (commandNum == 1) {
+			g2.drawString(">", x - 14, y);
+			if (panel.keyHandler.enterPressed == true) {
+				subState = 2;
+			}
+		}
+		y += panel.tileSize;
+		g2.drawString("Leave", x, y);
+		if (commandNum == 2) {
+			g2.drawString(">", x - 14, y);
+			if (panel.keyHandler.enterPressed == true) {
+				commandNum = 0;
+				panel.gameState = panel.dialogueState;
+				currentDialogue = "Come again!";
+			}
+		}
+	}
+
+	public void trade_buy() {
+
+		drawInventory(panel.player, false);
+
+		drawInventory(npc, true);
+
+		//draw hint window
+		int x = panel.tileSize * 2;
+		int y = panel.tileSize * 9 + 10;
+		int width = panel.tileSize * 6;
+		int height = panel.tileSize * 2;
+		drawSubWindow(x, y, width, height);
+		g2.drawString("[ESC]     Back", x + 20 , y + 50);
+
+		//draw player coin window
+		x = panel.tileSize * 12;
+		y = panel.tileSize * 9 + 10;
+		width = panel.tileSize * 6;
+		height = panel.tileSize * 2;
+		drawSubWindow(x, y, width, height);
+		g2.drawString("Coin: " + panel.player.coin, x + 20 , y + 50);
+
+		//draw price window
+		int itemIndex = getItemIndexOnSlot(npcSlotCol,npcSlotRow);
+		if (itemIndex < npc.inventory.size()) {
+			x = (int) (panel.tileSize * 5.5);
+			y = (int) (panel.tileSize * 5.5);
+			width = (int) (panel.tileSize * 2.5);
+			height = panel.tileSize;
+			drawPriceWindow(x, y, width, height);
+			int price = npc.inventory.get(itemIndex).price;
+
+			g2.drawString("Price: " + price, x + 15 , y + 30);
+		}
+
+		//buy item
+		if (panel.keyHandler.enterPressed == true) {
+			if (npc.inventory.get(itemIndex).price > panel.player.coin) {
+				subState = 0;
+				panel.gameState = panel.dialogueState;
+				currentDialogue = "You need more \ncoin to buy that.";
+				drawDialogueScreen();
+			} 
+			else if (panel.player.inventory.size() == panel.player.maxInventorySize) {
+				subState = 0;
+				panel.gameState = panel.dialogueState;
+				currentDialogue = "Your inventory is full.";
+				drawDialogueScreen();
+			} 
+			else {
+				panel.player.coin -= npc.inventory.get(itemIndex).price;
+				panel.player.inventory.add(npc.inventory.get(itemIndex));
+			}
+		}
+	}
+
+	public void trade_sell() {
+
+		//draw player inventory
+		drawInventory(panel.player, true);
+
+		//draw hint window
+		int x = panel.tileSize * 2;
+		int y = panel.tileSize * 9 + 10;
+		int width = panel.tileSize * 6;
+		int height = panel.tileSize * 2;
+		drawSubWindow(x, y, width, height);
+		g2.drawString("[ESC]     Back", x + 20 , y + 50);
+
+		//draw player coin window
+		x = panel.tileSize * 12;
+		y = panel.tileSize * 9 + 10;
+		width = panel.tileSize * 6;
+		height = panel.tileSize * 2;
+		drawSubWindow(x, y, width, height);
+		g2.drawString("Coin: " + panel.player.coin, x + 20 , y + 50);
+
+		//draw price window
+		int itemIndex = getItemIndexOnSlot(playerSlotCol,playerSlotRow);
+		if (itemIndex < panel.player.inventory.size()) {
+			x = (int) (panel.tileSize * 15.5);
+			y = (int) (panel.tileSize * 5.5);
+			width = (int) (panel.tileSize * 2.5);
+			height = panel.tileSize;
+			drawPriceWindow(x, y, width, height);
+			int price = panel.player.inventory.get(itemIndex).price;
+
+			g2.drawString("Price: " + price, x + 15 , y + 30);
+		}
+
+		//sell item
+		if (panel.keyHandler.enterPressed == true) {
+			int price = panel.player.inventory.get(itemIndex).price/2;
+			if (panel.player.inventory.get(itemIndex) == panel.player.currentWeapon
+					|| panel.player.inventory.get(itemIndex) == panel.player.currentShield) {
+				
+				commandNum = 0;
+				subState = 0;
+				panel.gameState = panel.dialogueState;
+				currentDialogue = "You cannot sell an equipped item.";
+			} else {
+				
+				panel.player.inventory.remove(itemIndex);
+				panel.player.coin += price;
+			}
+		}
+	}
+
 	private void drawTransition() {
-		
+
 		counter++;
 		g2.setColor(new Color(0, 0, 0, counter * 5));
 		g2.fillRect(0, 0, panel.screenWidth, panel.screenHeight);
-		
+
 		if (counter == 50 ) {
-			
+
 			counter = 0;
 			panel.ui.addMessage("You used a teleport");
 			panel.gameState = panel.playState;
@@ -136,9 +302,7 @@ public class UI {
 			panel.player.worldY = panel.tileSize * panel.eHandler.tempRow;
 			panel.eHandler.previousEventX = panel.player.worldX;
 			panel.eHandler.previousEventY = panel.player.worldY;
-			
 		}
-
 	}
 
 	private void drawGameOverScreen() {
@@ -373,7 +537,6 @@ public class UI {
 				commandNum = 4;
 			}
 		}
-
 	}
 
 	public void drawPlayerLife() {
@@ -446,13 +609,32 @@ public class UI {
 		}
 	}
 
-	public void drawInventory() {
+	public void drawInventory(Entity entity, boolean cursor) {
+
+		int frameX = 0;
+		int frameY = 0;
+		int frameWidth = 0;
+		int frameHeight = 0;
+		int slotCol = 0;
+		int slotRow = 0;
+
+		if (entity == panel.player) {
+			frameX = panel.tileSize * 12;
+			frameY = panel.tileSize;
+			frameWidth = panel.tileSize * 6;
+			frameHeight = panel.tileSize * 5;
+			slotCol = playerSlotCol;
+			slotRow = playerSlotRow;
+		} else {
+			frameX = panel.tileSize * 2;
+			frameY = panel.tileSize;
+			frameWidth = panel.tileSize * 6;
+			frameHeight = panel.tileSize * 5;
+			slotCol = npcSlotCol;
+			slotRow = npcSlotRow;
+		}
 
 		//frame
-		int frameX = panel.tileSize * 12;
-		int frameY = panel.tileSize;
-		int frameWidth = panel.tileSize * 6;
-		int frameHeight = panel.tileSize * 5;
 		drawSubWindow(frameX ,frameY, frameWidth, frameHeight);
 
 		//slot
@@ -463,16 +645,16 @@ public class UI {
 		int slotSize = panel.tileSize + 3;
 
 		//draw items
-		for (int i = 0; i < panel.player.inventory.size(); i++) {
+		for (int i = 0; i < entity.inventory.size(); i++) {
 
-			if (panel.player.inventory.get(i) == panel.player.currentWeapon ||
-					panel.player.inventory.get(i) == panel.player.currentShield) {
+			if (entity.inventory.get(i) == entity.currentWeapon ||
+					entity.inventory.get(i) == entity.currentShield) {
 
 				g2.setColor(new Color(240,190,90));
 				g2.fillRoundRect(slotX,slotY,panel.tileSize,panel.tileSize,10,10);
 			}
 
-			g2.drawImage(panel.player.inventory.get(i).down1, slotX, slotY, panel.tileSize, panel.tileSize, null);
+			g2.drawImage(entity.inventory.get(i).down1, slotX, slotY, panel.tileSize, panel.tileSize, null);
 			slotX += slotSize;
 
 			if (i == 4 || i == 9 || i == 14) {
@@ -482,35 +664,38 @@ public class UI {
 		}
 
 		//cursor
-		int cursorX = slotXstart + (slotSize * slotCol);
-		int cursorY = slotYstart + (slotSize * slotRow);
-		int cursorWidth = panel.tileSize;
-		int cursorHeight = panel.tileSize;
-		g2.setColor(Color.white);
-		g2.setStroke(new BasicStroke(3));
-		g2.drawRoundRect(cursorX, cursorY, cursorWidth, cursorHeight, 10, 10);
+		if (cursor == true) {
+			int cursorX = slotXstart + (slotSize * slotCol);
+			int cursorY = slotYstart + (slotSize * slotRow);
+			int cursorWidth = panel.tileSize;
+			int cursorHeight = panel.tileSize;
+			g2.setColor(Color.white);
+			g2.setStroke(new BasicStroke(3));
+			g2.drawRoundRect(cursorX, cursorY, cursorWidth, cursorHeight, 10, 10);
 
-		//description frame
-		int dFrameX = frameX;
-		int dFrameY = frameY + frameHeight;
-		int dFrameWidth = frameWidth;
-		int dFrameHeight = panel.tileSize * 3;
+			//description frame
+			int dFrameX = frameX;
+			int dFrameY = frameY + frameHeight;
+			int dFrameWidth = frameWidth;
+			int dFrameHeight = panel.tileSize * 3;
 
-		int textX = dFrameX + 20;
-		int textY = dFrameY + panel.tileSize;
-		g2.setFont(g2.getFont().deriveFont(20F));
-		int itemIndex = getItemIndexOnSlot();
+			int textX = dFrameX + 20;
+			int textY = dFrameY + panel.tileSize;
+			g2.setFont(g2.getFont().deriveFont(20F));
+			int itemIndex = getItemIndexOnSlot(slotCol, slotRow);
 
-		if (itemIndex < panel.player.inventory.size()) {
+			if (itemIndex < entity.inventory.size()) {
 
-			drawSubWindow(dFrameX, dFrameY, dFrameWidth, dFrameHeight);
+				drawSubWindow(dFrameX, dFrameY + 5, dFrameWidth, dFrameHeight);
 
-			for (String line: panel.player.inventory.get(itemIndex).description.split("\n")) {
+				for (String line: entity.inventory.get(itemIndex).description.split("\n")) {
 
-				g2.drawString(line, textX, textY);
-				textY += 24;
+					g2.drawString(line, textX, textY);
+					textY += 24;
+				}
 			}
 		}
+
 	}
 
 	public void drawTitleScreen() {
@@ -592,7 +777,7 @@ public class UI {
 		//Window
 		int x = panel.tileSize*2;
 		int y = panel.tileSize/2;
-		int width = panel.screenWidth - (panel.tileSize*8);
+		int width = panel.screenWidth - (panel.tileSize*11);
 		int height = panel.tileSize*4;
 
 		drawSubWindow(x, y, width, height);
@@ -607,12 +792,12 @@ public class UI {
 			y += 40;
 		}
 
-		x = panel.tileSize * 10;
+		x = panel.tileSize * 11;
 		y = panel.tileSize / 2;
 		width = panel.screenWidth - (panel.tileSize*12);
 		height = panel.tileSize*4;
-		drawSubWindow(x, y, width, height);
-		drawPicture(x, y, width, height);
+		drawSubWindow(x, y, width/2, height);
+		drawPicture(x, y, width/2, height);
 
 	}
 
@@ -650,7 +835,20 @@ public class UI {
 
 	}
 
-	public int getItemIndexOnSlot() {
+	public void drawPriceWindow(int x, int y, int width, int height) {
+
+		Color c = new Color(105,105,105);
+		g2.setColor(c);
+		g2.fillRoundRect(x, y, width, height, 35, 35);
+
+		c = new Color(255,255,255);
+		g2.setColor(c);
+		g2.setStroke(new BasicStroke(5));
+		g2.drawRoundRect(x+5, y+5, width-10, height-10, 25, 25);
+
+	}
+
+	public int getItemIndexOnSlot(int slotCol, int slotRow) {
 
 		int itemIndex = slotCol + (slotRow * 5);
 		return itemIndex;

@@ -123,6 +123,7 @@ public class EventHandler {
 	public void teleport(int map, int col, int row) {
 
 		if (panel.keyHandler.enterPressed == true) {
+			panel.player.attackCanceled = true;
 			panel.gameState = panel.transitionState;
 			tempMap = map;
 			tempCol = col;

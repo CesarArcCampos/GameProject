@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -15,8 +16,7 @@ import main.UtilityTool;
 public class Entity {
 
 	Panel panel;
-
-	public int worldX, worldY;
+	
 	public int speed;
 
 	public BufferedImage up1, up2, up3, down1, down2, down3, left1, left2, left3, right1, right2, right3;
@@ -24,31 +24,25 @@ public class Entity {
 	atack_down1, atack_down2, atack_down3, atack_down4,
 	atack_right1, atack_right2, atack_right3, atack_right4,
 	atack_left1, atack_left2, atack_left3, atack_left4;
-	public String direction = "down";
-
-	public int spriteCounter = 0;
-	public int spriteNumber = 1;
-
 	public Rectangle attackArea = new Rectangle(0,0,0,0);
-
-	public Rectangle solidArea = new Rectangle(0, 0, 48, 48);
+	public Rectangle solidArea = new Rectangle(8,16,30,30);
 	public int solidAreaDefaultX, solidAreaDefaultY;
-	public boolean collisionON = false;
-	public int actionLockerCounter = 0;
-	public boolean invincible = false;
-	boolean attacking = false;
-	public int invincibleCounter = 0;
 	String dialogues[] = new String[20];
-	int dialogueIndex = 0;
-	public boolean alive = true;
-	public boolean dying = false;
-	int dyingCounter = 0;
-	public boolean hpBarOn = false;
-	int hpBarCounter = 0;
-	public int shotAvailableCounter;
 	public int maxBullets;
 	public int bullets;
 	public Projectile projectile;
+
+    //STATE
+	public int worldX, worldY;
+	public String direction = "down";
+	int dialogueIndex = 0;
+	public boolean collisionON = false;
+	public boolean invincible = false;
+	boolean attacking = false;
+	public boolean alive = true;
+	public boolean dying = false;
+	public boolean hpBarOn = false;
+	public boolean onPath = false;
 
 	//TYPE
 	public int type;
@@ -87,6 +81,18 @@ public class Entity {
 	public String description = "";
 	public int useCost;
 	public int value;
+	public ArrayList<Entity> inventory = new ArrayList<>();
+	public final int maxInventorySize = 20;
+	public int price;
+	
+	//Counter
+	int dyingCounter = 0;
+	public int invincibleCounter = 0;
+	public int shotAvailableCounter;
+	public int actionLockerCounter = 0;
+	public int spriteCounter = 0;
+	public int spriteNumber = 1;
+	int hpBarCounter = 0;
 
 	public Entity(Panel panel) {
 		this.panel = panel;
@@ -99,7 +105,7 @@ public class Entity {
 	public void speak() {
 
 		if (dialogues[dialogueIndex] == null) {
-			String finalDialogue = "I don't have nothing more to say.";
+			String finalDialogue = "I don't have \nnothing more to say.";
 			panel.ui.currentDialogue = finalDialogue;
 		} else {
 			panel.ui.currentDialogue = dialogues[dialogueIndex];
@@ -179,38 +185,33 @@ public class Entity {
 		panel.particleList.add(p4);
 	}
 	
-	public void update() {
-
-		setAction();
-
+	public void checkCollision() {
+		
 		collisionON = false;
 		panel.checker.checkTile(this);
 		panel.checker.checkObject(this, false);
-		boolean contactPlayer = panel.checker.checkPlayer(this);
 		panel.checker.checkEntity(this, panel.npc);
 		panel.checker.checkEntity(this, panel.monster);
 		panel.checker.checkEntity(this, panel.iTile);
+		boolean contactPlayer = panel.checker.checkPlayer(this);
 
 		if (this.type == type_zombie && contactPlayer == true) {
-
 			damagePlayer(attack);
 		}
+	}
+	
+	public void update() {
+
+		setAction();
+		checkCollision();
 
 		if (collisionON == false) {
 
 			switch (direction) {
-			case "up":
-				worldY -= speed;
-				break;
-			case "down":
-				worldY += speed;
-				break;
-			case "left":
-				worldX -= speed;
-				break;
-			case "right":
-				worldX += speed;
-				break;
+			case "up": worldY -= speed; break;
+			case "down": worldY += speed; break;
+			case "left": worldX -= speed; break;
+			case "right": worldX += speed; break;
 			}	
 		}
 
@@ -349,6 +350,77 @@ public class Entity {
 
 		return image;
 	}
+	
+	public void searchPath(int goalCol, int goalRow) {
+		
+		int startCol = (worldX + solidArea.x)/panel.tileSize;
+		int startRow = (worldY + solidArea.y)/panel.tileSize;
+		
+		panel.pFinder.setNode(startCol, startRow, goalCol, goalRow);
+		
+		if (panel.pFinder.search() == true) {
+			
+			//next worldX and worldY
+			
+			int nextX = panel.pFinder.pathList.get(0).col * panel.tileSize;
+			int nextY = panel.pFinder.pathList.get(0).row * panel.tileSize;
 
-
+			//Entity solidArea Position
+			int enLeftX = worldX + solidArea.x;
+			int enRightX = worldX + solidArea.x + solidArea.width;
+			//int enRightX = worldX + solidArea.x;
+			int enTopY = worldY + solidArea.y;
+			int enBottomY = worldY + solidArea.y + solidArea.height;
+			//int enBottomY = worldY + solidArea.y;
+			
+			if (enTopY > nextY && enLeftX >= nextX && enRightX < nextX + panel.tileSize) {
+				direction = "up";
+			}
+			else if (enTopY < nextY && enLeftX >= nextX && enRightX < nextX + panel.tileSize) {
+				direction = "down";
+			}
+			else if (enTopY >= nextY && enBottomY < nextY + panel.tileSize) {
+				
+				if (enLeftX > nextX) {
+					direction = "left";
+				}
+				if (enLeftX < nextX) {
+					direction = "right";
+				}	
+			}
+			else if (enTopY > nextY && enLeftX > nextX) {
+				direction = "up";
+				checkCollision();
+				
+				if (collisionON == true) {
+					direction = "left";
+				}
+			}
+			else if (enTopY > nextY && enLeftX < nextX) {
+				direction = "up";
+				checkCollision();
+				
+				if (collisionON == true) {
+					direction = "right";
+				}
+			}
+			else if (enTopY < nextY && enLeftX > nextX) {
+				direction = "down";
+				checkCollision();
+				
+				if (collisionON == true) {
+					direction = "left";
+				}
+			}
+			else if (enTopY < nextY && enLeftX < nextX) {
+				direction = "down";
+				checkCollision();
+				
+				if (collisionON == true) {
+					direction = "right";
+				}
+			}
+		}
+	}
+	
 }

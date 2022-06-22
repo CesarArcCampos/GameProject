@@ -4,13 +4,11 @@ import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 import main.KeyHandler;
 import main.Panel;
 import object.BasicShield;
 import object.Bullet;
-import object.Key;
 import object.M16;
 
 public class Player extends Entity {
@@ -23,8 +21,6 @@ public class Player extends Entity {
 	public int hasChest = 0;
 	int standCounter = 0;
 	public boolean attackCanceled = false;
-	public ArrayList<Entity> inventory = new ArrayList<>();
-	public final int maxInventorySize = 20;
 
 	public Player (Panel panel, KeyHandler keyHandler) {
 
@@ -51,13 +47,14 @@ public class Player extends Entity {
 		worldY = panel.tileSize * 21;
 		speed = 4;
 		direction = "down";
+		panel.currentMap = 0;
 
 		level = 1;
 		strength = 1;
 		dexterity = 1;
 		exp = 0;
 		nextLevelExp = 5;
-		coin = 0;
+		coin = 20;
 		currentWeapon = new M16(panel);
 		currentShield = new BasicShield(panel);
 		projectile = new Bullet(panel);
@@ -88,7 +85,7 @@ public class Player extends Entity {
 		
 		inventory.clear();
 		inventory.add(currentWeapon);
-		inventory.add(new Key(panel));
+		inventory.add(currentShield);
 	}
 
 	public int getDefense() {
@@ -445,7 +442,7 @@ public class Player extends Entity {
 
 	public void selectItem() {
 
-		int itemIndex = panel.ui.getItemIndexOnSlot();
+		int itemIndex = panel.ui.getItemIndexOnSlot(panel.ui.playerSlotCol, panel.ui.playerSlotRow);
 
 		if (itemIndex < inventory.size()) {
 
