@@ -16,8 +16,6 @@ import main.UtilityTool;
 public class Entity {
 
 	Panel panel;
-	
-	public int speed;
 
 	public BufferedImage up1, up2, up3, down1, down2, down3, left1, left2, left3, right1, right2, right3;
 	public BufferedImage atack_up1, atack_up2, atack_up3, atack_up4,
@@ -28,11 +26,8 @@ public class Entity {
 	public Rectangle solidArea = new Rectangle(8,16,30,30);
 	public int solidAreaDefaultX, solidAreaDefaultY;
 	String dialogues[] = new String[20];
-	public int maxBullets;
-	public int bullets;
-	public Projectile projectile;
 
-    //STATE
+	//STATE
 	public int worldX, worldY;
 	public String direction = "down";
 	int dialogueIndex = 0;
@@ -43,6 +38,7 @@ public class Entity {
 	public boolean dying = false;
 	public boolean hpBarOn = false;
 	public boolean onPath = false;
+	public boolean knockBack = false;
 
 	//TYPE
 	public int type;
@@ -54,7 +50,15 @@ public class Entity {
 	public final int type_consumable = 5;
 	public final int type_pickUpOnly = 6;
 
-
+	//CHARACTER ATTRIBUTES
+	public String name;
+	public int defaultSpeed;
+	public String name1;
+	public int speed;
+	public int maxLife;
+	public int life;
+	public int maxBullets;
+	public int bullets;
 	public int level;
 	public int strength;
 	public int dexterity;
@@ -65,15 +69,11 @@ public class Entity {
 	public int coin;
 	public Entity currentWeapon;
 	public Entity currentShield;
+	public Projectile projectile;
 
 	public BufferedImage image, image2, image3;
-	public String name;
-	public String name1;
-	public boolean collision = false;
 
-	// Character Status
-	public int maxLife;
-	public int life;
+	public boolean collision = false;
 
 	// Item Attributes
 	public int attackValue;
@@ -84,7 +84,8 @@ public class Entity {
 	public ArrayList<Entity> inventory = new ArrayList<>();
 	public final int maxInventorySize = 20;
 	public int price;
-	
+	public int knockBackPower = 0;
+
 	//Counter
 	int dyingCounter = 0;
 	public int invincibleCounter = 0;
@@ -93,6 +94,7 @@ public class Entity {
 	public int spriteCounter = 0;
 	public int spriteNumber = 1;
 	int hpBarCounter = 0;
+	int knockBackCounter = 0;
 
 	public Entity(Panel panel) {
 		this.panel = panel;
@@ -137,7 +139,7 @@ public class Entity {
 	}
 
 	public void dropItem(Entity entity) {
-		
+
 		for (int i = 0; i < panel.obj[1].length; i++) {
 			if (panel.obj[panel.currentMap][i] == null) {
 				panel.obj[panel.currentMap][i] = entity;
@@ -152,29 +154,29 @@ public class Entity {
 		Color color = null;
 		return color;
 	}
-	
+
 	public int getParticleSize() {
 		int size = 0;
 		return size;
 	}
-	
+
 	public int getParticleSpeed() {
 		int speed = 0;
 		return speed;
 	}
-	
+
 	public int getParticleMaxLife() {
 		int maxLife = 20;
 		return maxLife;
 	}
-	
+
 	public void generateParticle (Entity generator, Entity target) {
-		
+
 		Color color = generator.getParticleColor();
 		int size = generator.getParticleSize();
 		int speed = generator.getParticleSpeed();
 		int maxLife = generator.getParticleMaxLife();
-		
+
 		Particle p1 = new Particle(panel, target, color, size, speed, maxLife, -2, -1);
 		Particle p2 = new Particle(panel, target, color, size, speed, maxLife, 2, -1);
 		Particle p3 = new Particle(panel, target, color, size, speed, maxLife, -2, 1);
@@ -184,9 +186,9 @@ public class Entity {
 		panel.particleList.add(p3);
 		panel.particleList.add(p4);
 	}
-	
+
 	public void checkCollision() {
-		
+
 		collisionON = false;
 		panel.checker.checkTile(this);
 		panel.checker.checkObject(this, false);
@@ -199,20 +201,49 @@ public class Entity {
 			damagePlayer(attack);
 		}
 	}
-	
+
 	public void update() {
 
-		setAction();
-		checkCollision();
+		if (knockBack == true) {
+			
+			checkCollision();
+			
+			if (collisionON == true) {
+				knockBackCounter = 0;
+				knockBack = false;
+				speed = defaultSpeed;
+			} else if (collisionON == false) {
+				
+				switch(panel.player.direction) {
+				case "up": worldY -= speed; break;
+				case "down": worldY += speed; break;
+				case "left": worldX -= speed; break;
+				case "right": worldX += speed; break;
+				}
+			}
+			
+			knockBackCounter++;
+			
+			if (knockBackCounter == 10) {
+				knockBackCounter = 0;
+				knockBack = false;
+				speed = 2;
+			}
+			
+		} else {
 
-		if (collisionON == false) {
+			setAction();
+			checkCollision();
 
-			switch (direction) {
-			case "up": worldY -= speed; break;
-			case "down": worldY += speed; break;
-			case "left": worldX -= speed; break;
-			case "right": worldX += speed; break;
-			}	
+			if (collisionON == false) {
+
+				switch (direction) {
+				case "up": worldY -= speed; break;
+				case "down": worldY += speed; break;
+				case "left": worldX -= speed; break;
+				case "right": worldX += speed; break;
+				}	
+			}
 		}
 
 		spriteCounter++;
@@ -350,18 +381,18 @@ public class Entity {
 
 		return image;
 	}
-	
+
 	public void searchPath(int goalCol, int goalRow) {
-		
+
 		int startCol = (worldX + solidArea.x)/panel.tileSize;
 		int startRow = (worldY + solidArea.y)/panel.tileSize;
-		
+
 		panel.pFinder.setNode(startCol, startRow, goalCol, goalRow);
-		
+
 		if (panel.pFinder.search() == true) {
-			
+
 			//next worldX and worldY
-			
+
 			int nextX = panel.pFinder.pathList.get(0).col * panel.tileSize;
 			int nextY = panel.pFinder.pathList.get(0).row * panel.tileSize;
 
@@ -372,7 +403,7 @@ public class Entity {
 			int enTopY = worldY + solidArea.y;
 			int enBottomY = worldY + solidArea.y + solidArea.height;
 			//int enBottomY = worldY + solidArea.y;
-			
+
 			if (enTopY > nextY && enLeftX >= nextX && enRightX < nextX + panel.tileSize) {
 				direction = "up";
 			}
@@ -380,7 +411,7 @@ public class Entity {
 				direction = "down";
 			}
 			else if (enTopY >= nextY && enBottomY < nextY + panel.tileSize) {
-				
+
 				if (enLeftX > nextX) {
 					direction = "left";
 				}
@@ -391,7 +422,7 @@ public class Entity {
 			else if (enTopY > nextY && enLeftX > nextX) {
 				direction = "up";
 				checkCollision();
-				
+
 				if (collisionON == true) {
 					direction = "left";
 				}
@@ -399,7 +430,7 @@ public class Entity {
 			else if (enTopY > nextY && enLeftX < nextX) {
 				direction = "up";
 				checkCollision();
-				
+
 				if (collisionON == true) {
 					direction = "right";
 				}
@@ -407,7 +438,7 @@ public class Entity {
 			else if (enTopY < nextY && enLeftX > nextX) {
 				direction = "down";
 				checkCollision();
-				
+
 				if (collisionON == true) {
 					direction = "left";
 				}
@@ -415,12 +446,12 @@ public class Entity {
 			else if (enTopY < nextY && enLeftX < nextX) {
 				direction = "down";
 				checkCollision();
-				
+
 				if (collisionON == true) {
 					direction = "right";
 				}
 			}
 		}
 	}
-	
+
 }

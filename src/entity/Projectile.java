@@ -24,6 +24,10 @@ public class Projectile extends Entity {
 	
 	public void update() {
 		
+		if (panel.player != null) {
+			knockBackPower = panel.player.currentWeapon.knockBackPower;
+		}
+		
 		collisionON = false;
 		panel.checker.checkTile(this);
 		
@@ -38,25 +42,9 @@ public class Projectile extends Entity {
 			int monsterIndex = panel.checker.checkEntity(this, panel.monster);
 			
 			if (monsterIndex != 999) {
-				panel.player.damageMonster(monsterIndex, attack);
+				panel.player.damageMonster(monsterIndex, attack, knockBackPower);
 				generateParticle(user.projectile, panel.monster[panel.currentMap][monsterIndex]);
 				alive = false;
-				
-				int x = panel.player.worldX;
-				int y = panel.player.worldY;
-				int xm = panel.monster[panel.currentMap][monsterIndex].worldX;
-				int ym = panel.monster[panel.currentMap][monsterIndex].worldY;
-				int xm_solid = panel.monster[panel.currentMap][monsterIndex].solidArea.x;
-				int ym_solid = panel.monster[panel.currentMap][monsterIndex].solidArea.y;
-				int xb = this.worldX;
-				int yb = this.worldY;
-				int xb_solid = this.solidArea.x;
-				int yb_solid = this.solidArea.y;
-				int xb_default = this.solidAreaDefaultX;
-				
-				System.out.println("x: " + x);
-				System.out.println("xm: " + xm + " ; xm_solid: " + xm_solid);
-				System.out.println("direction: " + direction + "xb: " + xb + " ; xb_solid: " + xb_solid + " ; xb_default: " + xb_default );
 			}
 			
 			int interactiveIndex = panel.checker.checkEntity(this, panel.iTile);

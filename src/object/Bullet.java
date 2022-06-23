@@ -80,7 +80,6 @@ public class Bullet extends Projectile {
 		return image;
 	}
 	
-	
 	public boolean checkBullets(Entity user) {
 		
 		boolean haveBullets = false;

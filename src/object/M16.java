@@ -12,13 +12,14 @@ public class M16 extends Entity{
 		name = "M16";	
 		down1 = setup("/object/M16", panel.tileSize, panel.tileSize);
 		
-		attackValue = 1;
+		attackValue = 2;
 		description = "(" + name + ")\nRifle.";
 		
 		attackArea.width = 25;
 		attackArea.height = 25;
 		
 		price = 30;
+		knockBackPower = 2;
 	}
 	
 	

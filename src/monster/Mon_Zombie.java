@@ -19,7 +19,8 @@ public class Mon_Zombie extends Entity {
 
 		type = type_zombie;
 		name = "Zombie";
-		speed = 1;
+		defaultSpeed = 1;
+		speed = defaultSpeed;
 		maxLife = 5;
 		life = maxLife;
 		attack = 5;
@@ -64,7 +65,7 @@ public class Mon_Zombie extends Entity {
 		
 		if (onPath == true && tileDistance > 20) {
 			onPath = false;
-			speed = 1;
+			speed = defaultSpeed;
 		}
 	}
 
@@ -107,6 +108,7 @@ public class Mon_Zombie extends Entity {
 	public void damageReaction() {
 
 		actionLockerCounter = 0;
+		onPath = true;
 		//direction = panel.player.direction; //moving way when receives damage
 	}
 
