@@ -20,15 +20,15 @@ public class Mon_Zombie extends Entity {
 		type = type_zombie;
 		name = "Zombie";
 		speed = 1;
-		maxLife = 4;
+		maxLife = 5;
 		life = maxLife;
 		attack = 5;
 		defense = 0;
 		exp = 2;
 
-		solidArea = new Rectangle(8,16,30,30);
+		solidArea = new Rectangle(panel.tileSize/4, panel.tileSize/4,panel.tileSize/2,panel.tileSize/2);
 		solidAreaDefaultX = solidArea.x;
-		solidAreaDefaultY = solidArea.y;	
+		solidAreaDefaultY = solidArea.y;
 
 		getImage();
 	}

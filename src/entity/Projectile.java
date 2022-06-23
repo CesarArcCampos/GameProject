@@ -27,6 +27,8 @@ public class Projectile extends Entity {
 		collisionON = false;
 		panel.checker.checkTile(this);
 		
+		solidArea(this.direction);
+		
 		if (this.collisionON == true) {
 			alive = false;
 			panel.playSFX(10);
@@ -39,6 +41,22 @@ public class Projectile extends Entity {
 				panel.player.damageMonster(monsterIndex, attack);
 				generateParticle(user.projectile, panel.monster[panel.currentMap][monsterIndex]);
 				alive = false;
+				
+				int x = panel.player.worldX;
+				int y = panel.player.worldY;
+				int xm = panel.monster[panel.currentMap][monsterIndex].worldX;
+				int ym = panel.monster[panel.currentMap][monsterIndex].worldY;
+				int xm_solid = panel.monster[panel.currentMap][monsterIndex].solidArea.x;
+				int ym_solid = panel.monster[panel.currentMap][monsterIndex].solidArea.y;
+				int xb = this.worldX;
+				int yb = this.worldY;
+				int xb_solid = this.solidArea.x;
+				int yb_solid = this.solidArea.y;
+				int xb_default = this.solidAreaDefaultX;
+				
+				System.out.println("x: " + x);
+				System.out.println("xm: " + xm + " ; xm_solid: " + xm_solid);
+				System.out.println("direction: " + direction + "xb: " + xb + " ; xb_solid: " + xb_solid + " ; xb_default: " + xb_default );
 			}
 			
 			int interactiveIndex = panel.checker.checkEntity(this, panel.iTile);
@@ -76,6 +94,34 @@ public class Projectile extends Entity {
 	
 	public void subtractBullets(Entity user) {
 
+	}
+	
+	public void solidArea(String direction) {
+		
+		if (direction == "right") {
+			solidArea.x = panel.tileSize;
+			solidArea.y = panel.tileSize - 5;
+			solidAreaDefaultX = solidArea.x;
+			solidAreaDefaultY = solidArea.y;
+		}
+		else if (direction == "left") {
+			solidArea.x = panel.tileSize / 2;
+			solidArea.y = 15;
+			solidAreaDefaultX = solidArea.x;
+			solidAreaDefaultY = solidArea.y;
+		}
+		else if (direction == "down") {
+			solidArea.x = 10;
+			solidArea.y = panel.tileSize;
+			solidAreaDefaultX = solidArea.x;
+			solidAreaDefaultY = solidArea.y;
+		}
+		else if (direction == "up") {
+			solidArea.x = panel.tileSize - 10;
+			solidArea.y = panel.tileSize/2;
+			solidAreaDefaultX = solidArea.x;
+			solidAreaDefaultY = solidArea.y;
+		}
 	}
 
 }

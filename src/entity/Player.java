@@ -63,7 +63,7 @@ public class Player extends Entity {
 
 		maxLife = 6;
 		life = maxLife;
-		maxBullets = 50;
+		maxBullets = 1050;
 		bullets = maxBullets;
 	}
 

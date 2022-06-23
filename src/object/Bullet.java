@@ -3,6 +3,7 @@ package object;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -29,6 +30,9 @@ public class Bullet extends Projectile {
 		useCost = 1;
 		alive = false;
 		getImage();
+		
+		solidArea = new Rectangle(0,0,2,2);
+		
 	}
 
 	private void getImage() {
