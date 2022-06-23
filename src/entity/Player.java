@@ -9,6 +9,7 @@ import main.KeyHandler;
 import main.Panel;
 import object.BasicShield;
 import object.Bullet;
+import object.Key;
 import object.M16;
 
 public class Player extends Entity {
@@ -22,6 +23,7 @@ public class Player extends Entity {
 	int standCounter = 0;
 	public boolean attackCanceled = false;
 	int meleeKnockBackPower;
+	int contactObjCounter = 0;
 
 	public Player (Panel panel, KeyHandler keyHandler) {
 
@@ -85,10 +87,12 @@ public class Player extends Entity {
 	}
 
 	public void setItems() {
-		
+
 		inventory.clear();
 		inventory.add(currentWeapon);
 		inventory.add(currentShield);
+		inventory.add(new Key(panel));
+
 	}
 
 	public int getDefense() {
@@ -140,11 +144,11 @@ public class Player extends Entity {
 	}
 
 	public void update() {
-		
+
 		if(maxLife > 10) {
 			maxLife = 10;
 		}
-		
+
 		if (attacking == true) {
 			attacking();
 		} 
@@ -228,7 +232,7 @@ public class Player extends Entity {
 			projectile.set(worldX, worldY, direction, true, this);
 
 			projectile.subtractBullets(this);
-			
+
 			for (int i = 0; i < panel.projectile[i].length; i++) {
 				if (panel.projectile[panel.currentMap][i] == null) {
 					panel.projectile[panel.currentMap][i] = projectile;
@@ -332,12 +336,24 @@ public class Player extends Entity {
 			//PICK UP ONLY ITEM
 			if (panel.obj[panel.currentMap][i].type == type_pickUpOnly) {
 
-				panel.obj[panel.currentMap][i].use(this);
-				panel.obj[panel.currentMap][i] = null;
+				if (inventory.size() != maxInventorySize) {
+					panel.obj[panel.currentMap][i].use(this);
+					panel.obj[panel.currentMap][i] = null;
+				} 	
 			}
-			//PICK UP TO INVENTORY
-			else {
 
+			//OBSTACLE
+			else if (panel.obj[panel.currentMap][i].type == type_obstacle) {
+
+				if (keyHandler.enterPressed == true) {
+					attackCanceled = true;
+					panel.obj[panel.currentMap][i].interact();
+				}
+			}
+
+			//PICK UP TO INVENTORY
+			
+			else {
 				String text;
 
 				if (inventory.size() != maxInventorySize) {
@@ -345,13 +361,23 @@ public class Player extends Entity {
 					inventory.add(panel.obj[panel.currentMap][i]);
 					panel.playSFX(2);
 					text = "Got a " + panel.obj[panel.currentMap][i].name + "!";
+					panel.obj[panel.currentMap][i] = null;
+					panel.ui.addMessage(text);
+					
 				} else {
-
-					text = "Your inventory is full";
+					
+					if (contactObjCounter == 0 ) {
+						text = "Your inventory is full";
+						panel.ui.addMessage(text);
+					}
+					
+					contactObjCounter++;
+					
+					if (contactObjCounter > 20) {
+						contactObjCounter = 0;
+					}
+					
 				}
-
-				panel.ui.addMessage(text);
-				panel.obj[panel.currentMap][i] = null;
 			}
 		}
 	}
@@ -388,7 +414,7 @@ public class Player extends Entity {
 	public void damageMonster(int i, int attack, int knockBackPower) {
 
 		if (i != 999) {
-			
+
 			if (knockBackPower > 0) {
 				knockBack(panel.monster[panel.currentMap][i], knockBackPower);
 			}
@@ -417,9 +443,9 @@ public class Player extends Entity {
 			}
 		}
 	}
-	
+
 	public void knockBack(Entity entity, int knockBackPower) {
-		
+
 		entity.direction = direction;
 		entity.speed += knockBackPower;
 		entity.knockBack = true;
@@ -481,8 +507,9 @@ public class Player extends Entity {
 
 			if(selectedItem.type == type_consumable) {
 
-				selectedItem.use(this);
-				inventory.remove(itemIndex);
+				if (selectedItem.use(this) == true) {
+					inventory.remove(itemIndex);
+				}
 			}
 		}
 	}

@@ -49,6 +49,7 @@ public class Entity {
 	public final int type_shield = 4;
 	public final int type_consumable = 5;
 	public final int type_pickUpOnly = 6;
+	public final int type_obstacle = 7;
 
 	//CHARACTER ATTRIBUTES
 	public String name;
@@ -100,6 +101,30 @@ public class Entity {
 		this.panel = panel;
 	}
 
+	public int getLeftX() {
+		return worldX + solidArea.x;
+	}
+	
+	public int getRightX() {
+		return worldX + solidArea.x + solidArea.width;
+	}
+	
+	public int getTopY() {
+		return worldY + solidArea.y;
+	}
+	
+	public int getBottomY() {
+		return worldY + solidArea.y + solidArea.height;
+	}
+	
+	public int getCol() {
+		return (worldX + solidArea.x)/panel.tileSize;
+	}
+	
+	public int getRow() {
+		return (worldY + solidArea.y)/panel.tileSize;
+	}
+	
 	public void setAction() {}
 
 	public void damageReaction() {}
@@ -130,8 +155,12 @@ public class Entity {
 		}
 	}
 
-	public void use(Entity entity) {
-
+	public void interact() {
+		
+	}
+	
+	public boolean use(Entity entity) {
+		return false;
 	}
 
 	public void checkDrop() {
@@ -454,4 +483,36 @@ public class Entity {
 		}
 	}
 
+	public int getDetected(Entity user, Entity target[][], String targeName) {
+		
+		int index = 999;
+		
+		//check the surrounding objects
+		int nextWorldX = user.getLeftX();
+		int nextWorldY = user.getTopY();
+		
+		switch(user.direction) {
+		case "up": nextWorldY = user.getTopY() - 1; break;
+		case "down": nextWorldY = user.getBottomY() + 1; break;
+		case "left": nextWorldX = user.getLeftX() - 1; break;
+		case "right": nextWorldX = user.getRightX() + 1; break;	
+		}
+		
+		int col = nextWorldX/panel.tileSize;
+		int row = nextWorldY/panel.tileSize;
+		
+		for (int i = 0; i < target[1].length; i++) {
+			if (target[panel.currentMap][i] != null) {
+				if (target[panel.currentMap][i].getCol() == col &&
+						target[panel.currentMap][i].getRow() == row &&
+						target[panel.currentMap][i].name.equals(targeName)) {
+					
+					index = i;
+					break;
+				}
+			}
+		}
+		
+		return index;
+	}
 }

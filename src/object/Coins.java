@@ -26,12 +26,13 @@ public class Coins extends Entity {
 		value = 1;
 	}
 	
-	public void use(Entity entity) {
+	public boolean use(Entity entity) {
 		
 		panel.playSFX(2);
 		panel.ui.addMessage("Coin +" + value);
 		panel.player.coin += value;
 		
+		return true;
 	}
 	
 	public BufferedImage setupCoin(String imagePath) {

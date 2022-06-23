@@ -30,7 +30,7 @@ public class MedicKit extends Entity{
 		price = 20;
 	}
 	
-	public void use(Entity entity) {
+	public boolean use(Entity entity) {
 		
 		panel.gameState = panel.warningState;
 		panel.ui.currentDialogue = "You took the " + name +
@@ -42,6 +42,8 @@ public class MedicKit extends Entity{
 		}
 		
 		panel.playSFX(7);
+		return true;
+		
 	}
 	
 	public BufferedImage setupKit(String imagePath) {
