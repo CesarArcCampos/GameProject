@@ -86,6 +86,8 @@ public class Entity {
 	public final int maxInventorySize = 20;
 	public int price;
 	public int knockBackPower = 0;
+	public boolean stackable = false;
+	public int amount = 1;
 
 	//Counter
 	int dyingCounter = 0;

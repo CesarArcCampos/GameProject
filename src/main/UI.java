@@ -158,6 +158,7 @@ public class UI {
 				subState = 1;
 			}
 		}
+		
 		y += panel.tileSize;
 		g2.drawString("Sell", x, y);
 		if (commandNum == 1) {
@@ -216,20 +217,23 @@ public class UI {
 		//buy item
 		if (panel.keyHandler.enterPressed == true) {
 			if (npc.inventory.get(itemIndex).price > panel.player.coin) {
+				
 				subState = 0;
 				panel.gameState = panel.dialogueState;
 				currentDialogue = "You need more \ncoin to buy that.";
 				drawDialogueScreen();
 			} 
-			else if (panel.player.inventory.size() == panel.player.maxInventorySize) {
-				subState = 0;
-				panel.gameState = panel.dialogueState;
-				currentDialogue = "Your inventory is full.";
-				drawDialogueScreen();
-			} 
 			else {
-				panel.player.coin -= npc.inventory.get(itemIndex).price;
-				panel.player.inventory.add(npc.inventory.get(itemIndex));
+				if (panel.player.canObtainItem(npc.inventory.get(itemIndex)) == true) {
+					
+					panel.player.coin -= npc.inventory.get(itemIndex).price;
+				} else {
+					
+					subState = 0;
+					panel.gameState = panel.dialogueState;
+					currentDialogue = "Your inventory is full.";
+					drawDialogueScreen();	
+				}
 			}
 		}
 	}
@@ -279,8 +283,12 @@ public class UI {
 				panel.gameState = panel.dialogueState;
 				currentDialogue = "You cannot sell an equipped item.";
 			} else {
-				
-				panel.player.inventory.remove(itemIndex);
+				if (panel.player.inventory.get(itemIndex).amount > 1) {
+					
+					panel.player.inventory.get(itemIndex).amount--;
+				} else {
+					panel.player.inventory.remove(itemIndex);
+				}	
 				panel.player.coin += price;
 			}
 		}
@@ -654,7 +662,28 @@ public class UI {
 				g2.fillRoundRect(slotX,slotY,panel.tileSize,panel.tileSize,10,10);
 			}
 
-			g2.drawImage(entity.inventory.get(i).down1, slotX, slotY, panel.tileSize, panel.tileSize, null);
+			g2.drawImage(entity.inventory.get(i).down1, slotX, slotY, null);
+			
+			//Display Amount
+			
+			if (entity == panel.player && entity.inventory.get(i).amount > 1) {
+				
+				g2.setFont(g2.getFont().deriveFont(32f));
+				int amountX;
+				int amountY;
+				
+				String s = "" + entity.inventory.get(i).amount;
+				amountX = getXforAlignRightText(s, slotX + 44);
+				amountY = slotY + panel.tileSize;
+				
+				//shadow
+				g2.setColor(new Color(60,60,60));
+				g2.drawString(s, amountX, amountY);
+				//number
+				g2.setColor(Color.white);
+				g2.drawString(s, amountX - 3, amountY - 3);
+			}
+			
 			slotX += slotSize;
 
 			if (i == 4 || i == 9 || i == 14) {

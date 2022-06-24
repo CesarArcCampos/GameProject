@@ -25,7 +25,8 @@ public class MedicKit extends Entity{
 		type = type_consumable;
 		name = "Medicine";
 		down1 = setupKit("/object/medickit");
-		description = "(Medicine)\nHeals your life by" + value + ".";	
+		description = "(Medicine)\nHeals your life by" + value + ".";
+		stackable = true;
 		
 		price = 20;
 	}
@@ -56,11 +57,11 @@ public class MedicKit extends Entity{
 	    g.setBackground(transparent);
 	    g.fillRect(0, 0, image.getWidth(), image.getHeight());
 	    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-	    BufferedImage bulletImage;
+	    BufferedImage imageKit;
 	    
 		try {
-			bulletImage = ImageIO.read(getClass().getResourceAsStream(imagePath + ".png"));
-			g.drawImage(bulletImage, panel.tileSize/2, panel.tileSize/2, 20, 20, null);
+			imageKit = ImageIO.read(getClass().getResourceAsStream(imagePath + ".png"));
+			g.drawImage(imageKit, panel.tileSize/2 - 10, panel.tileSize/2 - 10, 20, 20, null);
 			
 		} catch (IOException e) {
 			e.printStackTrace();
