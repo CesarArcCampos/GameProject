@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import ai.PathFinder;
 import entity.Entity;
 import entity.Player;
+import environment.EnvironmentManager;
 import tile.TileManager;
 import tile_interactive.InteractiveTile;
 
@@ -48,6 +49,7 @@ public class Panel extends JPanel implements Runnable {
 	public UI ui = new UI(this);
 	Config config = new Config(this);
 	public PathFinder pFinder = new PathFinder(this);
+	EnvironmentManager eManager = new EnvironmentManager(this);
 	
 	//Entity and Object
 	public Player player = new Player(this, keyHandler);
@@ -89,9 +91,8 @@ public class Panel extends JPanel implements Runnable {
 		aSetter.setNPC();
 		aSetter.setMonster();
 		aSetter.setInteractiveTile();
-		//playMusic(0);
-		//stopMusic();
 		gameState = titleState;
+		eManager.setup();
 
 	}
 
@@ -286,6 +287,9 @@ public class Panel extends JPanel implements Runnable {
 				entityList.get(i).draw(g2);
 			}
 
+			//ENVIRONMENT
+			eManager.draw(g2);
+			
 			// DRAW UI
 			ui.draw(g2);
 

@@ -75,8 +75,6 @@ public class KeyHandler implements KeyListener {
 		}
 	}
 
-
-
 	private void tradeState(int code) {
 		
 		if (code == KeyEvent.VK_ENTER) {

@@ -53,7 +53,7 @@ public class Player extends Entity {
 		defaultSpeed = 4;
 		speed = defaultSpeed;
 		direction = "down";
-		panel.currentMap = 1;
+		panel.currentMap = 0;
 
 		level = 1;
 		strength = 1;

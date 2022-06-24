@@ -67,7 +67,6 @@ public class EventHandler {
 
 			else if (hit(1,24,21,"any") == true) {
 				teleport(0,48,4);
-				panel.aSetter.setMonster();
 			}
 		}
 	}
