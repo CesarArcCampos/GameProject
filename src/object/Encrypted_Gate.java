@@ -3,17 +3,17 @@ package object;
 import entity.Entity;
 import main.Panel;
 
-public class Gate extends Entity{
+public class Encrypted_Gate extends Entity {
 
 	Panel panel;
 
-	public Gate(Panel panel) {
+	public Encrypted_Gate(Panel panel) {
 		super(panel);
 
 		this.panel = panel;
 
 		type = type_obstacle;
-		name = "Gate";
+		name = "Encrypted_Gate";
 		down1 = setup("/tiles_interactive/gate_close",panel.tileSize,panel.tileSize);
 		collision = true;
 
@@ -27,12 +27,17 @@ public class Gate extends Entity{
 
 	public void interact() {
 
-		int objIndex = getDetected(this, panel.obj, "Gate");
+		int objIndex = getDetected(this, panel.obj, "Encrypted_Gate");
 
 		if (objIndex != 999) {
-			panel.playSFX(14);
-			panel.obj[panel.currentMap][objIndex] = null;
+			if (panel.player.hasPassword == true) {
+				panel.playSFX(14);
+				panel.obj[panel.currentMap][objIndex] = null;
+			} else {
+				panel.gameState = panel.warningState;
+				panel.ui.currentDialogue = "This door is closed...\n You need a password!";
+			}
+			
 		}
 	}
-
 }

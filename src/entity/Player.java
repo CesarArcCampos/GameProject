@@ -26,6 +26,7 @@ public class Player extends Entity {
 	public boolean attackCanceled = false;
 	int meleeKnockBackPower;
 	int contactObjCounter = 0;
+	public boolean hasPassword = false;
 
 	public Player (Panel panel, KeyHandler keyHandler) {
 
@@ -48,8 +49,8 @@ public class Player extends Entity {
 
 	public void setDefaultValues() {
 
-		worldX = panel.tileSize * 23;
-		worldY = panel.tileSize * 21;
+		worldX = panel.tileSize * 1;
+		worldY = panel.tileSize * 1;
 		defaultSpeed = 4;
 		speed = defaultSpeed;
 		direction = "down";

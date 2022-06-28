@@ -73,14 +73,58 @@ public class KeyHandler implements KeyListener {
 		else if (panel.gameState == panel.tradeState) {
 			tradeState(code);
 		}
+
+		//Chat State
+
+		else if (panel.gameState == panel.chatState) {
+			chatState(code);
+		}
 	}
 
 	private void tradeState(int code) {
-		
+
 		if (code == KeyEvent.VK_ENTER) {
 			enterPressed = true;
 		}
-		
+
+		if (panel.ui.subState == 0) {
+			if (code == KeyEvent.VK_W) {
+				panel.ui.commandNum--;
+				if (panel.ui.commandNum < 0) {
+					panel.ui.commandNum = 2;
+				}
+				panel.playSFX(8);
+			}
+			if (code == KeyEvent.VK_S) {
+				panel.ui.commandNum++;
+				if (panel.ui.commandNum > 2) {
+					panel.ui.commandNum = 0;
+				}
+				panel.playSFX(8);
+			}	
+		}	
+
+		if (panel.ui.subState == 1) {
+			npcInventory(code);
+			if (code == KeyEvent.VK_ESCAPE) {
+				panel.ui.subState = 0;
+			}
+		}
+
+		if (panel.ui.subState == 2) {
+			playerInventory(code);
+			if (code == KeyEvent.VK_ESCAPE) {
+				panel.ui.subState = 0;
+			}
+		}
+	}
+
+	private void chatState(int code) {
+
+		if (code == KeyEvent.VK_ENTER) {
+			enterPressed = true;
+		}
+
 		if (panel.ui.subState == 0) {
 			if (code == KeyEvent.VK_W) {
 				panel.ui.commandNum--;
@@ -99,17 +143,20 @@ public class KeyHandler implements KeyListener {
 		}	
 		
 		if (panel.ui.subState == 1) {
-			npcInventory(code);
-			if (code == KeyEvent.VK_ESCAPE) {
-				panel.ui.subState = 0;
+			if (code == KeyEvent.VK_W) {
+				panel.ui.commandNum--;
+				if (panel.ui.commandNum < 0) {
+					panel.ui.commandNum = 2;
+				}
+				panel.playSFX(8);
 			}
-		}
-		
-		if (panel.ui.subState == 2) {
-			playerInventory(code);
-			if (code == KeyEvent.VK_ESCAPE) {
-				panel.ui.subState = 0;
-			}
+			if (code == KeyEvent.VK_S) {
+				panel.ui.commandNum++;
+				if (panel.ui.commandNum > 2) {
+					panel.ui.commandNum = 0;
+				}
+				panel.playSFX(8);
+			}	
 		}
 	}
 
@@ -129,7 +176,7 @@ public class KeyHandler implements KeyListener {
 		}
 		if (code == KeyEvent.VK_ENTER) {
 			if (panel.ui.commandNum == 0) {
-				
+
 				panel.gameState = panel.playState;
 				panel.restart();
 				panel.playMusic(0);
@@ -209,11 +256,11 @@ public class KeyHandler implements KeyListener {
 		if (code == KeyEvent.VK_C) {
 			panel.gameState = panel.playState;
 		}
-		
+
 		if (code == KeyEvent.VK_ENTER) {
 			panel.player.selectItem();
 		}
-		
+
 		playerInventory(code);
 	}
 
@@ -310,9 +357,9 @@ public class KeyHandler implements KeyListener {
 			}
 		}
 	}
-	
+
 	public void playerInventory(int code) {
-		
+
 		if (code == KeyEvent.VK_W) {
 			if (panel.ui.playerSlotRow != 0) {
 				panel.ui.playerSlotRow--;
@@ -338,9 +385,9 @@ public class KeyHandler implements KeyListener {
 			}
 		}
 	}
-	
+
 	public void npcInventory(int code) {
-		
+
 		if (code == KeyEvent.VK_W) {
 			if (panel.ui.npcSlotRow != 0) {
 				panel.ui.npcSlotRow--;

@@ -75,6 +75,7 @@ public class Panel extends JPanel implements Runnable {
 	public final int gameOverState = 7;
 	public final int transitionState = 8;
 	public final int tradeState = 9;
+	public final int chatState = 10;
 
 
 	public Panel() {
@@ -280,7 +281,7 @@ public class Panel extends JPanel implements Runnable {
 					return result;
 				}
 			});
-
+			
 			//DRAW ENTITIES
 
 			for (int i = 0; i < entityList.size(); i++) {

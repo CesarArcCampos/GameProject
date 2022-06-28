@@ -124,6 +124,11 @@ public class UI {
 			drawTradeScreen();
 		}
 
+		//ChatState
+		if (panel.gameState == panel.chatState) {
+			drawChatScreen();
+		}
+
 	}
 
 	private void drawTradeScreen() {
@@ -135,6 +140,114 @@ public class UI {
 		}
 
 		panel.keyHandler.enterPressed = false;
+	}
+
+	private void drawChatScreen() {
+
+		switch(subState) {
+		case 0: firstChat_select(); break;
+		case 1: secondChat_select(); break;
+		}
+
+		panel.keyHandler.enterPressed = false;
+	}
+
+	public void firstChat_select() {
+
+		int npcIndex = panel.checker.checkEntity(panel.player, panel.npc);
+		String dialogues[] = panel.npc[panel.currentMap][npcIndex].dialogues;
+
+		if (panel.npc[panel.currentMap][npcIndex].finalDialogue == true) {
+
+			currentDialogue = dialogues[9];
+			panel.gameState = panel.dialogueState;
+			
+		} else {
+
+			currentDialogue = dialogues[0];
+			drawDialogueScreen();
+
+			//draw window
+			int x = panel.tileSize * 2;
+			int y = panel.tileSize * 5;
+			int width = panel.tileSize * 15;
+			int height = (int) (panel.tileSize * 2.5);
+			drawSubWindow(x, y, width, height);
+
+			String option_1 = dialogues[1];
+			String option_2 = dialogues[2];
+
+			//draw texts
+			x += 3 * panel.tileSize/4;
+			y += 3 * panel.tileSize/4 + 10;
+			g2.drawString(option_1, x, y);
+			if (commandNum == 0) {
+				g2.drawString(">", x - 14, y);
+				if (panel.keyHandler.enterPressed == true) {
+					commandNum = 0;
+					panel.gameState = panel.dialogueState;
+					currentDialogue = dialogues[8];
+				}
+			}
+
+			y += panel.tileSize;
+			g2.drawString(option_2, x, y);
+			if (commandNum == 1) {
+				g2.drawString(">", x - 14, y);
+				if (panel.keyHandler.enterPressed == true) {
+					commandNum = 0;
+					subState = 1;
+				}
+			}
+		}
+	}
+
+	public void secondChat_select() {
+
+		int npcIndex = panel.checker.checkEntity(panel.player, panel.npc);
+		String dialogues[] = panel.npc[panel.currentMap][npcIndex].dialogues;
+
+		currentDialogue = dialogues[3];
+		drawDialogueScreen();
+
+		panel.player.hasPassword = true;
+
+		//draw window
+		int x = panel.tileSize * 2;
+		int y = panel.tileSize * 5;
+		int width = panel.tileSize * 15;
+		int height = (int) (panel.tileSize * 2.5);
+		drawSubWindow(x, y, width, height);
+
+		String option_1 = dialogues[4];
+		String option_2 = dialogues[5];
+
+		//draw texts
+		x += 3 * panel.tileSize/4;
+		y += 3 * panel.tileSize/4 + 10;
+		g2.drawString(option_1, x, y);
+		if (commandNum == 0) {
+			g2.drawString(">", x - 14, y);
+			if (panel.keyHandler.enterPressed == true) {
+				panel.npc[panel.currentMap][npcIndex].finalDialogue = true;
+				commandNum = 0;
+				subState = 0;
+				panel.gameState = panel.dialogueState;
+				currentDialogue = dialogues[6];
+			}
+		}
+
+		y += panel.tileSize;
+		g2.drawString(option_2, x, y);
+		if (commandNum == 1) {
+			g2.drawString(">", x - 14, y);
+			if (panel.keyHandler.enterPressed == true) {
+				panel.npc[panel.currentMap][npcIndex].finalDialogue = true;
+				commandNum = 0;
+				panel.gameState = panel.dialogueState;
+				currentDialogue = dialogues[7];
+			}
+		}
 	}
 
 	public void trade_select() {
@@ -158,7 +271,7 @@ public class UI {
 				subState = 1;
 			}
 		}
-		
+
 		y += panel.tileSize;
 		g2.drawString("Sell", x, y);
 		if (commandNum == 1) {
@@ -217,7 +330,7 @@ public class UI {
 		//buy item
 		if (panel.keyHandler.enterPressed == true) {
 			if (npc.inventory.get(itemIndex).price > panel.player.coin) {
-				
+
 				subState = 0;
 				panel.gameState = panel.dialogueState;
 				currentDialogue = "You need more \ncoin to buy that.";
@@ -225,10 +338,10 @@ public class UI {
 			} 
 			else {
 				if (panel.player.canObtainItem(npc.inventory.get(itemIndex)) == true) {
-					
+
 					panel.player.coin -= npc.inventory.get(itemIndex).price;
 				} else {
-					
+
 					subState = 0;
 					panel.gameState = panel.dialogueState;
 					currentDialogue = "Your inventory is full.";
@@ -277,14 +390,14 @@ public class UI {
 			int price = panel.player.inventory.get(itemIndex).price/2;
 			if (panel.player.inventory.get(itemIndex) == panel.player.currentWeapon
 					|| panel.player.inventory.get(itemIndex) == panel.player.currentShield) {
-				
+
 				commandNum = 0;
 				subState = 0;
 				panel.gameState = panel.dialogueState;
 				currentDialogue = "You cannot sell an equipped item.";
 			} else {
 				if (panel.player.inventory.get(itemIndex).amount > 1) {
-					
+
 					panel.player.inventory.get(itemIndex).amount--;
 				} else {
 					panel.player.inventory.remove(itemIndex);
@@ -663,19 +776,19 @@ public class UI {
 			}
 
 			g2.drawImage(entity.inventory.get(i).down1, slotX, slotY, null);
-			
+
 			//Display Amount
-			
+
 			if (entity == panel.player && entity.inventory.get(i).amount > 1) {
-				
+
 				g2.setFont(g2.getFont().deriveFont(32f));
 				int amountX;
 				int amountY;
-				
+
 				String s = "" + entity.inventory.get(i).amount;
 				amountX = getXforAlignRightText(s, slotX + 44);
 				amountY = slotY + panel.tileSize;
-				
+
 				//shadow
 				g2.setColor(new Color(60,60,60));
 				g2.drawString(s, amountX, amountY);
@@ -683,7 +796,7 @@ public class UI {
 				g2.setColor(Color.white);
 				g2.drawString(s, amountX - 3, amountY - 3);
 			}
-			
+
 			slotX += slotSize;
 
 			if (i == 4 || i == 9 || i == 14) {

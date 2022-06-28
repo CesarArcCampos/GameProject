@@ -25,12 +25,12 @@ public class Entity {
 	public Rectangle attackArea = new Rectangle(0,0,0,0);
 	public Rectangle solidArea = new Rectangle(8,16,30,30);
 	public int solidAreaDefaultX, solidAreaDefaultY;
-	String dialogues[] = new String[20];
+	public String dialogues[] = new String[20];
 
 	//STATE
 	public int worldX, worldY;
 	public String direction = "down";
-	int dialogueIndex = 0;
+	public int dialogueIndex = 0;
 	public boolean collisionON = false;
 	public boolean invincible = false;
 	boolean attacking = false;
@@ -88,6 +88,7 @@ public class Entity {
 	public int knockBackPower = 0;
 	public boolean stackable = false;
 	public int amount = 1;
+	public boolean finalDialogue = false;
 
 	//Counter
 	int dyingCounter = 0;
@@ -98,6 +99,10 @@ public class Entity {
 	public int spriteNumber = 1;
 	int hpBarCounter = 0;
 	int knockBackCounter = 0;
+
+	
+
+	
 
 	public Entity(Panel panel) {
 		this.panel = panel;
