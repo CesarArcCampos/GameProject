@@ -9,6 +9,8 @@ public class M16 extends Entity{
 		super(panel);
 		
 		type = type_weapon;
+		automatic = true;
+		weaponShotAvailableCounter = 10;
 		name = "M16";	
 		down1 = setup("/object/M16", panel.tileSize, panel.tileSize);
 		

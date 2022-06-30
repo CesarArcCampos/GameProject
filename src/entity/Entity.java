@@ -89,20 +89,18 @@ public class Entity {
 	public boolean stackable = false;
 	public int amount = 1;
 	public boolean finalDialogue = false;
+	public boolean automatic;
 
 	//Counter
 	int dyingCounter = 0;
 	public int invincibleCounter = 0;
 	public int shotAvailableCounter;
+	public int weaponShotAvailableCounter;
 	public int actionLockerCounter = 0;
 	public int spriteCounter = 0;
 	public int spriteNumber = 1;
 	int hpBarCounter = 0;
 	int knockBackCounter = 0;
-
-	
-
-	
 
 	public Entity(Panel panel) {
 		this.panel = panel;

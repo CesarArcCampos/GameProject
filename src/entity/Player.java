@@ -7,6 +7,8 @@ import java.awt.image.BufferedImage;
 
 import main.KeyHandler;
 import main.Panel;
+import object.AK;
+import object.AssaultRifle;
 import object.BasicShield;
 import object.Bullet;
 import object.Key;
@@ -27,6 +29,7 @@ public class Player extends Entity {
 	int meleeKnockBackPower;
 	int contactObjCounter = 0;
 	public boolean hasPassword = false;
+	public int counter = 0;
 
 	public Player (Panel panel, KeyHandler keyHandler) {
 
@@ -95,7 +98,8 @@ public class Player extends Entity {
 		inventory.add(currentWeapon);
 		inventory.add(currentShield);
 		inventory.add(new Shotgun(panel));
-		inventory.add(new Shotgun(panel));
+		inventory.add(new AK(panel));
+		inventory.add(new AssaultRifle(panel));
 		inventory.add(new MedicKit(panel));
 		inventory.add(new Key(panel));
 
@@ -188,10 +192,6 @@ public class Player extends Entity {
 			int monsterIndex = panel.checker.checkEntity(this, panel.monster);
 			contactMonster(monsterIndex);
 
-			// CHECK INTERACTIVE TILE COLLISION
-			int iTileIndex = panel.checker.checkEntity(this, panel.iTile);
-			contactMonster(monsterIndex);
-
 			// CHECK EVENT
 			panel.eHandler.checkEvent();
 
@@ -232,14 +232,16 @@ public class Player extends Entity {
 		}
 
 		if(panel.keyHandler.shotKeyPressed == true 
-				&& shotAvailableCounter == 30
+				&& shotAvailableCounter == currentWeapon.weaponShotAvailableCounter
 				&& projectile.checkBullets(this) == true) {
+			
+			counter++;
 
 			projectile.set(worldX, worldY, direction, true, this);
 
 			projectile.subtractBullets(this);
 
-			for (int i = 0; i < panel.projectile[i].length; i++) {
+			for (int i = 0; i < panel.projectile[panel.currentMap].length; i++) {
 				if (panel.projectile[panel.currentMap][i] == null) {
 					panel.projectile[panel.currentMap][i] = projectile;
 					break;
@@ -249,6 +251,12 @@ public class Player extends Entity {
 			panel.playSFX(9);
 
 			shotAvailableCounter = 0;
+			
+			if (currentWeapon.automatic == true && counter > 10) {
+				panel.keyHandler.shotKeyPressed = false;
+				counter = 0;
+			}
+
 		}
 
 		//Way to fix problem when player touch zombie, all the life is drain, because the 
@@ -261,7 +269,7 @@ public class Player extends Entity {
 			}
 		}
 
-		if (shotAvailableCounter < 30) {
+		if (shotAvailableCounter < currentWeapon.weaponShotAvailableCounter) {
 			shotAvailableCounter++;
 		}
 		if (life > maxLife) {
@@ -503,6 +511,8 @@ public class Player extends Entity {
 
 				currentWeapon = selectedItem;
 				attack = getAttack();
+				shotAvailableCounter = 0;
+				
 			}
 
 			if(selectedItem.type == type_shield) {

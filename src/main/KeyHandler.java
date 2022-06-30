@@ -440,7 +440,11 @@ public class KeyHandler implements KeyListener {
 		}
 
 		if (code == KeyEvent.VK_SHIFT) {
-			shotKeyPressed = false;
+
+			if (panel.player.currentWeapon.automatic == false) {
+				shotKeyPressed = false;
+			}
+			
 		}
 	}
 

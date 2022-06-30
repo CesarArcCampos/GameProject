@@ -4,11 +4,15 @@ import entity.Entity;
 import main.Panel;
 
 public class AK extends Entity{
+	
+	
 
 	public AK(Panel panel) {
 		super(panel);
 		
 		type = type_weapon;
+		automatic = true;
+		weaponShotAvailableCounter = 10;
 		name = "AK";	
 		down1 = setup("/object/AK", panel.tileSize, panel.tileSize);
 		

@@ -9,6 +9,8 @@ public class AssaultRifle extends Entity {
 		super(panel);
 		
 		type = type_weapon;
+		automatic = false;
+		weaponShotAvailableCounter= 30;
 		name = "Assault";	
 		down1 = setup("/object/Assault", panel.tileSize, panel.tileSize);
 		

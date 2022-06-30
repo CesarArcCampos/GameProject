@@ -9,6 +9,8 @@ public class Shotgun extends Entity {
 		super(panel);
 		
 		type = type_weapon;
+		automatic = false;
+		weaponShotAvailableCounter = 40;
 		name = "Shotgun";	
 		down1 = setup("/object/Shootgun", panel.tileSize, panel.tileSize);
 		
