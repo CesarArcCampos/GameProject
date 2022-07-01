@@ -79,6 +79,32 @@ public class KeyHandler implements KeyListener {
 		else if (panel.gameState == panel.chatState) {
 			chatState(code);
 		}
+		
+		//Boss State
+		else if (panel.gameState == panel.bossState) {
+			BossState(code);
+		}
+		
+		//End State
+		else if (panel.gameState == panel.endState) {
+			endState(code);
+		}
+	}
+
+	private void BossState(int code) {
+
+		if (code == KeyEvent.VK_ENTER) {
+			panel.gameState = panel.playState;
+		}
+		
+	}
+	
+	private void endState(int code) {
+
+		if (code == KeyEvent.VK_ENTER) {
+			panel.gameState = panel.titleState;
+		}
+		
 	}
 
 	private void tradeState(int code) {

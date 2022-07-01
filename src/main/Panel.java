@@ -50,7 +50,7 @@ public class Panel extends JPanel implements Runnable {
 	Config config = new Config(this);
 	public PathFinder pFinder = new PathFinder(this);
 	EnvironmentManager eManager = new EnvironmentManager(this);
-	
+
 	//Entity and Object
 	public Player player = new Player(this, keyHandler);
 	public Entity obj[][] = new Entity[maxMap][200];
@@ -60,8 +60,8 @@ public class Panel extends JPanel implements Runnable {
 	ArrayList<Entity> entityList = new ArrayList<>();
 	public Entity projectile[][] = new Entity[maxMap][200];
 	public ArrayList<Entity> particleList = new ArrayList<>();
-	
-	
+
+
 	// Game State
 	public int gameState;
 	public final int titleState = 0;
@@ -75,6 +75,8 @@ public class Panel extends JPanel implements Runnable {
 	public final int transitionState = 8;
 	public final int tradeState = 9;
 	public final int chatState = 10;
+	public final int bossState = 11;
+	public final int endState = 12;
 
 
 	public Panel() {
@@ -97,7 +99,7 @@ public class Panel extends JPanel implements Runnable {
 	}
 
 	public void retry() {
-		
+
 		stopSFX();
 		playMusic(0);
 		player.setDefaultPositions();
@@ -107,10 +109,13 @@ public class Panel extends JPanel implements Runnable {
 	}
 
 	public void restart() {
-		
+
 		if (sfx.clip != null) {
 			stopSFX();
 		}
+		
+		ui.message.clear();
+		keyHandler.enterPressed = false;
 		player.setDefaultValues();
 		player.restoreLifeAndBullets();
 		player.setItems();
@@ -209,7 +214,25 @@ public class Panel extends JPanel implements Runnable {
 		}
 
 		if (gameState == pauseState) {
-			//NOTHING
+
+			if (keyHandler.enterPressed == true) {
+				gameState = playState;
+			}
+		}
+
+		if (gameState == bossState) {
+
+			if (keyHandler.enterPressed == true) {
+				gameState = playState;
+			}
+		}
+
+		if (gameState == endState) {
+			
+			if (keyHandler.enterPressed == true) {
+				stopMusic();
+				gameState = titleState;
+			}
 		}
 
 	}
@@ -280,7 +303,7 @@ public class Panel extends JPanel implements Runnable {
 					return result;
 				}
 			});
-			
+
 			//DRAW ENTITIES
 
 			for (int i = 0; i < entityList.size(); i++) {
@@ -289,7 +312,7 @@ public class Panel extends JPanel implements Runnable {
 
 			//ENVIRONMENT
 			eManager.draw(g2);
-			
+
 			// DRAW UI
 			ui.draw(g2);
 
@@ -320,7 +343,7 @@ public class Panel extends JPanel implements Runnable {
 	}
 
 	public void stopSFX() {	
-		
+
 		sfx.stop();
 	}
 

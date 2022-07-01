@@ -53,7 +53,7 @@ public class Player extends Entity {
 	public void setDefaultValues() {
 
 		worldX = panel.tileSize * 1;
-		worldY = panel.tileSize * 1;
+		worldY = panel.tileSize * 45;
 		defaultSpeed = 4;
 		speed = defaultSpeed;
 		direction = "down";
@@ -89,7 +89,7 @@ public class Player extends Entity {
 
 		life = maxLife;
 		bullets = maxBullets;
-		invincible = false;
+		this.invincible = false;
 	}
 
 	public void setItems() {
@@ -234,7 +234,7 @@ public class Player extends Entity {
 		if(panel.keyHandler.shotKeyPressed == true 
 				&& shotAvailableCounter == currentWeapon.weaponShotAvailableCounter
 				&& projectile.checkBullets(this) == true) {
-			
+
 			counter++;
 
 			projectile.set(worldX, worldY, direction, true, this);
@@ -251,7 +251,7 @@ public class Player extends Entity {
 			panel.playSFX(9);
 
 			shotAvailableCounter = 0;
-			
+
 			if (currentWeapon.automatic == true && counter > 10) {
 				panel.keyHandler.shotKeyPressed = false;
 				counter = 0;
@@ -366,7 +366,7 @@ public class Player extends Entity {
 			}
 
 			//PICK UP TO INVENTORY
-			
+
 			else {
 				String text;
 
@@ -377,20 +377,20 @@ public class Player extends Entity {
 					text = "Got a " + panel.obj[panel.currentMap][i].name + "!";
 					panel.obj[panel.currentMap][i] = null;
 					panel.ui.addMessage(text);
-					
+
 				} else {
-					
+
 					if (contactObjCounter == 0 ) {
 						text = "Your inventory is full";
 						panel.ui.addMessage(text);
 					}
-					
+
 					contactObjCounter++;
-					
+
 					if (contactObjCounter > 20) {
 						contactObjCounter = 0;
 					}
-					
+
 				}
 			}
 		}
@@ -406,6 +406,14 @@ public class Player extends Entity {
 				panel.npc[panel.currentMap][i].speak();
 			}
 		}
+	}
+
+	public void interactBoss(Entity entity) {
+
+		panel.gameState = panel.bossState;
+		panel.playMusic(15);
+		entity.speak();
+
 	}
 
 	public void contactMonster(int i) {
@@ -428,8 +436,12 @@ public class Player extends Entity {
 	public void damageMonster(int i, int attack, int knockBackPower) {
 
 		if (i != 999) {
-
-			if (knockBackPower > 0) {
+			
+			if (knockBackPower > 0 && panel.monster[panel.currentMap][i].name != "Boss" && panel.monster[panel.currentMap][i].hadDialogue != false ) {
+				knockBack(panel.monster[panel.currentMap][i], knockBackPower);
+			}
+			
+			if (knockBackPower > 0 && panel.monster[panel.currentMap][i].name == "Boss" && panel.monster[panel.currentMap][i].hadDialogue == true ) {
 				knockBack(panel.monster[panel.currentMap][i], knockBackPower);
 			}
 
@@ -459,10 +471,13 @@ public class Player extends Entity {
 	}
 
 	public void knockBack(Entity entity, int knockBackPower) {
-
-		entity.direction = direction;
-		entity.speed += knockBackPower;
-		entity.knockBack = true;
+		
+		if (entity.invincible == false ) {
+			entity.direction = direction;
+			//entity.speed += knockBackPower;
+			entity.knockBack = true;
+		}
+		
 	}
 
 	public void damageInteractiveTile(int i) {
@@ -512,7 +527,7 @@ public class Player extends Entity {
 				currentWeapon = selectedItem;
 				attack = getAttack();
 				shotAvailableCounter = 0;
-				
+
 			}
 
 			if(selectedItem.type == type_shield) {
@@ -535,28 +550,28 @@ public class Player extends Entity {
 	}
 
 	public int searchItemInInventory(String itemName) {
-		
+
 		int itemIndex = 999;
-		
+
 		for (int i = 0; i < inventory.size(); i++) {
 			if (inventory.get(i).name.equals(itemName)) {
 				itemIndex = i;
 				break;
 			}
 		}
-		
+
 		return itemIndex;
 	}
 
 	public boolean canObtainItem(Entity item) {
-		
+
 		boolean canObtain = false;
-		
+
 		//check if item is stackable
 		if (item.stackable == true) {
-			
+
 			int index = searchItemInInventory(item.name);
-			
+
 			if (index != 999) {
 				inventory.get(index).amount++;
 				canObtain = true;
@@ -572,10 +587,10 @@ public class Player extends Entity {
 				canObtain = true;
 			}
 		}
-		
+
 		return canObtain;
 	}
-	
+
 	public void draw(Graphics2D g2) {
 
 		BufferedImage image = null;

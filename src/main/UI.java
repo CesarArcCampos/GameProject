@@ -129,6 +129,45 @@ public class UI {
 			drawChatScreen();
 		}
 
+		//BossState
+		if (panel.gameState == panel.bossState) {
+			drawBossScreen();
+		}
+		
+		//EndState
+		if (panel.gameState == panel.endState) {
+			drawEngGameScreen();
+		}
+
+	}
+
+	private void drawBossScreen() {
+
+		//Window
+		int x = panel.tileSize*2;
+		int y = panel.tileSize/2;
+		int width = panel.screenWidth - (panel.tileSize*11);
+		int height = panel.tileSize*4;
+
+		drawSubWindow(x, y, width, height);
+
+		g2.setFont(g2.getFont().deriveFont(Font.PLAIN,22F));
+		g2.setColor(Color.GREEN);
+		x += panel.tileSize;
+		y += panel.tileSize;
+
+		for (String line : currentDialogue.split("\n")) {
+			g2.drawString(line, x, y);
+			y += 40;
+		}
+
+		x = panel.tileSize * 11;
+		y = panel.tileSize / 2;
+		width = panel.screenWidth - (panel.tileSize*12);
+		height = panel.tileSize*4;
+		drawSubWindow(x, y, width/2, height);
+		drawPicture(x, y, width/2, height, "boss");
+
 	}
 
 	private void drawTradeScreen() {
@@ -161,7 +200,7 @@ public class UI {
 
 			currentDialogue = dialogues[9];
 			panel.gameState = panel.dialogueState;
-			
+
 		} else {
 
 			currentDialogue = dialogues[0];
@@ -426,8 +465,36 @@ public class UI {
 		}
 	}
 
-	private void drawGameOverScreen() {
+	private void drawEngGameScreen() {
+			
+		g2.setColor(new Color(0,0,0,150));
+		g2.fillRect(0, 0, panel.screenWidth, panel.screenHeight);
 
+		int x;
+		int y;
+		String text;
+		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 80f));
+
+		text = "CONGRATULATIONS!";
+		g2.setColor(Color.black);
+		x = getXforCenteredText(text);
+		y = panel.tileSize * 3;
+		g2.drawString(text, x, y);
+		g2.setColor(Color.white);
+		g2.drawString(text, x - 4, y - 4);
+		
+		text = "Game Over!";
+		g2.setColor(Color.black);
+		x = getXforCenteredText(text);
+		y += panel.tileSize * 3;
+		g2.drawString(text, x, y);
+		g2.setColor(Color.white);
+		g2.drawString(text, x - 4, y - 4);
+		
+	}
+	
+	private void drawGameOverScreen() {
+		
 		g2.setColor(new Color(0,0,0,150));
 		g2.fillRect(0, 0, panel.screenWidth, panel.screenHeight);
 
@@ -939,7 +1006,7 @@ public class UI {
 		width = panel.screenWidth - (panel.tileSize*12);
 		height = panel.tileSize*4;
 		drawSubWindow(x, y, width/2, height);
-		drawPicture(x, y, width/2, height);
+		drawPicture(x, y, width/2, height, "npc");
 
 	}
 
@@ -1010,10 +1077,15 @@ public class UI {
 		return x;
 	}
 
-	public void drawPicture(int x, int y, int width, int height) {
+	public void drawPicture(int x, int y, int width, int height, String target) {
 
 		BufferedImage image = null;
-		image = setup("/npc/npc-picture");
+		
+		if (target == "npc") {
+			image = setup("/npc/npc-picture");
+		} else {
+			image = setup("/monster/zombie_picture");
+		}
 
 		x += panel.tileSize/4;
 		y += panel.tileSize/4;

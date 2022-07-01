@@ -39,6 +39,7 @@ public class Entity {
 	public boolean hpBarOn = false;
 	public boolean onPath = false;
 	public boolean knockBack = false;
+	public boolean hadDialogue = false;
 
 	//TYPE
 	public int type;
@@ -243,6 +244,7 @@ public class Entity {
 			checkCollision();
 			
 			if (collisionON == true) {
+				
 				knockBackCounter = 0;
 				knockBack = false;
 				speed = defaultSpeed;
@@ -261,7 +263,7 @@ public class Entity {
 			if (knockBackCounter == 10) {
 				knockBackCounter = 0;
 				knockBack = false;
-				speed = 2;
+			
 			}
 			
 		} else {
@@ -290,10 +292,18 @@ public class Entity {
 			spriteCounter = 0;
 		}
 
-		if (invincible == true) {
+		if (invincible == true && name != "Boss" && hadDialogue == false) {
 			invincibleCounter++;
 			if (invincibleCounter > 40) {
-				invincible = false;
+				this.invincible = false;
+				invincibleCounter = 0;
+			}
+		}
+		
+		if (invincible == true && name == "Boss" && hadDialogue == true) {
+			invincibleCounter++;
+			if (invincibleCounter > 40) {
+				this.invincible = false;
 				invincibleCounter = 0;
 			}
 		}
@@ -370,6 +380,10 @@ public class Entity {
 			}
 			if (dying == true) {
 				dyingAnimation(g2);
+				if (name == "Boss") {
+					panel.stopMusic();
+					panel.gameState = panel.endState;
+				}
 			}
 
 			g2.drawImage(image, screenX, screenY, null);
@@ -390,8 +404,7 @@ public class Entity {
 		if (dyingCounter > i*5 && dyingCounter <= i*6) {changeAlpha(g2,1f);}
 		if (dyingCounter > i*6 && dyingCounter <= i*7) {changeAlpha(g2,0f);}
 		if (dyingCounter > i*7 && dyingCounter <= i*8) {changeAlpha(g2,1f);}
-		if (dyingCounter > i*8) {
-
+		if (dyingCounter > i*8) {	
 			alive = false;
 		}
 	}

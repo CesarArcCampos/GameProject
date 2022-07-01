@@ -3,6 +3,7 @@ package main;
 import entity.NPC01;
 import entity.NPC02;
 import entity.NPC03;
+import monster.Mon_Boss;
 import object.Encrypted_Gate;
 
 public class AssetSetter {
@@ -93,6 +94,11 @@ public class AssetSetter {
 		
 		int mapNum = 0;
 		int i = 0;
+		
+		panel.monster[mapNum][i] = new Mon_Boss(panel);
+		panel.monster[mapNum][i].worldX = panel.tileSize*45;
+		panel.monster[mapNum][i].worldY = panel.tileSize*45;
+		i++;
 		
 //		panel.monster[mapNum][i] = new Mon_Zombie(panel);
 //		panel.monster[mapNum][i].worldX = panel.tileSize*45;
