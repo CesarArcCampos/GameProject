@@ -79,12 +79,12 @@ public class KeyHandler implements KeyListener {
 		else if (panel.gameState == panel.chatState) {
 			chatState(code);
 		}
-		
+
 		//Boss State
 		else if (panel.gameState == panel.bossState) {
 			BossState(code);
 		}
-		
+
 		//End State
 		else if (panel.gameState == panel.endState) {
 			endState(code);
@@ -96,15 +96,14 @@ public class KeyHandler implements KeyListener {
 		if (code == KeyEvent.VK_ENTER) {
 			panel.gameState = panel.playState;
 		}
-		
+
 	}
-	
+
 	private void endState(int code) {
 
 		if (code == KeyEvent.VK_ENTER) {
 			panel.gameState = panel.titleState;
 		}
-		
 	}
 
 	private void tradeState(int code) {
@@ -167,7 +166,7 @@ public class KeyHandler implements KeyListener {
 				panel.playSFX(8);
 			}	
 		}	
-		
+
 		if (panel.ui.subState == 1) {
 			if (code == KeyEvent.VK_W) {
 				panel.ui.commandNum--;
@@ -185,7 +184,7 @@ public class KeyHandler implements KeyListener {
 			}	
 		}
 	}
-
+	
 	public void titleState(int code) {
 
 		if (code == KeyEvent.VK_W) {
@@ -470,7 +469,7 @@ public class KeyHandler implements KeyListener {
 			if (panel.player.currentWeapon.automatic == false) {
 				shotKeyPressed = false;
 			}
-			
+
 		}
 	}
 

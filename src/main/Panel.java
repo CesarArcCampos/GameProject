@@ -77,6 +77,7 @@ public class Panel extends JPanel implements Runnable {
 	public final int chatState = 10;
 	public final int bossState = 11;
 	public final int endState = 12;
+	public final int introductionState = 13;
 
 
 	public Panel() {
@@ -85,6 +86,7 @@ public class Panel extends JPanel implements Runnable {
 		this.setDoubleBuffered(true);
 		this.addKeyListener(keyHandler);
 		this.setFocusable(true);
+		gameState = introductionState;
 	}
 
 	public void setUpGame() {
@@ -93,7 +95,6 @@ public class Panel extends JPanel implements Runnable {
 		aSetter.setNPC();
 		aSetter.setMonster();
 		aSetter.setInteractiveTile();
-		gameState = titleState;
 		eManager.setup();
 
 	}
@@ -113,7 +114,7 @@ public class Panel extends JPanel implements Runnable {
 		if (sfx.clip != null) {
 			stopSFX();
 		}
-		
+
 		ui.message.clear();
 		ui.playTime = 0;
 		keyHandler.shotKeyPressed = false;
@@ -230,7 +231,7 @@ public class Panel extends JPanel implements Runnable {
 		}
 
 		if (gameState == endState) {
-			
+
 			if (keyHandler.enterPressed == true) {
 				stopMusic();
 				gameState = titleState;
@@ -244,11 +245,18 @@ public class Panel extends JPanel implements Runnable {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 
-		// TITLE SCREEN		
+
+		// INTRO SCREEN		
+		if ( gameState == introductionState) {
+			ui.draw(g2);
+		} 
+
+		// INTRO SCREEN		
 		if ( gameState == titleState) {
 			ui.draw(g2);
+		} 
 
-		} else {
+		else {
 
 			// DRAW TILES
 			tm.draw(g2);

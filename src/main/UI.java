@@ -41,9 +41,7 @@ public class UI {
 	double playTime;
 	DecimalFormat dFormat = new DecimalFormat("#0.00");
 	UtilityTool uTool = new UtilityTool();
-
-	
-
+	String time = "";
 
 	public UI(Panel panel) {
 
@@ -70,24 +68,28 @@ public class UI {
 		messageCounter.add(0);
 	}
 
-
-	
 	public void draw(Graphics2D g2) {
 
 		this.g2 = g2;
-
+		
 		//Time
 		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 20f));
 		g2.setColor(Color.white);
+		
 		if (panel.gameState == panel.playState) {
-			playTime += (double) 1/60;
+			time = uTool.getTime();
 		}
 		g2.drawString("Time: "
-				+ "" + uTool.getFormattedTime(playTime), panel.tileSize * 17, panel.tileSize * 1);
+				+ "" + time, panel.tileSize * 17, panel.tileSize * 1);
 
 		g2.setFont(futuristicFont);
 		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2.setColor(Color.white);
+
+		//IntroductionState
+		if (panel.gameState == panel.introductionState) {
+			drawIntroduction();
+		}
 
 		//TitleState
 		if (panel.gameState == panel.titleState) {
@@ -152,7 +154,7 @@ public class UI {
 
 		//EndState
 		if (panel.gameState == panel.endState) {
-			drawEngGameScreen();
+			drawEndGameScreen();
 		}
 
 	}
@@ -481,7 +483,7 @@ public class UI {
 		}
 	}
 
-	private void drawEngGameScreen() {
+	private void drawEndGameScreen() {
 
 		g2.setColor(new Color(0,0,0,150));
 		g2.fillRect(0, 0, panel.screenWidth, panel.screenHeight);
@@ -506,14 +508,18 @@ public class UI {
 		g2.drawString(text, x, y);
 		g2.setColor(Color.white);
 		g2.drawString(text, x - 4, y - 4);
-		
-		text = "Time: " + uTool.getFormattedTime(playTime);
+
+		text = "Time: " + uTool.getTime();
 		g2.setColor(Color.black);
 		x = getXforCenteredText(text);
 		y += panel.tileSize * 2;
 		g2.drawString(text, x, y);
 		g2.setColor(Color.white);
 		g2.drawString(text, x - 4, y - 4);
+		
+		if (panel.keyHandler.enterPressed) {
+			panel.gameState = panel.titleState;
+		}
 
 	}
 
@@ -1081,6 +1087,58 @@ public class UI {
 
 	}
 
+	private void drawIntroduction() {
+
+		counter++;
+		g2.setColor(new Color(0, 0, 0));
+		g2.fillRect(0, 0, panel.screenWidth, panel.screenHeight);
+		String text = "";
+		int x = 0;
+		int y = 0;
+		BufferedImage image;
+
+		//Title Name
+		g2.setFont(g2.getFont().deriveFont(Font.BOLD,96F));
+		if (counter < 100) {
+			text = "Arcizet Studio";
+			x = getXforCenteredText(text);
+			y = panel.tileSize*3;
+			
+			try{
+				image = ImageIO.read(getClass().getResource("/pictures/intro.png"));
+				AffineTransform at = new AffineTransform();
+				g2.drawImage(image, x + panel.tileSize * 5, y + panel.tileSize, panel.tileSize*5, panel.tileSize*5, null);
+
+			}catch(IOException e) {
+				e.printStackTrace();
+			}
+			catch(Exception e) {
+				e.printStackTrace();
+			} 
+			
+		} 
+		else if (counter >= 100 && counter < 300) {
+			text = "Game Project";
+			x = getXforCenteredText(text);
+			y = panel.tileSize*6;
+			image = null;
+		}
+		
+		g2.drawString(text, x, y);
+
+		//Shadow
+		g2.setColor(new Color(0,100,0));
+		g2.drawString(text, x + 5, y + 5);
+		
+		g2.setColor(Color.green);
+		g2.drawString(text, x, y);
+
+		if (counter == 300) {
+			counter = 0;
+			panel.gameState = panel.titleState;
+		}
+	}
+
 	public int getItemIndexOnSlot(int slotCol, int slotRow) {
 
 		int itemIndex = slotCol + (slotRow * 5);
@@ -1121,7 +1179,7 @@ public class UI {
 
 	public BufferedImage setup(String imagePath) {
 
-		
+
 		BufferedImage image = null;
 
 		try {

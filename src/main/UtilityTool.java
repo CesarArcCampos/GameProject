@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 public class UtilityTool {
 	
 	int minutes = 0;
+	double playTime;
 	
 	public BufferedImage scaleImage(BufferedImage original, int width, int height) {
 		
@@ -17,12 +18,15 @@ public class UtilityTool {
 		return scaledImage;
 	}
 	
-	public String getFormattedTime(double playTime) {
+	public String getTime() {
 		StringBuilder stringBuilder = new StringBuilder();
 		int seconds = (int) playTime;
 		
+		playTime += (double) 1/60;
+		
 		if (seconds > 59) {
 			playTime = 0;
+			seconds = 0;
 			minutes++;
 		}
 		
