@@ -115,6 +115,8 @@ public class Panel extends JPanel implements Runnable {
 		}
 		
 		ui.message.clear();
+		ui.playTime = 0;
+		keyHandler.shotKeyPressed = false;
 		keyHandler.enterPressed = false;
 		player.setDefaultValues();
 		player.restoreLifeAndBullets();

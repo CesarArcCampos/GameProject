@@ -10,6 +10,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -25,8 +26,6 @@ public class UI {
 	Font futuristicFont;
 	BufferedImage heart_full, heart_half, heart_blank, bulletMagazine;
 	public boolean messageOn = false;
-	//public String message = "";
-	//public int messageCounter = 0;
 	ArrayList<String> message = new ArrayList<>();
 	ArrayList<Integer> messageCounter = new ArrayList<>();
 	public boolean gameFinished = false;
@@ -39,6 +38,12 @@ public class UI {
 	public int subState = 0;
 	int counter = 0;
 	public Entity npc;
+	double playTime;
+	DecimalFormat dFormat = new DecimalFormat("#0.00");
+	UtilityTool uTool = new UtilityTool();
+
+	
+
 
 	public UI(Panel panel) {
 
@@ -65,9 +70,20 @@ public class UI {
 		messageCounter.add(0);
 	}
 
+
+	
 	public void draw(Graphics2D g2) {
 
 		this.g2 = g2;
+
+		//Time
+		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 20f));
+		g2.setColor(Color.white);
+		if (panel.gameState == panel.playState) {
+			playTime += (double) 1/60;
+		}
+		g2.drawString("Time: "
+				+ "" + uTool.getFormattedTime(playTime), panel.tileSize * 17, panel.tileSize * 1);
 
 		g2.setFont(futuristicFont);
 		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -133,7 +149,7 @@ public class UI {
 		if (panel.gameState == panel.bossState) {
 			drawBossScreen();
 		}
-		
+
 		//EndState
 		if (panel.gameState == panel.endState) {
 			drawEngGameScreen();
@@ -466,7 +482,7 @@ public class UI {
 	}
 
 	private void drawEngGameScreen() {
-			
+
 		g2.setColor(new Color(0,0,0,150));
 		g2.fillRect(0, 0, panel.screenWidth, panel.screenHeight);
 
@@ -482,7 +498,7 @@ public class UI {
 		g2.drawString(text, x, y);
 		g2.setColor(Color.white);
 		g2.drawString(text, x - 4, y - 4);
-		
+
 		text = "Game Over!";
 		g2.setColor(Color.black);
 		x = getXforCenteredText(text);
@@ -491,10 +507,18 @@ public class UI {
 		g2.setColor(Color.white);
 		g2.drawString(text, x - 4, y - 4);
 		
+		text = "Time: " + uTool.getFormattedTime(playTime);
+		g2.setColor(Color.black);
+		x = getXforCenteredText(text);
+		y += panel.tileSize * 2;
+		g2.drawString(text, x, y);
+		g2.setColor(Color.white);
+		g2.drawString(text, x - 4, y - 4);
+
 	}
-	
+
 	private void drawGameOverScreen() {
-		
+
 		g2.setColor(new Color(0,0,0,150));
 		g2.fillRect(0, 0, panel.screenWidth, panel.screenHeight);
 
@@ -1080,7 +1104,7 @@ public class UI {
 	public void drawPicture(int x, int y, int width, int height, String target) {
 
 		BufferedImage image = null;
-		
+
 		if (target == "npc") {
 			image = setup("/npc/npc-picture");
 		} else {
@@ -1097,7 +1121,7 @@ public class UI {
 
 	public BufferedImage setup(String imagePath) {
 
-		UtilityTool uTool = new UtilityTool();
+		
 		BufferedImage image = null;
 
 		try {
