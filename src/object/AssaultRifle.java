@@ -20,7 +20,7 @@ public class AssaultRifle extends Entity {
 		attackArea.width = 25;
 		attackArea.height = 25;
 		
-		price = 25;
+		price = 50;
 		knockBackPower = 1;
 	}
 

@@ -21,10 +21,10 @@ public class Chest extends Entity{
 		down1 = image;
 		collision = true;
 		
-		solidArea.x = 0;
-		solidArea.y = 0;
-		solidArea.width = 20;
-		solidArea.height = 20;
+		solidArea.x = panel.tileSize/2 - 20;
+		solidArea.y = panel.tileSize/2 - 20;
+		solidArea.width = 40;
+		solidArea.height = 40;
 		solidAreaDefaultX = solidArea.x;
 		solidAreaDefaultY = solidArea.y;
 	}
@@ -33,22 +33,27 @@ public class Chest extends Entity{
 		
 		panel.gameState = panel.warningState;
 		
-		if (opened == false) {
+		if (opened == false && loot != null) {
 			panel.playSFX(14);
 			
 			StringBuilder sb = new StringBuilder();
-			sb.append("You open the chest and find a " + loot.name + "!");
+			sb.append("You open the crate and find a " + loot.name + "!");
 			
 			if (panel.player.canObtainItem(loot) == false) {
 				sb.append("\n... Your inventory is full!");
 			} else {
 				sb.append("\nYou obtained the " + loot.name + "!");
+				if (loot.type == type_weapon) {
+					panel.player.bullets += 50;
+				}
 				down1 = image2;
 				opened = true;
 			}
 			panel.ui.currentDialogue = sb.toString();
 		} else {
-			panel.ui.currentDialogue = "This chest is empty!";
+			panel.ui.currentDialogue = "This crate is empty!";
+			down1 = image2;
+			opened = true;
 		}
 	}
 

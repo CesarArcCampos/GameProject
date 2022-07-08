@@ -372,13 +372,17 @@ public class KeyHandler implements KeyListener {
 		}
 
 		if (code == KeyEvent.VK_ENTER) {
+			
 			if (panel.ui.commandNum == 0) {
-				panel.gameState = panel.playState;
+				panel.stopMusic();
 				panel.retry();
+				panel.gameState = panel.playState;
+				
 			}
 			if (panel.ui.commandNum == 1) {
-				panel.gameState = panel.titleState;
+				panel.stopMusic();
 				panel.restart();
+				panel.gameState = panel.titleState;		
 			}
 		}
 	}

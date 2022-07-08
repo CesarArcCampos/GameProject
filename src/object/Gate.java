@@ -20,7 +20,7 @@ public class Gate extends Entity{
 		solidArea.x = 0;
 		solidArea.y = 0;
 		solidArea.width = 48;
-		solidArea.height = 24;
+		solidArea.height = 36;
 		solidAreaDefaultX = solidArea.x;
 		solidAreaDefaultY = solidArea.y;
 	}

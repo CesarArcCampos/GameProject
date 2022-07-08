@@ -36,7 +36,6 @@ public class Mon_Zombie extends Entity {
 
 	public void getImage() {
 		
-		
 		up1 = setup("/monster/zombie_1_up", panel.tileSize, panel.tileSize);
 		up2 = setup("/monster/zombie_2_up", panel.tileSize, panel.tileSize);
 		down1 = setup("/monster/zombie_1_down", panel.tileSize, panel.tileSize);
@@ -116,13 +115,13 @@ public class Mon_Zombie extends Entity {
 
 		int i = new Random().nextInt(100) + 1;
 
-		if (i < 25) {
+		if (i < 45) {
 			//DO NOTHING
 		} 
-		if (i >= 25 && i < 75) {
+		if (i >= 45 && i < 90) {
 			dropItem(new Coins(panel));
 		}
-		if (i >= 75) {
+		if (i >= 90) {
 			dropItem(new MedicKit(panel));
 		}
 	}

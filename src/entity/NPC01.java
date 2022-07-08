@@ -33,11 +33,19 @@ public class NPC01 extends Entity{
 	}
 
 	public void setDialogue() {
-
-		dialogues[0] = "Hello, friend.";
-		dialogues[1] = "I am glad that you \narrived";
-		dialogues[2] = "The Walkers \ntook over \nthis complex...";
-		dialogues[3] = "We need your help \nto clean this \nplace!";
+		
+		int randomNumber = new Random().nextInt(100) + 1;
+		
+		if (randomNumber < 50) {
+			dialogues[0] = "Hello, friend. I am glad that you \narrived. The Walkers took over this \ncomplex... We need your help to \nclean this place!";
+		}
+		if (randomNumber >= 50 && randomNumber < 75) {
+			dialogues[0] = "Whatever you're going to ask, the \nanswer is No! But the only thing I can\n say is there's a surprise for you\n in one of the teleports.";
+		}
+		if (randomNumber >= 75) {
+			dialogues[0] = "Hey my brother! Do you remember \nwe used to do this in school? We \nwere told there was no future for \nshooters, and now look at us! Haha";
+		}
+		
 	}
 
 	public void setAction() {

@@ -20,7 +20,7 @@ public class Shotgun extends Entity {
 		attackArea.width = 25;
 		attackArea.height = 25;
 		
-		price = 15;
+		price = 40;
 		knockBackPower = 3;
 	}
 

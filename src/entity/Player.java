@@ -7,14 +7,10 @@ import java.awt.image.BufferedImage;
 
 import main.KeyHandler;
 import main.Panel;
-import object.AK;
-import object.AssaultRifle;
 import object.BasicShield;
 import object.Bullet;
-import object.Key;
 import object.M16;
 import object.MedicKit;
-import object.Shotgun;
 
 public class Player extends Entity {
 
@@ -30,6 +26,7 @@ public class Player extends Entity {
 	int contactObjCounter = 0;
 	public boolean hasPassword = false;
 	public int counter = 0;
+	public int zombieCounter = 0;
 
 	public Player (Panel panel, KeyHandler keyHandler) {
 
@@ -40,7 +37,7 @@ public class Player extends Entity {
 		screenX = panel.screenWidth/2 - (panel.tileSize/2);
 		screenY = panel.screenHeight/2 - (panel.tileSize/2);
 
-		solidArea = new Rectangle(16,16,16,16);
+		solidArea = new Rectangle(16,16,16,20);
 		solidAreaDefaultX = solidArea.x;
 		solidAreaDefaultY = solidArea.y;
 
@@ -53,7 +50,7 @@ public class Player extends Entity {
 	public void setDefaultValues() {
 
 		worldX = panel.tileSize * 1;
-		worldY = panel.tileSize * 45;
+		worldY = panel.tileSize * 1;
 		defaultSpeed = 4;
 		speed = defaultSpeed;
 		direction = "down";
@@ -64,7 +61,7 @@ public class Player extends Entity {
 		dexterity = 1;
 		exp = 0;
 		nextLevelExp = 5;
-		coin = 200;
+		coin = 20;
 		currentWeapon = new M16(panel);
 		currentShield = new BasicShield(panel);
 		projectile = new Bullet(panel);
@@ -73,15 +70,15 @@ public class Player extends Entity {
 
 		maxLife = 6;
 		life = maxLife;
-		maxBullets = 1050;
+		maxBullets = 100;
 		bullets = maxBullets;
 		meleeKnockBackPower = 2;
 	}
 
 	public void setDefaultPositions() {
 
-		worldX = panel.tileSize * 23;
-		worldY = panel.tileSize * 23;
+		worldX = panel.tileSize * 1;
+		worldY = panel.tileSize * 1;
 		direction = "down";
 	}
 
@@ -97,23 +94,25 @@ public class Player extends Entity {
 		inventory.clear();
 		inventory.add(currentWeapon);
 		inventory.add(currentShield);
-		inventory.add(new Shotgun(panel));
-		inventory.add(new AK(panel));
-		inventory.add(new AssaultRifle(panel));
 		inventory.add(new MedicKit(panel));
-		inventory.add(new Key(panel));
 
 	}
 
 	public int getDefense() {
-
-		return defense = dexterity * currentShield.defenseValue;
+		
+		if (defense > 4) {
+			defense = dexterity * currentShield.defenseValue;
+		} else {
+			defense = 4;
+		}
+		
+		return defense;
 	}
 
 	public int getAttack() {
 
 		attackArea = currentWeapon.attackArea;
-		return attack = strength * currentWeapon.attackValue;
+		return attack = strength;
 	}
 
 	public void getPlayerImage() {
@@ -154,8 +153,10 @@ public class Player extends Entity {
 	}
 
 	public void update() {
-
-		if(maxLife > 10) {
+		
+		//System.out.println("X: " + worldX/panel.tileSize + " Y: " + worldY/panel.tileSize);
+		
+		if(level > 3) {
 			maxLife = 10;
 		}
 
@@ -325,9 +326,6 @@ public class Player extends Entity {
 			int monsterIndex = panel.checker.checkEntity(this, panel.monster);
 			damageMonster(monsterIndex, attack, meleeKnockBackPower);
 
-			int iTileIndex = panel.checker.checkEntity(this, panel.iTile);
-			damageInteractiveTile(iTileIndex);
-
 			//reset position and solid area
 			worldX = currentWorldX;
 			worldY = currentWorldY;
@@ -437,7 +435,7 @@ public class Player extends Entity {
 
 		if (i != 999) {
 			
-			if (knockBackPower > 0 && panel.monster[panel.currentMap][i].name != "Boss" && panel.monster[panel.currentMap][i].hadDialogue != false ) {
+			if (knockBackPower > 0 && panel.monster[panel.currentMap][i].name != "Boss" && panel.monster[panel.currentMap][i].hadDialogue == false ) {
 				knockBack(panel.monster[panel.currentMap][i], knockBackPower);
 			}
 			
@@ -461,6 +459,7 @@ public class Player extends Entity {
 
 				if (panel.monster[panel.currentMap][i].life <= 0) {
 					panel.monster[panel.currentMap][i].dying = true;
+					zombieCounter++;
 					panel.ui.addMessage("> killed the " + panel.monster[panel.currentMap][i].name);
 					panel.ui.addMessage("> Exp " + panel.monster[panel.currentMap][i].exp);
 					exp += panel.monster[panel.currentMap][i].exp;
@@ -474,7 +473,6 @@ public class Player extends Entity {
 		
 		if (entity.invincible == false ) {
 			entity.direction = direction;
-			//entity.speed += knockBackPower;
 			entity.knockBack = true;
 		}
 		
@@ -498,12 +496,14 @@ public class Player extends Entity {
 	public void checkLevelUp() {
 
 		if (exp >= nextLevelExp) {
+			
 			panel.playSFX(7);
 			level ++;
 			nextLevelExp = nextLevelExp * 2;
 			maxLife += 2;
-			life = maxLife;
-			strength++;
+			if (level < 4) {
+				strength++;
+			}
 			dexterity++;
 			attack = getAttack();
 			defense = getDefense();

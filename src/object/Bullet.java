@@ -64,13 +64,13 @@ public class Bullet extends Projectile {
 			bulletImage = ImageIO.read(getClass().getResourceAsStream(imagePath + ".png"));
 			
 			if (direction == "right") {
-				g.drawImage(bulletImage, panel.tileSize/2 + 20, 3 * panel.tileSize/4 + 4, 10, 10, null);
+				g.drawImage(bulletImage, panel.tileSize/2 + 10, 3 * panel.tileSize/4 - 5, 10, 10, null);
 			} else if (direction == "left") {
-				g.drawImage(bulletImage, panel.tileSize/2 - 20, 1 * panel.tileSize/4 - 1, 10, 10, null);
+				g.drawImage(bulletImage, panel.tileSize/2 - 15, 1 * panel.tileSize/4 - 5, 10, 10, null);
 			} else if (direction == "up") {
-				g.drawImage(bulletImage, panel.tileSize/2 + 20, panel.tileSize/2 - 20, 10, 10, null);
+				g.drawImage(bulletImage, panel.tileSize/2 + 10, panel.tileSize/2 - 18, 10, 10, null);
 			} else if (direction == "down") {
-				g.drawImage(bulletImage, panel.tileSize/2 - 15, panel.tileSize/2 + 20, 10, 10, null);
+				g.drawImage(bulletImage, panel.tileSize/2 - 18, panel.tileSize/2 + 5, 10, 10, null);
 			}
 			
 		} catch (IOException e) {

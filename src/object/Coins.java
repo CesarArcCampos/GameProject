@@ -23,7 +23,7 @@ public class Coins extends Entity {
 		type = type_pickUpOnly;
 		name = "Coins";
 		down1 = setupCoin("/object/coin");
-		value = 1;
+		value = 5;
 	}
 	
 	public boolean use(Entity entity) {

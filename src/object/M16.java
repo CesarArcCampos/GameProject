@@ -20,7 +20,7 @@ public class M16 extends Entity{
 		attackArea.width = 25;
 		attackArea.height = 25;
 		
-		price = 30;
+		price = 60;
 		knockBackPower = 2;
 	}
 	

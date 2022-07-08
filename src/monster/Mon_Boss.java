@@ -19,10 +19,10 @@ public class Mon_Boss extends Entity {
 		name = "Boss";
 		defaultSpeed = 1;
 		speed = 0;
-		maxLife = 5;
+		maxLife = 20;
 		life = maxLife;
 		attack = 5;
-		defense = 0;
+		defense = 1;
 		exp = 5;
 
 		solidArea = new Rectangle(panel.tileSize/4, panel.tileSize/4,panel.tileSize/2,panel.tileSize/2);

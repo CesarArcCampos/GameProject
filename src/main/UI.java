@@ -6,7 +6,6 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,15 +15,15 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 import entity.Entity;
-import object.BulletMagazine;
 import object.Heart;
+import object.Magazine;
 
 public class UI {
 
 	Panel panel;
 	Graphics2D g2;
 	Font futuristicFont;
-	BufferedImage heart_full, heart_half, heart_blank, bulletMagazine;
+	BufferedImage heart_full, heart_half, heart_blank, bullet;
 	public boolean messageOn = false;
 	ArrayList<String> message = new ArrayList<>();
 	ArrayList<Integer> messageCounter = new ArrayList<>();
@@ -38,7 +37,7 @@ public class UI {
 	public int subState = 0;
 	int counter = 0;
 	public Entity npc;
-	double playTime;
+	//double playTime;
 	DecimalFormat dFormat = new DecimalFormat("#0.00");
 	UtilityTool uTool = new UtilityTool();
 	String time = "";
@@ -58,8 +57,8 @@ public class UI {
 		heart_full = heart.image;
 		heart_half = heart.image2;
 		heart_blank = heart.image3;
-		Entity magazine = new BulletMagazine(panel);
-		bulletMagazine = magazine.image;
+		Entity bulletMagazine = new Magazine(panel);
+		bullet = bulletMagazine.image;
 	}
 
 	public void addMessage(String text) {
@@ -68,7 +67,7 @@ public class UI {
 		messageCounter.add(0);
 	}
 
-	public void draw(Graphics2D g2) {
+	public void draw(Graphics2D g2) {	
 
 		this.g2 = g2;
 		
@@ -80,7 +79,7 @@ public class UI {
 			time = uTool.getTime();
 		}
 		g2.drawString("Time: "
-				+ "" + time, panel.tileSize * 17, panel.tileSize * 1);
+				+ "" + time, panel.tileSize * 17 + 15, panel.tileSize * 1 - 15);
 
 		g2.setFont(futuristicFont);
 		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -290,7 +289,7 @@ public class UI {
 				commandNum = 0;
 				subState = 0;
 				panel.gameState = panel.dialogueState;
-				currentDialogue = dialogues[6];
+				currentDialogue = dialogues[7];
 			}
 		}
 
@@ -301,8 +300,9 @@ public class UI {
 			if (panel.keyHandler.enterPressed == true) {
 				panel.npc[panel.currentMap][npcIndex].finalDialogue = true;
 				commandNum = 0;
+				subState = 0;
 				panel.gameState = panel.dialogueState;
-				currentDialogue = dialogues[7];
+				currentDialogue = dialogues[6];
 			}
 		}
 	}
@@ -397,6 +397,11 @@ public class UI {
 				if (panel.player.canObtainItem(npc.inventory.get(itemIndex)) == true) {
 
 					panel.player.coin -= npc.inventory.get(itemIndex).price;
+					
+					if (npc.inventory.get(itemIndex).type == npc.inventory.get(itemIndex).type_weapon) {
+						panel.player.bullets += 50;
+					}
+					
 				} else {
 
 					subState = 0;
@@ -500,8 +505,9 @@ public class UI {
 		g2.drawString(text, x, y);
 		g2.setColor(Color.white);
 		g2.drawString(text, x - 4, y - 4);
-
-		text = "Game Over!";
+		
+		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 50f));
+		text = "You crazy bastard! You did it!";
 		g2.setColor(Color.black);
 		x = getXforCenteredText(text);
 		y += panel.tileSize * 3;
@@ -509,7 +515,7 @@ public class UI {
 		g2.setColor(Color.white);
 		g2.drawString(text, x - 4, y - 4);
 
-		text = "Time: " + uTool.getTime();
+		text = "Time: " + time;
 		g2.setColor(Color.black);
 		x = getXforCenteredText(text);
 		y += panel.tileSize * 2;
@@ -553,7 +559,6 @@ public class UI {
 
 		// Back to the title screen
 		text = "Quit";
-		x = getXforCenteredText(text);
 		y += 55;
 		g2.drawString(text, x, y);
 		if (commandNum == 1) {
@@ -790,7 +795,7 @@ public class UI {
 		x = panel.tileSize/2;
 		y = panel.tileSize*2 - panel.tileSize/2;
 
-		g2.drawImage(bulletMagazine, x, y, null);
+		g2.drawImage(bullet, x, y, null);
 		x += panel.tileSize;
 		y += panel.tileSize - 12;
 		String text = Integer.toString(panel.player.bullets);
@@ -920,7 +925,7 @@ public class UI {
 
 			int textX = dFrameX + 20;
 			int textY = dFrameY + panel.tileSize;
-			g2.setFont(g2.getFont().deriveFont(20F));
+			g2.setFont(g2.getFont().deriveFont(18F));
 			int itemIndex = getItemIndexOnSlot(slotCol, slotRow);
 
 			if (itemIndex < entity.inventory.size()) {
@@ -961,7 +966,6 @@ public class UI {
 
 		try{
 			BufferedImage image = ImageIO.read(getClass().getResource("/pictures/zombie-picture.png"));
-			AffineTransform at = new AffineTransform();
 			g2.drawImage(image, x + panel.tileSize/2, y - panel.tileSize, panel.tileSize*3, panel.tileSize*3, null);
 
 		}catch(IOException e) {
@@ -1021,10 +1025,10 @@ public class UI {
 
 		drawSubWindow(x, y, width, height);
 
-		g2.setFont(g2.getFont().deriveFont(Font.PLAIN,22F));
+		g2.setFont(g2.getFont().deriveFont(Font.PLAIN,20F));
 		g2.setColor(Color.GREEN);
-		x += panel.tileSize;
-		y += panel.tileSize;
+		x += 3 * panel.tileSize/4 - 5;
+		y += 3 * panel.tileSize/4;
 
 		for (String line : currentDialogue.split("\n")) {
 			g2.drawString(line, x, y);
@@ -1099,6 +1103,7 @@ public class UI {
 
 		//Title Name
 		g2.setFont(g2.getFont().deriveFont(Font.BOLD,96F));
+		
 		if (counter < 100) {
 			text = "Arcizet Studio";
 			x = getXforCenteredText(text);
@@ -1106,7 +1111,6 @@ public class UI {
 			
 			try{
 				image = ImageIO.read(getClass().getResource("/pictures/intro.png"));
-				AffineTransform at = new AffineTransform();
 				g2.drawImage(image, x + panel.tileSize * 5, y + panel.tileSize, panel.tileSize*5, panel.tileSize*5, null);
 
 			}catch(IOException e) {
@@ -1116,6 +1120,15 @@ public class UI {
 				e.printStackTrace();
 			} 
 			
+			g2.setFont(g2.getFont().deriveFont(Font.BOLD,50F));
+			String text1 = counter + "%";
+			int x1 = (int) (panel.tileSize * 8.8);
+			int y1 = panel.tileSize * 11;
+			g2.setColor(new Color(0,100,0));
+			g2.drawString(text1, x1 + 5, y1 + 5);
+			g2.setColor(Color.green);
+			g2.drawString(text1, x1, y1);
+			
 		} 
 		else if (counter >= 100 && counter < 300) {
 			text = "Game Project";
@@ -1124,7 +1137,8 @@ public class UI {
 			image = null;
 		}
 		
-		g2.drawString(text, x, y);
+		//g2.drawString(text, x, y);
+		g2.setFont(g2.getFont().deriveFont(Font.BOLD,96F));
 
 		//Shadow
 		g2.setColor(new Color(0,100,0));
@@ -1198,14 +1212,14 @@ public class UI {
 		//create frame
 		final int frameX = panel.tileSize * 2;
 		final int frameY = panel.tileSize;
-		final int frameWidth = panel.tileSize * 5;
+		final int frameWidth = panel.tileSize * 6;
 		final int frameHeight = panel.tileSize * 10;
 
 		drawSubWindow(frameX, frameY, frameWidth, frameHeight);
 
 		//text
 		g2.setColor(Color.white);
-		g2.setFont(g2.getFont().deriveFont(25F));
+		g2.setFont(g2.getFont().deriveFont(22F));
 
 		int textX = frameX + 20;
 		int textY = frameY + panel.tileSize;
@@ -1265,7 +1279,7 @@ public class UI {
 		g2.drawString(value, textX, textY);
 		textY += lineHeight;
 
-		value = String.valueOf(panel.player.defense);
+		value = String.valueOf(panel.player.getDefense());
 		textX = getXforAlignRightText(value,tailX);
 		g2.drawString(value, textX, textY);
 		textY += lineHeight;

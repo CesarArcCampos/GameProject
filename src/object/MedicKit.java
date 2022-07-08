@@ -15,7 +15,6 @@ import main.Panel;
 public class MedicKit extends Entity{
 	
 	Panel panel;
-	int value = 5;
 
 	public MedicKit(Panel panel) {
 		super(panel);
@@ -25,7 +24,7 @@ public class MedicKit extends Entity{
 		type = type_consumable;
 		name = "Medicine";
 		down1 = setupKit("/object/medickit");
-		description = "(Medicine)\nHeals your life by" + value + ".";
+		description = "(Medicine)\nHeals your life.";
 		stackable = true;
 		
 		price = 20;
@@ -34,9 +33,8 @@ public class MedicKit extends Entity{
 	public boolean use(Entity entity) {
 		
 		panel.gameState = panel.warningState;
-		panel.ui.currentDialogue = "You took the " + name +
-			"!\n" + "Your life as been recovered\n by" + value + ".";
-		entity.life += value;
+		panel.ui.currentDialogue = "You used the medicine kit!\nYour life as been recovered.";
+		entity.life += entity.maxLife;
 		
 		if (panel.player.life > panel.player.maxLife) {
 			panel.player.life = panel.player.maxLife;

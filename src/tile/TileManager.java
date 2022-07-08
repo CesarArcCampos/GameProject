@@ -27,6 +27,7 @@ public class TileManager {
 
 		loadMap("/maps/worldMap01.txt",0);
 		loadMap("/maps/worldMap02.txt",1);
+		loadMap("/maps/worldMap03.txt",2);
 	}
 
 	public void getTileImage() {
@@ -38,6 +39,7 @@ public class TileManager {
 		setup(4,"pav5", false);
 		setup(5,"pav6", false);
 		setup(6,"pav7", false);
+		setup(36,"pav9", false);
 
 		setup(7,"wall1", true);
 		setup(8,"wall2", true);
@@ -47,6 +49,8 @@ public class TileManager {
 		setup(12,"wall6", true);
 		setup(13,"wall7", true);
 		setup(14,"wall8", true);
+		setup(37,"wall9", true);
+		setup(35,"wall10", true);
 
 		setup(15,"int1", true);
 		setup(16,"int3", true);
@@ -69,6 +73,10 @@ public class TileManager {
 		setup(29,"inter5", true);
 		setup(30,"inter6", true);
 		setup(31,"inter7", true);
+		setup(32,"inter8", true);
+		setup(33,"black", true);
+		
+		setup(34,"rad", false);
 		
 	}
 

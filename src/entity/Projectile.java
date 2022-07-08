@@ -42,7 +42,7 @@ public class Projectile extends Entity {
 			int monsterIndex = panel.checker.checkEntity(this, panel.monster);
 			
 			if (monsterIndex != 999) {
-				panel.player.damageMonster(monsterIndex, attack, knockBackPower);
+				panel.player.damageMonster(monsterIndex, attack, panel.player.currentWeapon.knockBackPower);
 				generateParticle(user.projectile, panel.monster[panel.currentMap][monsterIndex]);
 				alive = false;
 			}
@@ -53,6 +53,16 @@ public class Projectile extends Entity {
 				
 				panel.player.damageInteractiveTile(interactiveIndex);
 			}
+			
+			int gateIndex = panel.checker.checkEntity(this, panel.obj); 
+			
+			if (gateIndex != 999) {
+				if (panel.obj[panel.currentMap][gateIndex].name == "Gate") {
+					alive = false;
+					panel.playSFX(10);
+				}
+			}
+			
 		} 
 		
 		if (user != panel.player) {

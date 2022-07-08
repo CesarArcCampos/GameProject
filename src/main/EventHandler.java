@@ -53,7 +53,58 @@ public class EventHandler {
 		}
 
 		if (canTouchEvent == true) {
-			if (hit(0,1,1,"any") == true) {
+			if (hit(0,2,16,"any") == true) {
+				damagePit(panel.warningState);
+			}
+			else if (hit(0,3,47,"any") == true) {
+				damagePit(panel.warningState);
+			}
+			else if (hit(0,6,12,"any") == true) {
+				damagePit(panel.warningState);
+			}
+			else if (hit(0,9,25,"any") == true) {
+				damagePit(panel.warningState);
+			}
+			else if (hit(0,10,5,"any") == true) {
+				damagePit(panel.warningState);
+			}
+			else if (hit(0,14,34,"any") == true) {
+				damagePit(panel.warningState);
+			}
+			else if (hit(0,15,26,"any") == true) {
+				damagePit(panel.warningState);
+			}
+			else if (hit(0,17,42,"any") == true) {
+				damagePit(panel.warningState);
+			}
+			else if (hit(0,23,11,"any") == true) {
+				damagePit(panel.warningState);
+			}
+			else if (hit(0,23,30,"any") == true) {
+				damagePit(panel.warningState);
+			}
+			else if (hit(0,23,48,"any") == true) {
+				damagePit(panel.warningState);
+			}
+			else if (hit(0,25,42,"any") == true) {
+				damagePit(panel.warningState);
+			}
+			else if (hit(0,29,2,"any") == true) {
+				damagePit(panel.warningState);
+			}
+			else if (hit(0,29,44,"any") == true) {
+				damagePit(panel.warningState);
+			}
+			else if (hit(0,35,12,"any") == true) {
+				damagePit(panel.warningState);
+			}
+			else if (hit(0,35,19,"any") == true) {
+				damagePit(panel.warningState);
+			}
+			else if (hit(0,35,26,"any") == true) {
+				damagePit(panel.warningState);
+			}
+			else if (hit(0,36,34,"any") == true) {
 				damagePit(panel.warningState);
 			}
 
@@ -67,6 +118,20 @@ public class EventHandler {
 
 			else if (hit(1,24,21,"any") == true) {
 				teleport(0,48,4);
+			}
+
+			else if (hit(0,47,41,"any") == true) {
+				if (panel.player.zombieCounter == 35) {
+					teleport(2,9,30);
+				} else {
+
+					if (panel.keyHandler.enterPressed == true) {
+						panel.player.attackCanceled = true;
+						panel.gameState = panel.warningState;
+						panel.ui.currentDialogue = "You need to kill all the walkers!\n You missed: " + (35 - panel.player.zombieCounter);
+					}
+				}
+
 			}
 		}
 	}

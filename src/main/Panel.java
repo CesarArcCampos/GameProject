@@ -55,7 +55,7 @@ public class Panel extends JPanel implements Runnable {
 	public Player player = new Player(this, keyHandler);
 	public Entity obj[][] = new Entity[maxMap][200];
 	public Entity npc[][] = new Entity[maxMap][10];
-	public Entity monster[][] = new Entity[maxMap][20];
+	public Entity monster[][] = new Entity[maxMap][40];
 	public InteractiveTile iTile[][] = new InteractiveTile[maxMap][50];
 	ArrayList<Entity> entityList = new ArrayList<>();
 	public Entity projectile[][] = new Entity[maxMap][200];
@@ -102,7 +102,9 @@ public class Panel extends JPanel implements Runnable {
 	public void retry() {
 
 		stopSFX();
+		stopMusic();
 		playMusic(0);
+		ui.uTool.playTime = 0;
 		player.setDefaultPositions();
 		player.restoreLifeAndBullets();
 		aSetter.setNPC();
@@ -116,7 +118,7 @@ public class Panel extends JPanel implements Runnable {
 		}
 
 		ui.message.clear();
-		ui.playTime = 0;
+		ui.uTool.playTime = 0;
 		keyHandler.shotKeyPressed = false;
 		keyHandler.enterPressed = false;
 		player.setDefaultValues();
@@ -251,7 +253,7 @@ public class Panel extends JPanel implements Runnable {
 			ui.draw(g2);
 		} 
 
-		// INTRO SCREEN		
+		// TITLE SCREEN		
 		if ( gameState == titleState) {
 			ui.draw(g2);
 		} 
