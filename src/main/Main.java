@@ -1,5 +1,6 @@
 package main;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 public class Main {
@@ -8,10 +9,13 @@ public class Main {
 
 	public static void main(String[] args) {
 		
+		ImageIcon img = new ImageIcon("res/pictures/zombie-icon.png");
+		
 		window = new JFrame();
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setResizable(false);
 		window.setTitle("Project Game");
+		window.setIconImage(img.getImage());
 		
 		Panel panel = new Panel();
 		window.add(panel);
